@@ -82,18 +82,5 @@ public:
 
 int main()
 {
-    TreeLinkNode *root = new TreeLinkNode(3);
-    root->left = new TreeLinkNode(9);
-    root->right = new TreeLinkNode(20);
-    root->right->left = new TreeLinkNode(15);
-    root->right->right = new TreeLinkNode(7);
-
-    Solution sol;
-    sol.connect(root);
-    cout << root->val << endl;
-    cout << root->left->val << endl;
-    cout << root->left->next->val << endl;
-    cout << root->right->left->val << endl;
-    cout << root->right->left->next->val << endl;
     return 0;
 }
