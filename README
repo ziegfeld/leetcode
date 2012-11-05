@@ -59,6 +59,8 @@ N-Queens
 N-QueensII
 PalindromeNumber
 PartitionList
+PascalTriangle
+PascalTriangleII
 PathSum
 PathSumII
 Permutations
@@ -68,7 +70,7 @@ PlusOne
 PopulatingNextRightPointersinEachNode
 PopulatingNextRightPointersinEachNodeII
 Pow
-READ
+README
 RecoverBinarySearchTree
 RegularExpressionMatching
 RemoveDuplicatesfromSortedArray
