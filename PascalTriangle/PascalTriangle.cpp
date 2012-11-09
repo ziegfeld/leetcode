@@ -26,18 +26,19 @@ public:
     {
         vector<vector<int> > res;
         if (numRows < 1) return res;
+        res.reserve(numRows);
         res.push_back(vector<int>(1, 1));
-        while (numRows > 1)
+        int m = 1;
+        while (m < numRows)
         {
-            size_t m = res.size();
-            size_t n = res[m-1].size();
             vector<int> row;
+            row.reserve(m+1);
             row.push_back(1);
-            for (size_t i = 0; i < n-1; i++)
+            for (int i = 0; i < m-1; i++)
                 row.push_back(res[m-1][i] + res[m-1][i+1]);
             row.push_back(1);
             res.push_back(row);
-            numRows--;
+            m++;
         }
         return res;
     }

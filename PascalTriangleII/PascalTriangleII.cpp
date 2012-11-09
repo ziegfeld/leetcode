@@ -20,17 +20,17 @@ public:
     vector<int> getRow(int rowIndex)
     {
         vector<int> res;
+        res.reserve(rowIndex+1);
         res.push_back(1);
-        while (rowIndex > 0)
+        if (rowIndex < 1) return res;
+        res.push_back(1);
+        int m = 1;
+        while (m < rowIndex)
         {
-            vector<int> row;
-            row.push_back(1);
-            for (size_t i = 0; i < res.size()-1; i++)
-                row.push_back(res[i] + res[i+1]);
-            row.push_back(1);
-            res.clear();
-            res.assign(row.begin(), row.end());
-            rowIndex--;
+            for (int i = 0; i < m; i++)
+                res[i] += res[i+1];
+            res.insert(res.begin(), 1);
+            m++;
         }
         return res;
     }
