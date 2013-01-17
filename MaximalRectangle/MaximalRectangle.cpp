@@ -12,12 +12,49 @@ using namespace std;
 class Solution {
 public:
     int maximalRectangle(vector<vector<char> > &matrix) {
+        return maximalRectangle2(matrix);
+    }
+
+    // based on dynamic programming, takes O(n^3) time
+    int maximalRectangle1(vector<vector<char> > &matrix) {
+        int M = matrix.size();
+        if (M == 0) return 0;
+        int N = matrix[0].size();
+        if (N == 0) return 0;
+        int dp[M][N];
+        fill(&dp[0][0], &dp[M][0], 0);
+
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (matrix[i][j] == '1') {
+                    dp[i][j] = (j > 0) ? (dp[i][j-1] + 1) : 1;
+                }
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                int min = dp[i][j];
+                int k = i;
+                while (k >= 0) {
+                    if (dp[k][j] < min) min = dp[k][j];
+                    res = max(res, min * (i - k + 1));
+                    k--;
+                }
+            }
+        }
+        return res;
+    }
+
+    // based on stack, takes O(n^2) time
+    int maximalRectangle2(vector<vector<char> > &matrix) {
         int M = matrix.size();
         if (M == 0) return 0;
         int N = matrix[0].size();
         if (N == 0) return 0;
         int h[N];
-        memset(h, 0, sizeof(int)*N);
+        fill(h, h + N, 0);
         int res = 0;
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
