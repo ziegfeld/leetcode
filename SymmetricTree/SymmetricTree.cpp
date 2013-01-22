@@ -48,8 +48,8 @@ public:
     bool isSymmetricHelper1(TreeNode *a, TreeNode *b) {
         if (a == NULL || b == NULL) return (a == b);
         return (a->val == b->val)
-                && isSymmetricHelper1(a->left, b->right)
-                && isSymmetricHelper1(a->right, b->left);
+            && isSymmetricHelper1(a->left, b->right)
+            && isSymmetricHelper1(a->right, b->left);
     }
 };
 
