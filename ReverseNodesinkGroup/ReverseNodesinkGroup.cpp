@@ -34,6 +34,38 @@ struct ListNode {
 class Solution {
 public:
     ListNode *reverseKGroup(ListNode *head, int k) {
+        return reverseKGroup1(head, k);
+    }
+
+    ListNode *reverseKGroup1(ListNode *head, int k) {
+        if (k < 2) return head;
+        ListNode* node = head;
+        int size = 0;
+        while (node != NULL) {
+            node = node->next;
+            size++;
+        }
+        return reverseByKHelper(head, size, k);
+    }
+
+    ListNode* reverseByKHelper(ListNode*& curNode, int size, int k) {
+        if (size < k) return curNode;
+        ListNode* curTail = curNode;
+        ListNode *preNode, *nextNode;
+        preNode = NULL;
+        for(int i = 0; i < k; i++) {
+            if(curNode != NULL) {
+                nextNode = curNode->next;
+                curNode->next = preNode;
+                preNode = curNode;
+            }
+            curNode = nextNode;
+        }
+        curTail->next = reverseByKHelper(curNode, size - k, k);
+        return preNode;
+    }
+
+    ListNode *reverseKGroup2(ListNode *head, int k) {
         if(k == 0 || k == 1) return head;
         ListNode *curNode = head;
         int length = 0;
