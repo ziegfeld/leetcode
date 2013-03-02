@@ -21,7 +21,7 @@ public:
         dict['V'] = 5;
         dict['I'] = 1;
         int res = 0;
-        int i = 0;
+        size_t i = 0;
         while (i < s.size() - 1) {
             if (dict[s[i]] < dict[s[i+1]]) res -= dict[s[i]];
             else res += dict[s[i]];
@@ -33,5 +33,7 @@ public:
 };
 
 int main() {
+    Solution sol;
+    sol.romanToInt("MMMMM");
     return 0;
 }
