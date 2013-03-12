@@ -7,9 +7,11 @@ Anagrams
 BalancedBinaryTree
 BestTimetoBuyandSellStock
 BestTimetoBuyandSellStockII
+BestTimetoBuyandSellStockIII
 BinaryTreeInorderTraversal
 BinaryTreeLevelOrderTraversal
 BinaryTreeLevelOrderTraversalII
+BinaryTreeMaximumPathSum
 BinaryTreeZigzagLevelOrderTraversal
 ClimbingStairs
 Combinations
@@ -39,6 +41,7 @@ LargestRectangleinHistogram
 LengthofLastWord
 LetterCombinationsofaPhoneNumber
 LongestCommonPrefix
+LongestConsecutiveSequence
 LongestPalindromicSubstring
 LongestSubstringWithoutRepeatingCharacters
 LongestValidParentheses
@@ -104,10 +107,12 @@ Subsets
 SubsetsII
 SubstringwithConcatenationofAllWords
 SudokuSolver
+SumRoottoLeafNumbers
 SwapNodesinPairs
 SymmetricTree
 TextJustification
 TrappingRainWater
+Triangle
 TwoSum
 UniqueBinarySearchTrees
 UniqueBinarySearchTreesII
@@ -115,8 +120,11 @@ UniquePaths
 UniquePathsII
 ValidateBinarySearchTree
 ValidNumber
+ValidPalindrome
 ValidParentheses
 ValidSudoku
 WildcardMatching
+WordLadder
+WordLadderII
 WordSearch
 ZigZagConversion
