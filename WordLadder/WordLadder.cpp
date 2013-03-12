@@ -16,7 +16,7 @@
 //============================================================================
 
 #include <iostream>
-#include <tr1/unordered_set>
+#include <unordered_set>
 #include <queue>
 
 using namespace std;

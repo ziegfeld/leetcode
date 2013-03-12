@@ -100,32 +100,5 @@ public:
 };
 
 int main() {
-    Solution sol;
-    unordered_set<string> dict;
-    /*
-    dict.insert("hot");
-    dict.insert("dot");
-    dict.insert("dog");
-    dict.insert("lot");
-    dict.insert("log");
-    vector<vector<string> > res = sol.findLadders("hit", "cog", dict);
-    */
-   /* 
-    dict.insert("ted");
-    dict.insert("tex");
-    dict.insert("red");
-    dict.insert("tax");
-    dict.insert("tad");
-    dict.insert("den");
-    dict.insert("rex");
-    dict.insert("pee");
-    vector<vector<string> > res = sol.findLadders("red", "tax", dict);
-    */
-    for (size_t i = 0; i < res.size(); i++)
-    {
-        for (size_t j = 0; j < res[i].size(); j++)
-            cout << res[i][j] << " ";
-        cout << endl;
-    }
     return 0;
 }
