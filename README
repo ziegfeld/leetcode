@@ -61,6 +61,8 @@ NextPermutation
 N-Queens
 N-QueensII
 PalindromeNumber
+PalindromePartitioning
+PalindromePartitioningII
 PartitionList
 PascalTriangle
 PascalTriangleII
@@ -108,6 +110,7 @@ SubsetsII
 SubstringwithConcatenationofAllWords
 SudokuSolver
 SumRoottoLeafNumbers
+SurroundedRegions
 SwapNodesinPairs
 SymmetricTree
 TextJustification

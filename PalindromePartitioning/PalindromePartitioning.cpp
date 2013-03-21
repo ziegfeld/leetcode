@@ -1,4 +1,5 @@
 //============================================================================
+// Palindrome Partitioning
 // Given a string s, partition s such that every substring of the partition 
 // is a palindrome.
 //
@@ -16,6 +17,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+
 using namespace std;
 
 class Solution {
