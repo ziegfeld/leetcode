@@ -35,7 +35,7 @@ public:
             int N = triangle[i].size();
             for (int j = 0; j < N; ++j)
             {
-                triangle[i][j] = min(triangle[i+1][j], triangle[i+1][j+1]);
+                triangle[i][j] += min(triangle[i+1][j], triangle[i+1][j+1]);
             }
         }
         return triangle[0][0];
