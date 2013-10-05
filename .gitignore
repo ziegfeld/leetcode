@@ -3,3 +3,4 @@ tags
 test
 *.o
 *.swp
+.DS_Store
