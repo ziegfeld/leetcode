@@ -13,9 +13,9 @@ using namespace std;
 
 class Solution {
 public:
-	int singleNumber(int A[], int n) {
-		int res = 0;
-	    for (int i = 0; i < (int)sizeof(int)*CHAR_BIT; i++) {
+    int singleNumber(int A[], int n) {
+        int res = 0;
+        for (int i = 0; i < (int)sizeof(int)*CHAR_BIT; i++) {
             int sum = 0;
             int mask = (1 << i);
             for (int j = 0; j < n; j++) {
