@@ -20,13 +20,20 @@
 // ]
 //============================================================================
 
+#include <iostream>
 #include <vector>
 #include <algorithm>
-using namespace std;
 
+using namespace std;
 class Solution {
 public:
     vector<vector<int> > subsets(vector<int> &S) {
+        return subsets1(S);
+        //return subsets2(S);
+    }
+
+    vector<vector<int> > subsets1(vector<int> &S) {
+        sort(begin(S), end(S));
         int N = S.size();
         int max = 1 << N;
         vector<vector<int> > res;
@@ -39,11 +46,28 @@ public:
                 k >>= 1;
                 j++;
             }
-            sort(sub.begin(), sub.end());
             res.push_back(sub);
         }
-        sort(res.begin(), res.end());
+        sort(begin(res), end(res));
         return res;
+    }
+
+    vector<vector<int> > subsets2(vector<int> &S) {
+        sort(begin(S), end(S));
+        vector<vector<int> > res;
+        subsetsHelper(S, 0, vector<int>(), res);
+        sort(begin(res), end(res));
+        return res;
+    }
+
+    void subsetsHelper(vector<int> &S, int i, vector<int> sol, vector<vector<int> > & res) {
+        res.push_back(sol);
+        while (i < (int)S.size()) {
+            vector<int> next(sol);
+            next.push_back(S[i]);
+            ++i;
+            subsetsHelper(S, i, next, res);
+        }
     }
 };
 

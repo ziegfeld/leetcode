@@ -19,14 +19,13 @@ using namespace std;
 class Solution {
 public:
     int searchInsert(int A[], int n, int target) {
-        int l = 0;
-        int u = n - 1;
-        while (l <= u) {
-            int m = l + (u - l) / 2;
-            if (A[m] > target) u = m - 1;
-            else if (A[m] < target) l = m + 1;
-            else return m;
+        int l = 0, u = n-1;
+        while (l < u) {
+            int m = l+(u-l)/2;
+            if (A[m] < target) l = m+1;
+            else u = m;
         }
+        if (A[l] < target) return n;
         return l;
     }
 };

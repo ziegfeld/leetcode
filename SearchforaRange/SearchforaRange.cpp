@@ -29,24 +29,24 @@ public:
     }
 
     int lower_bound(int A[], int n, int target) {
-        int l = 0;
-        int u = n - 1;
-        while (l <= u) {
-            int m = l + (u - l) / 2;
-            if (A[m] >= target) u = m - 1;
-            else l = m + 1;
+        int l = 0, u = n-1;
+        while (l < u) {
+            int m = l+(u-l)/2;
+            if (A[m] < target) l = m+1;
+            else u = m;
         }
-        return u + 1;
+        if (A[l] < target) return n;
+        return l;
     }
 
     int upper_bound(int A[], int n, int target) {
-        int l = 0;
-        int u = n - 1;
-        while (l <= u) {
-            int m = l + (u - l) / 2;
-            if (A[m] <= target) l = m + 1;
-            else u = m - 1;
+        int l = 0, u = n-1;
+        while (l < u) {
+            int m = l+(u-l)/2;
+            if (A[m] <= target) l = m+1;
+            else u = m;
         }
+        if (A[l] <= target) return n;
         return l;
     }
 };
