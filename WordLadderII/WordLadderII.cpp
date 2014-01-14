@@ -22,83 +22,60 @@
 //============================================================================
 
 #include <iostream>
+#include <string>
 #include <unordered_set>
-#include <queue>
+#include <unordered_map>
 
 using namespace std;
 
 class Solution {
 public:
-     vector<vector<string>> findLadders(string start, string end, unordered_set<string> & dict) 
-     {
-         dict.insert(end);
-         int steps = ladderLength(start, end, dict);
-         cout << steps << endl;
+	vector<vector<string> > findLadders(string start, string end, unordered_set<string> & dict) {
+		unordered_map<string, vector<string> > graph;
+		vector<vector<string> > res;
+		unordered_set<string> curr, prev;
+		prev.insert(start);
+		while (true) {
+			for (auto word : prev) dict.erase(word);
+			for (auto word : prev) {
+				for (int i = 0; i < (int)word.size(); i++) {
+					string copy = word;
+					for (char c = 'a'; c <= 'z'; c++) {
+						if (copy[i] == c) continue;
+						copy[i] = c;
+						if (dict.find(copy) == dict.end()) continue;
+						graph[copy].push_back(word);
+						curr.insert(copy);
+					}
+				}
+			} 
 
-         vector<vector<string> > res;
-         vector<string> path;
-         unordered_set<string> visit;
-         dfs(start, end, dict, visit, steps, path, res);
-         return move(res);
-     }
+			if (curr.size() == 0) return res;
+			if (curr.find(end) != curr.end()) break;
 
-     void dfs(string const & start, string const & end, unordered_set<string> const & dict, unordered_set<string> visit, int steps, vector<string> path, vector<vector<string> > & res)
-     {
-         if (steps == 0 || visit.find(start) != visit.end())
-            return;
-         visit.insert(start);
-         path.push_back(start);
-         
-         if (start == end)
-         {
-             res.push_back(path);
-             return;
-         }
+			prev = curr;
+			curr.clear();
+		}
 
-        for (string node : getNeighbors(start, dict))
-            dfs(node, end, dict, visit, steps-1, path, res);
-     }
-     
-     int ladderLength(string const & start, string const & end, unordered_set<string> dict) 
-     {   
-         queue<pair<string, int> > queue;
-         queue.push(make_pair(start, 1));
-         while (!queue.empty())
-         {   
-             pair<string, int> cur = queue.front();   
-             queue.pop();
-             if (cur.first == end)
-                 return cur.second;
+		vector<string> path;
+		getPath(end, start, graph, path, res);
+		return res;
+	}
 
-             for (string node : getNeighbors(cur.first, dict))
-                 queue.push(make_pair(node, cur.second+1));
-         }   
-
-         return 0;
-     }   
-
-     vector<string> getNeighbors(string const & word, unordered_set<string> dict)
-     {
-         vector<string> res;
-         for (size_t i = 0; i < word.size(); i++)
-         {
-             string copy(word);
-             for (char c = 'a'; c <= 'z'; c++)
-             {
-                 copy[i] = c;
-                 if (word == copy)
-                     continue;
-                 if (dict.find(copy) != dict.end())
-                 {
-                     res.push_back(copy);
-                     dict.erase(copy);
-                 }
-             }
-         }
-         return move(res);
-     }
+	void getPath(string & start, string & end, unordered_map<string, vector<string> > & graph, vector<string> & path, vector<vector<string> > & res) {
+		path.push_back(start);
+		if (start == end) {
+			res.push_back(vector<string>(path.rbegin(), path.rend()));
+		}
+		else {
+			for (auto it : graph[start]) {
+				getPath(it, end, graph, path, res);
+			}
+		}
+		path.pop_back();
+	}
 };
 
 int main() {
-    return 0;
+	return 0;
 }
