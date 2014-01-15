@@ -12,19 +12,20 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+
 using namespace std;
 
 class Solution {
 public:
+    // takes O(n^2) time
     int threeSumClosest(vector<int> &num, int target) {
         int N = num.size();
-        sort(num.begin(), num.end());
-        int res = num[0] + num[1] + num[2];
+        sort(begin(num), end(num));
+        int res = num[0]+num[1]+num[2];
         for (int k = 0; k < N-2; k++) {
-            int i = k+1;
-            int j = N-1;
+            int i = k+1, j = N-1;
             while (i < j) {
-                int sum = num[i] + num[j] + num[k];
+                int sum = num[i]+num[j]+num[k];
                 if (sum == target) return sum;
                 if (abs(sum-target) < abs(res-target)) res = sum;
                 if (sum > target) j--;
@@ -36,5 +37,16 @@ public:
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0;
+    int p1;
+
+    {
+        int a[] = {-1, 2, 1, -4};
+        p0.assign(begin(a), end(a));
+        p1 = 1;
+        cout << sol.threeSumClosest(p0, p1) << endl;
+    }
+
     return 0;
 }

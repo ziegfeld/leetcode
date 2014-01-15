@@ -16,39 +16,50 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
 using namespace std;
 
 class Solution {
 public:
+    // takes O(n^2) time
     vector<vector<int> > threeSum(vector<int> &num) {
+        vector<vector<int> > res;  
         int N = num.size();
-        sort(num.begin(), num.end());
-        vector<vector<int> > result;
+        if (N < 3) return res;
+
+        sort(begin(num), end(num));
         for (int k = 0; k < N-2; k++) {
-            int i = k+1;
-            int j = N-1;
+            if (k > 0 && num[k-1] == num[k]) continue;
+            int i = k+1, j = N-1;
             while (i < j) {
-                int sum = num[i] + num[j] + num[k];
-                if (sum > 0) j--;
-                else if (sum < 0) i++;
-                else {
-                    vector<int> triplet;
-                    triplet.push_back(num[i]);
-                    triplet.push_back(num[j]);
-                    triplet.push_back(num[k]);
-                    sort(triplet.begin(), triplet.end());
-                    if (find(result.begin(), result.end(), triplet) == result.end()) {
-                        result.push_back(triplet);
-                    }
-                    i++;
-                    j--;
+                int sum = num[k]+num[i]+num[j];
+                if (sum == 0) {
+                    res.push_back(vector<int>({num[k], num[i], num[j]}));
+                    do { i++; } while (i < j && num[i-1] == num[i]);
+                    do { j--; } while (i < j && num[j] == num[j+1]);
                 }
+                else if (sum < 0) i++;
+                else j--;
             }
         }
-        return result;
+        return res;
     }
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0;
+    vector<vector<int> > p1;
+
+    {
+        int a[] = {-1, 0, 1, 2, -1, -4};
+        p0.assign(begin(a), end(a));
+        p1 = sol.threeSum(p0);
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
+
     return 0;
 }
