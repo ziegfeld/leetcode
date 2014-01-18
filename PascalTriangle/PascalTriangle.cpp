@@ -12,6 +12,9 @@
 //   [1,3,3,1],
 //  [1,4,6,4,1]
 // ]
+//
+// Complexity:
+// O(n^2)
 //============================================================================
 
 #include <iostream>
@@ -19,32 +22,31 @@
 
 using namespace std;
 
-class Solution
-{
+class Solution {
 public:
-    vector<vector<int> > generate(int numRows)
-    {
+    vector<vector<int> > generate(int numRows) {
         vector<vector<int> > res;
-        if (numRows < 1) return res;
-        res.reserve(numRows);
-        res.push_back(vector<int>(1, 1));
-        int m = 1;
-        while (m < numRows)
-        {
-            vector<int> row;
-            row.reserve(m+1);
-            row.push_back(1);
-            for (int i = 0; i < m-1; i++)
-                row.push_back(res[m-1][i] + res[m-1][i+1]);
-            row.push_back(1);
-            res.push_back(row);
-            m++;
-        }
+        for (int r = 0; r < numRows; r++) res.push_back(vector<int>(r+1, 1));
+        for (int r = 2; r < numRows; r++)
+            for (int c = 1; c < r; c++)
+                res[r][c] = res[r-1][c-1]+res[r-1][c];
+
         return res;
     }
 };
 
-int main()
-{
+int main() {
+    Solution sol;
+    vector<int> p0;
+    vector<vector<int> > p1;
+
+    {
+        p1 = sol.generate(5);
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
+
     return 0;
 }

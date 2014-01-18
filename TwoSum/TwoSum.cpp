@@ -12,6 +12,8 @@
 //
 // Input: numbers={2, 7, 11, 15}, target=9
 // Output: index1=1, index2=2
+// 
+// Complexity: O(nlog(n)) time, O(n) space
 //============================================================================
 
 #include <iostream>
@@ -22,7 +24,6 @@ using namespace std;
 
 class Solution {
 public:
-    // takes O(nlog(n)) time, O(n) space
     vector<int> twoSum(vector<int> &numbers, int target) {
         vector<int> res;
         int N = numbers.size();

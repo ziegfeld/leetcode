@@ -6,6 +6,9 @@
 // the most water.
 //
 // Note: You may not slant the container.
+// 
+// Complexity:
+// O(n) time
 //============================================================================
 
 #include <vector>
@@ -16,23 +19,19 @@ using namespace std;
 class Solution {
 public:
     int maxArea(vector<int> &height) {
-        int i = 0;
-        int j = height.size() - 1;
-        int max = 0;
+        int N = height.size();
+        if (N < 2) return 0;
+        int i = 0, j = N-1, res = 0;
         while (i < j) {
-            int h = (height[i] < height[j]) ? height[i] : height[j];
-            int res = h * (j - i);
-            if (res > max) max = res;
-            if (height[i] <= height[j]) {
-                i++;
-                while (height[i] < h && i < j) i++;
+            res = max(res, (j-i)*min(height[i], height[j]));
+            if (height[i] < height[j]) {
+                do { i++; } while (i < j && height[i] <= h);
             }
             else {
-                j--;
-                while (height[j] < h && i < j) j--;
+                do { j--; } while (i < j && height[j] <= h);
             }
         }
-        return max;
+        return res;
     }
 };
 

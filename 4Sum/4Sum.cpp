@@ -12,95 +12,67 @@
 // (-1,  0, 0, 1)
 // (-2, -1, 1, 2)
 // (-2,  0, 0, 2)
+//
+// Complexity: O(n^3) time
 //============================================================================
 
-#include <vector>
-#include <map>
 #include <iostream>
+#include <vector>
 #include <algorithm>
 
 using namespace std;
 
-struct TwoSum{
-public:
-    TwoSum(int idx1, int idx2, int v) :
-        index1(idx1), index2(idx2), value(v) {}
-public:
-    int index1;
-    int index2;
-    int value;
-};
-
-struct increaing {
-    bool operator() (TwoSum ts1, TwoSum ts2) {
-        if (ts1.value == ts2.value){
-            if (ts1.index1 == ts1.index1) return (ts1.index2 < ts2.index2);
-            else return (ts1.index1 < ts2.index1);
-        }
-        else
-            return (ts1.value < ts2.value);
-    }
-};
-
 class Solution {
 public:
-    int find_start_index(vector<TwoSum>& twoSums, int begin, int end, int val){
-        while (begin <= end) {
-            int mid = begin + (end - begin) / 2;
-            if (twoSums[mid].value >= val) end = mid - 1;
-            else begin = mid + 1;
-        }
-        return end + 1;
-    };
+	vector<vector<int> > fourSum(vector<int> &num, int target) {
+		vector<vector<int> > res;
+		int N = num.size();
+		if (N < 4) return res;
+		sort(begin(num), end(num));
+		for (int i = 0; i < N-3; i++) {
+			if (i > 0 && num[i-1] == num[i]) continue;
+			for (int j = i+1; j < N-2; j++) {
+				if (j > i+1 && num[j-1] == num[j]) continue;
+				int l = j+1;
+				int r = N-1;
+				while (l < r) {
+					int sum = num[i]+num[j]+num[l]+num[r];
+					if (sum < target) l++;
+					else if (sum > target) r--;
+					else {
+						vector<int> sub;
+						sub.push_back(num[i]);
+						sub.push_back(num[j]);
+						sub.push_back(num[l]);
+						sub.push_back(num[r]);
+						res.push_back(sub);
+						do { l++; } while (l < r && num[l-1] == num[l]);
+						do { r--; } while (l < r && num[r] == num[r+1]);
+					}
+				}
+			}
+		}
 
-    int find_end_index(vector<TwoSum>& twoSums, int begin, int end, int val){
-        while (begin <= end) {
-            int mid = begin + (end - begin) / 2;
-            if (twoSums[mid].value <= val) begin = mid + 1;
-            else end = mid - 1;
-        }
-        return begin - 1;
-    }
-
-    vector<vector<int> > fourSum(vector<int> &num, int target) {
-        // calculate sum for every two elements and sort
-        vector<TwoSum> twoSums;
-        for (size_t i = 0; i < num.size(); i++){
-            for (size_t j = i + 1; j < num.size(); j++) {
-                twoSums.push_back(TwoSum(i, j, num[i] + num[j]));
-            }
-        }
-        sort(twoSums.begin(), twoSums.end(), increaing());
-
-        vector<vector<int> > result;
-        for (size_t i = 0; i < twoSums.size(); i++){
-            size_t begin, end;
-            int val = target - twoSums[i].value;
-
-            begin = find_start_index(twoSums, i + 1, twoSums.size() - 1, val);
-            end = find_end_index(twoSums, i + 1, twoSums.size() - 1, val);
-
-            for (size_t j = begin; j <= end; j++) {
-                if (twoSums[j].index1 == twoSums[i].index1) continue;
-                if (twoSums[j].index2 == twoSums[i].index1) continue;
-                if (twoSums[j].index1 == twoSums[i].index2) continue;
-                if (twoSums[j].index2 == twoSums[i].index2) continue;
-
-                vector<int> tmp;
-                tmp.push_back(num[ twoSums[i].index1]);
-                tmp.push_back(num[ twoSums[i].index2]);
-                tmp.push_back(num[ twoSums[j].index1]);
-                tmp.push_back(num[ twoSums[j].index2]);
-                sort(tmp.begin(), tmp.end());
-
-                if (find(result.begin(), result.end(), tmp) == result.end())
-                    result.push_back(tmp);
-            }
-        }
-        return result;
-    };
+		return res;
+	}
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0;
+    int p1;
+    vector<vector<int> > p2;
+
+    {
+        int a[] = {1, 0, -1, 0, -2, 2};
+        p0.assign(begin(a), end(a));
+        p1 = 0;
+        p2 = sol.fourSum(p0, p1);
+        for (auto it1 : p2) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
+
     return 0;
 }

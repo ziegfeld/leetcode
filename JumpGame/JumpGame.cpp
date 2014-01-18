@@ -11,25 +11,43 @@
 // A = [2,3,1,1,4], return true.
 //
 // A = [3,2,1,0,4], return false.
+//
+// Complexity
+// O(n)
 //============================================================================
 
 #include <algorithm>
+
 using namespace std;
+
 
 class Solution {
 public:
     bool canJump(int A[], int n) {
-        int i = 0;
-        int next = 0;
-        while (i <= next) {
-            next = max(next, i + A[i]);
-            if (next >= n - 1) return true;
-            i++;
+        int start = 0, end = 0;
+        while (start <= end) {
+            end = max(end, start+A[start]);
+            if (end >= n-1) return true;
+            start++;
         }
         return false;
     }
 };
 
 int main() {
+    Solution sol;
+
+    {
+        int p0[] = {2,3,1,1,4};
+        int p1 = sizeof(p0)/sizeof(p0[0]);
+        cout << sol.canJump(p0, p1) << endl;
+    }
+
+    {
+        int p0[] = {3,2,1,0,4};
+        int p1 = sizeof(p0)/sizeof(p0[0]);
+        cout << sol.canJump(p0, p1) << endl;
+    }
+
     return 0;
 }

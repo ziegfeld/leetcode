@@ -5,34 +5,44 @@
 //
 // For example,
 // Given [0,1,0,2,1,0,1,3,2,1,2,1], return 6.
+//
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <iostream>
+
 using namespace std;
 
 class Solution {
 public:
-    int trap(int A[], int n) {
-        if (n <= 2) return 0;
-        int lmax[n];
-        int rmax[n];
-        lmax[0] = A[0];
-        for (int i = 1; i < n; i++) {
-            lmax[i] = max(lmax[i - 1], A[i]);
-        }
-        rmax[n - 1] = A[n - 1];
-        for (int i = n - 2; i >= 0; i--) {
-            rmax[i] = max(rmax[i + 1], A[i]);
-        }
-        int total = 0;
-        for (int i = 1; i < n - 1; i++) {
-            int low = min(lmax[i - 1], rmax[i + 1]);
-            total += (low > A[i]) ? (low - A[i]) : 0;
-        }
-        return total;
-    }
+	int trap(int A[], int n) {
+		if (n < 3) return 0;
+
+		vector<int> ls(n, 0);
+		for (int i = 1; i <= n-1; i++)
+			ls[i] = max(ls[i-1], A[i-1]);
+
+		vector<int> rs(n, 0);
+		for (int i = n-2; i >= 0; i--)
+			rs[i] = max(rs[i+1], A[i+1]);
+		
+		int res = 0;
+		for (int i = 1; i < n-1; i++) {
+			int h = min(ls[i], rs[i]);
+			if (h > A[i]) res += (h-A[i]);
+		}
+
+		return res;
+	}
 };
 
 int main() {
-    return 0;
+	Solution sol;
+
+	{
+		int p0[] = {0,1,0,2,1,0,1,3,2,1,2,1};
+		int p1 = sizeof(p0)/sizeof(p0[0]);
+		cout << sol.trap(p0, p1) << endl;
+	}
 }

@@ -6,6 +6,8 @@
 // For example, given array S = {-1 2 1 -4}, and target = 1.
 //
 // The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+//
+// Complexity: O(n^2) time
 //============================================================================
 
 #include <iostream>
@@ -17,7 +19,6 @@ using namespace std;
 
 class Solution {
 public:
-    // takes O(n^2) time
     int threeSumClosest(vector<int> &num, int target) {
         int N = num.size();
         sort(begin(num), end(num));

@@ -10,6 +10,9 @@
 // Given input array A = [1,1,2],
 //
 // Your function should return length = 2, and A is now [1,2].
+//
+// Complexity
+// O(n) time
 //============================================================================
 
 class Solution {
@@ -18,8 +21,8 @@ public:
         if (n < 2) return n;
         int i = 1, j = 1;
         while (i < n) {
-            if (A[i-1] != A[i]) A[j++] = A[i++];
-            else i++;
+            if (A[i-1] != A[i]) A[j++] = A[i];
+            i++;
         }
         return j;
     }

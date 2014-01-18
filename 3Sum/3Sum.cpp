@@ -11,6 +11,8 @@
 // A solution set is:
 // (-1, 0, 1)
 // (-1, -1, 2)
+//
+// Complexity: O(n^2) time
 //============================================================================
 
 #include <iostream>
@@ -21,7 +23,6 @@ using namespace std;
 
 class Solution {
 public:
-    // takes O(n^2) time
     vector<vector<int> > threeSum(vector<int> &num) {
         vector<vector<int> > res;  
         int N = num.size();
@@ -33,18 +34,24 @@ public:
             int i = k+1, j = N-1;
             while (i < j) {
                 int sum = num[k]+num[i]+num[j];
-                if (sum == 0) {
-                    res.push_back(vector<int>({num[k], num[i], num[j]}));
+				if (sum < 0) i++;
+                else if (sum > 0) j--;
+				else {
+					vector<int> sub;
+					sub.push_back(num[k]);
+					sub.push_back(num[i]);
+					sub.push_back(num[j]);
+					res.push_back(sub);
                     do { i++; } while (i < j && num[i-1] == num[i]);
                     do { j--; } while (i < j && num[j] == num[j+1]);
                 }
-                else if (sum < 0) i++;
-                else j--;
+
             }
         }
         return res;
     }
 };
+
 
 int main() {
     Solution sol;

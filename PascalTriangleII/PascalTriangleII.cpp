@@ -7,6 +7,9 @@
 //
 // Note:
 // Could you optimize your algorithm to use only O(k) extra space?
+//
+// Complexity:
+// O(n^2) time, O(n) space
 //============================================================================
 
 #include <iostream>
@@ -14,29 +17,17 @@
 
 using namespace std;
 
-class Solution
-{
+class Solution {
 public:
-    vector<int> getRow(int rowIndex)
-    {
-        vector<int> res;
-        res.reserve(rowIndex+1);
-        res.push_back(1);
-        if (rowIndex < 1) return res;
-        res.push_back(1);
-        int m = 1;
-        while (m < rowIndex)
-        {
-            for (int i = 0; i < m; i++)
-                res[i] += res[i+1];
-            res.insert(res.begin(), 1);
-            m++;
-        }
+    vector<int> getRow(int rowIndex) {
+        vector<int> res(rowIndex+1, 1);
+        for (int r = 2; r <= rowIndex; r++)
+            for (int c = r-1; c > 0; c--)
+                res[c] += res[c-1];
         return res;
     }
 };
 
-int main()
-{
+int main() {
     return 0;
 }

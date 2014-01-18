@@ -8,30 +8,27 @@
 // one and sell one share of the stock), design an algorithm to find the
 // maximum profit.
 //
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <iostream>
 #include <vector>
+
 using namespace std;
 
-class Solution
-{
+class Solution {
 public:
-    int maxProfit(vector<int> &prices)
-    {
-        size_t min_i = 0;
-        int res = 0;
-        for (size_t i = 0; i < prices.size(); i++)
-        {
-            if (prices[i] < prices[min_i]) min_i = i;
-            int diff = prices[i] - prices[min_i];
-            if (diff > res) res = diff;
+    int maxProfit(vector<int> & prices) {
+        int res = 0, minp = INT_MAX;
+        for (int p : prices) {
+            minp = min(minp, p);
+            res = max(res, (p-minp));
         }
         return res;
     }
 };
 
-int main()
-{
+int main() {
     return 0;
 }
