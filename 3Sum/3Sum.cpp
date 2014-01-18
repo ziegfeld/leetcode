@@ -34,14 +34,14 @@ public:
             int i = k+1, j = N-1;
             while (i < j) {
                 int sum = num[k]+num[i]+num[j];
-				if (sum < 0) i++;
+                if (sum < 0) i++;
                 else if (sum > 0) j--;
-				else {
-					vector<int> sub;
-					sub.push_back(num[k]);
-					sub.push_back(num[i]);
-					sub.push_back(num[j]);
-					res.push_back(sub);
+                else {
+                    vector<int> sub;
+                    sub.push_back(num[k]);
+                    sub.push_back(num[i]);
+                    sub.push_back(num[j]);
+                    res.push_back(sub);
                     do { i++; } while (i < j && num[i-1] == num[i]);
                     do { j--; } while (i < j && num[j] == num[j+1]);
                 }
