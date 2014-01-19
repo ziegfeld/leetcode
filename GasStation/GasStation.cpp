@@ -12,6 +12,8 @@
 // Note:
 // The solution is guaranteed to be unique.
 //
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <iostream>
@@ -22,8 +24,7 @@ class Solution {
 public:
     int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
         int sumSoFar = 0, sumTotal = 0, res = -1;
-        for (int i = 0; i < (int)gas.size(); i++)
-        {
+        for (int i = 0; i < (int)gas.size(); i++) {
             sumSoFar += (gas[i]-cost[i]);
             sumTotal += (gas[i]-cost[i]);
             if (sumSoFar < 0) {

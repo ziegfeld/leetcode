@@ -19,25 +19,22 @@
 // Could you come up with an one-pass algorithm using only constant space?
 //============================================================================
 
-#include <iostream>
-using namespace std;
-
 class Solution {
 public:
     void sortColors(int A[], int n) {
-        int low = 0,mid = 0,high = n - 1;
-        if(n <= 1) return;
-        while (mid <= high) {
-            if (A[mid] == 0) {
-                A[mid++] = A[low];
-                A[low++] = 0;
+        int zero = -1, one = -1, two = -1;
+        for (int i = 0; i < n; i++) {
+            if (A[i] == 0) {
+                A[++two] = 2;
+                A[++one] = 1;
+                A[++zero] = 0;
             }
-            else if(A[mid] == 1) {
-                mid++;
+            else if (A[i] == 1) {
+                A[++two] = 2;
+                A[++one] = 1;
             }
-            else if (A[mid] == 2) {
-                A[mid] = A[high];
-                A[high--] = 2;
+            else {
+                A[++two] = 2;
             }
         }
     }

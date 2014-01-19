@@ -20,7 +20,7 @@ class Solution {
 public:
     vector<int> searchRange(int A[], int n, int target) {
         int l = lower_bound(A, n, target);
-        int u = upper_bound(A, n, target) - 1;
+        int u = upper_bound(A, n, target)-1;
         vector<int> res(2, -1);
         if (l > u) return res;
         res[0] = l;
