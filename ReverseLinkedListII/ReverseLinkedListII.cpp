@@ -26,27 +26,47 @@ struct ListNode {
 class Solution {
 public:
     ListNode *reverseBetween(ListNode *head, int m, int n) {
-        if (head == NULL || head->next == NULL) return head;
-        ListNode *preTail = NULL, *curTail = NULL;
-        ListNode *preNode = NULL, *curNode = head;
-        for (int i = 1; i <= n; i++) {
-            if (i == m-1) preTail = curNode;
-            if (i == m) curTail = curNode;
-            if (i >= m) {
-                ListNode* nextNode = curNode->next;
-                curNode->next = preNode;
-                preNode = curNode;
-                curNode = nextNode;
-            }
-            else curNode = curNode->next;
+        ListNode * newHead = new ListNode(-1);
+        newHead->next = head;
+        ListNode * preNode = NULL, * curNode = newHead;
+        for (int i = 0; i < m; i++) preNode = curNode, curNode = curNode->next;
+        ListNode * preTail = preNode;
+        preNode = NULL;
+        for (int i = 0; i <= n-m; i++) {
+            ListNode * nextNode = curNode->next;
+            curNode->next = preNode;
+            preNode = curNode;
+            curNode = nextNode;
         }
-        if (preTail == NULL) head = preNode;
-        else preTail->next = preNode;
-        curTail->next = curNode;
-        return head;
+        preTail->next->next = curNode;
+        preTail->next = preNode;
+		return deleteNode(newHead);
     }
+
+	ListNode * deleteNode(ListNode * curNode) {
+		ListNode * toDel = curNode;
+		curNode = curNode->next;
+		delete toDel;
+		return curNode;
+	}
 };
 
 int main() {
+    Solution sol;
+
+    {
+        ListNode * head = new ListNode(1);
+        head->next = new ListNode(2);
+        head->next->next = new ListNode(3);
+        head->next->next->next = new ListNode(4);
+        head->next->next->next->next = new ListNode(5);
+        head = sol.reverseBetween(head, 2, 4);
+        while (head != NULL) {
+            cout << head->val << " ";
+            head = head->next;
+        }
+        cout << endl;
+    }
+
     return 0;
 }

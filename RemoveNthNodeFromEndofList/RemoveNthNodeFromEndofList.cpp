@@ -12,6 +12,9 @@
 // Note:
 // Given n will always be valid.
 // Try to do this in one pass.
+//
+// Complexity:
+// O(n) time
 //============================================================================
 
 #include <iostream>
@@ -29,22 +32,20 @@ struct ListNode {
 class Solution {
 public:
     ListNode *removeNthFromEnd(ListNode *head, int n) {
-        if (NULL == head) return head;
-        ListNode *fast = head, *slow = head;
-        int i = 0;
-        while (fast != NULL && i < n) fast = fast->next, i++;
-        if (fast == NULL) {
-            head = head->next;
-            delete slow;
+        if (NULL == head || n <= 0) return head;
+        ListNode *fastNode = head, *slowNode = head;
+        while (fastNode != NULL && n > 0) fastNode = fastNode->next, n--;
+        if (fastNode == NULL) {
+            if (n == 0) {
+                head = head->next;
+                delete slowNode;
+            }
             return head;
         }
-        while (fast->next != NULL) {
-            fast = fast->next;
-            slow = slow->next;
-        }
-        ListNode* node = slow->next;
-        slow->next = node->next;
-        delete node;
+        while (fastNode->next != NULL) fastNode = fastNode->next, slowNode = slowNode->next;
+        ListNode* nextNode = slowNode->next;
+        slowNode->next = nextNode->next;
+        delete nextNode;
         return head;
     }
 };

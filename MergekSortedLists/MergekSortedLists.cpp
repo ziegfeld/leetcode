@@ -1,6 +1,9 @@
 //============================================================================
 // Merge k sorted linked lists and return it as one sorted list.
 // Analyze and describe its complexity.
+//
+// Complexity:
+// O(nlog(k)) time
 //============================================================================
 
 #include <iostream>
@@ -18,32 +21,32 @@ struct ListNode {
      ListNode(int x) : val(x), next(NULL) {};
 };
 
-struct greater_listnode {
-    bool operator() (const ListNode* a, const ListNode* b) {
-        return a->val > b->val;
-    }
+struct cmp {
+    bool operator() (ListNode * a, ListNode * b) { return a->val > b->val; };
 };
 
 class Solution {
 public:
     ListNode *mergeKLists(vector<ListNode *> &lists) {
-        priority_queue<ListNode*, vector<ListNode*>, greater_listnode > minHeap;
-        for (vector<ListNode *>::iterator it = lists.begin(); it != lists.end(); it++) {
-            if ((*it) != NULL) minHeap.push(*it);
+        priority_queue<ListNode*, vector<ListNode*>, cmp> pq;
+        for (auto curNode : lists) if (curNode != NULL) pq.push(curNode);
+        ListNode * head = new ListNode(-1), * curNode = head;
+        while (!pq.empty()) {
+            ListNode * nextNode = pq.top();
+            pq.pop();
+            if (nextNode->next != NULL) pq.push(nextNode->next);
+            curNode->next = nextNode;
+            curNode = curNode->next;
         }
-        if (minHeap.empty()) return NULL;
-        ListNode *head = minHeap.top();
-        minHeap.pop();
-        ListNode *node = head;
-        if (node->next != NULL) minHeap.push(node->next);
-        while (!minHeap.empty()) {
-            node->next = minHeap.top();
-            minHeap.pop();
-            node = node->next;
-            if (node->next != NULL) minHeap.push(node->next);
-        }
-        return head;
+        return deleteNode(head);
     }
+
+	ListNode * deleteNode(ListNode * curNode) {
+		ListNode * toDel = curNode;
+		curNode = curNode->next;
+		delete toDel;
+		return curNode;
+	}
 };
 
 int main() {

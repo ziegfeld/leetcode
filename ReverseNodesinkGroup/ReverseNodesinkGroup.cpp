@@ -34,61 +34,40 @@ struct ListNode {
 class Solution {
 public:
     ListNode *reverseKGroup(ListNode *head, int k) {
-        return reverseKGroup1(head, k);
-    }
-
-    ListNode *reverseKGroup1(ListNode *head, int k) {
         if (k < 2) return head;
-        ListNode* node = head;
-        int size = 0;
-        while (node != NULL) {
-            node = node->next;
-            size++;
-        }
-        return reverseByKHelper(head, size, k);
+        int l = 0;
+        ListNode *curNode = head;
+        while (curNode != NULL) curNode = curNode->next, l++;
+        return reverseKGroup2(head, k, l);
     }
 
-    ListNode* reverseByKHelper(ListNode*& curNode, int size, int k) {
-        if (size < k) return curNode;
-        ListNode* curTail = curNode;
-        ListNode *preNode, *nextNode;
-        preNode = NULL;
-        for(int i = 0; i < k; i++) {
-            if(curNode != NULL) {
-                nextNode = curNode->next;
-                curNode->next = preNode;
-                preNode = curNode;
-            }
+    ListNode *reverseKGroup1(ListNode * curNode, int k, int l) {
+        if (l < k) return curNode;
+        ListNode * curTail = curNode, * preNode = NULL;
+        for (int i = 0; i < k; i++) {
+            ListNode * nextNode = curNode->next;
+            curNode->next = preNode;
+            preNode = curNode;
             curNode = nextNode;
         }
-        curTail->next = reverseByKHelper(curNode, size - k, k);
+        curTail->next = reverseKGroup1(curNode, k, l-k);
         return preNode;
     }
 
-    ListNode *reverseKGroup2(ListNode *head, int k) {
-        if(k == 0 || k == 1) return head;
-        ListNode *curNode = head;
-        int length = 0;
-        while (curNode != NULL) curNode = curNode->next, length++;
-        int multi = length / k;
-        if(multi == 0) return head;
-        ListNode *preTail = NULL, *curHead = NULL, *curTail = NULL;
-        ListNode *preNode, *nextNode;
-        curNode = head;
-        for(int j = 0; j < multi; j++) {
-            preNode = NULL;
-            for(int i = 0; i < k; i++) {
-                if(curNode != NULL) {
-                    nextNode = curNode->next;
-                    curNode->next = preNode;
-                    preNode = curNode;
-                }
-                if(i == 0) curTail = curNode;
-                if(i == (k - 1)) curHead = curNode;
+    ListNode *reverseKGroup2(ListNode *head, int k, int l) {
+        if (l < k) return head;
+        ListNode * preTail = NULL, * curTail = NULL, * curNode = head;
+        for (int i = 0; i < l/k; i++) {
+            ListNode * preNode = NULL;
+            curTail = curNode;
+            for (int j = 0; j < k; j++) {
+                ListNode * nextNode = curNode->next;
+                curNode->next = preNode;
+                preNode = curNode;
                 curNode = nextNode;
             }
-            if(preTail == NULL) head = curHead;
-            else preTail->next = curHead;
+            if (preTail == NULL) head = preNode;
+            else preTail->next = preNode;
             preTail = curTail;
         }
         curTail->next = curNode;
@@ -97,5 +76,32 @@ public:
 };
 
 int main() {
-    return 0;
-}
+    Solution sol;
+
+    {
+        ListNode * head = new ListNode(1);
+        head->next = new ListNode(2);
+        head->next->next = new ListNode(3);
+        head->next->next->next = new ListNode(4);
+        head->next->next->next->next = new ListNode(5);
+        head = sol.reverseKGroup(head, 2);
+        while (head != NULL) {
+            cout << head->val << " ";
+            head = head->next;
+        }
+        cout << endl;
+    }
+
+    {
+        ListNode * head = new ListNode(1);
+        head->next = new ListNode(2);
+        head->next->next = new ListNode(3);
+        head->next->next->next = new ListNode(4);
+        head->next->next->next->next = new ListNode(5);
+        head = sol.reverseKGroup(head, 3);
+        while (head != NULL) {
+            cout << head->val << " ";
+            head = head->next;
+        }
+        cout << endl;
+    }

@@ -4,6 +4,9 @@
 //
 // Follow up:
 // Can you solve it without using extra space?
+//
+// Complexity
+// O(n)
 //============================================================================
 
 #include <iostream>
@@ -19,14 +22,13 @@ struct ListNode {
 
 class Solution {
 public:
-    bool hasCycle(ListNode * head) {
-        ListNode * slow = head, * fast = head;
-        while (fast != NULL && fast->next != NULL) {
-            slow = slow->next;
-            fast = fast->next->next;
-            if (slow == fast) return true;
+    bool hasCycle(ListNode *head) {
+        ListNode * fastNode = head, * slowNode = head;
+        while (fastNode != NULL && fastNode->next != NULL) {
+            fastNode = fastNode->next->next;
+            slowNode = slowNode->next;
+            if (fastNode == slowNode) return true;
         }
-
         return false;
     }
 };

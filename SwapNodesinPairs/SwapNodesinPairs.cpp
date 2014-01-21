@@ -7,6 +7,9 @@
 //
 // Your algorithm should use only constant space. You may not modify the
 // values in the list, only nodes itself can be changed.
+//
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <iostream>
@@ -23,29 +26,21 @@ struct ListNode {
 class Solution {
 public:
     ListNode *swapPairs(ListNode *head) {
-        return swapPairs1(head);
+        return swapPairs2(head);
     }
 
-    ListNode *swapPairs1(ListNode *head) {
-       swapPairsHelper(head);
-       return head;
-    }
-    
-    void swapPairsHelper(ListNode*& curNode) {
-        if(curNode == NULL or curNode->next == NULL) return;
-        ListNode* nextNode = curNode->next;
-        ListNode* nextNext = nextNode->next;
-        swapPairsHelper(nextNext);
+    ListNode * swapPairs1(ListNode *curNode) {
+        if (curNode == NULL || curNode->next == NULL) return curNode;
+        ListNode * nextNode = curNode->next;
+        curNode->next = swapPairs1(nextNode->next);
         nextNode->next = curNode;
-        curNode->next = nextNext;
-        curNode = nextNode;
+        return nextNode;
     }
 
     ListNode *swapPairs2(ListNode *head) {
-        ListNode *preNode = NULL;
-        ListNode *curNode = head;
+        ListNode * preNode = NULL, * curNode = head;
         while (curNode != NULL) {
-            ListNode *nextNode = curNode->next;
+            ListNode * nextNode = curNode->next;
             if (nextNode == NULL) return head;
             if (preNode == NULL) head = nextNode;
             else preNode->next = nextNode;
@@ -54,9 +49,22 @@ public:
             preNode = curNode;
             curNode = curNode->next;
         }
+
         return head;
     }
 };
+
 int main() {
+    Solution sol;
+    ListNode * head = new ListNode(1);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(3);
+    head->next->next->next = new ListNode(4);
+    head = sol.swapPairs(head);
+    while (head != NULL) {
+        cout << head->val << " ";
+        head = head->next;
+    }
+    cout << endl;
     return 0;
 }

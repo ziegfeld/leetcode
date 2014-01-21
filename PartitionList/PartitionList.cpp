@@ -9,6 +9,9 @@
 // For example,
 // Given 1->4->3->2->5->2 and x = 3,
 // return 1->2->2->4->3->5.
+//
+// Complexity:
+// O(n) time
 //============================================================================
 
 #include <iostream>
@@ -25,39 +28,43 @@ struct ListNode {
 
 class Solution {
 public:
-    ListNode *partition(ListNode *head, int x) {
-        ListNode* frontHead = NULL, *frontNode = NULL;
-        ListNode* backHead = NULL, *backNode = NULL;
-        while (head != NULL) {
-            if (head->val < x) {
-                if (frontHead == NULL) {
-                    frontHead = head;
-                    frontNode = head;
-                }
-                else {
-                    frontNode->next = head;
-                    frontNode = frontNode->next;
-                }
-            }
-            else {
-                if (backHead == NULL) {
-                    backHead = head;
-                    backNode = head;
-                }
-                else {
-                    backNode->next = head;
-                    backNode = backNode->next;
-                }
-            }
-            head = head->next;
-        }
-        if (frontNode != NULL) frontNode->next = backHead;
-        if (backNode != NULL) backNode->next = NULL;
-        if (frontHead == NULL) return backHead;
-        return frontHead;
-    }
+	ListNode *partition(ListNode *head, int x) {
+		ListNode* frontHead = new ListNode(-1), *frontNode = frontHead;
+		ListNode* backHead = new ListNode(-1), *backNode = backHead;
+		while (head != NULL) {
+			if (head->val < x) frontNode->next = head, frontNode = frontNode->next;
+			else backNode->next = head, backNode = backNode->next;
+			head = head->next;
+		}
+		backNode->next = NULL;
+		frontNode->next = deleteNode(backHead);
+		return deleteNode(frontHead);
+	}
+
+	ListNode * deleteNode(ListNode * curNode) {
+		ListNode * toDel = curNode;
+		curNode = curNode->next;
+		delete toDel;
+		return curNode;
+	}
 };
 
 int main() {
+	Solution sol;
+
+	{
+		ListNode * head = new ListNode(1);
+		head->next = new ListNode(4);
+		head->next->next = new ListNode(3);
+		head->next->next->next = new ListNode(2);
+		head->next->next->next->next = new ListNode(5);
+		head->next->next->next->next->next = new ListNode(2);
+		head = sol.partition(head, 3);
+		while (head != NULL) {
+			cout << head->val << " ";
+			head = head->next;
+		}
+		cout << endl;
+	}
 	return 0;
 }

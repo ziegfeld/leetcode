@@ -21,22 +21,20 @@ class Solution {
 public:
     ListNode *detectCycle(ListNode *head) {
         if (head == NULL || head->next == NULL) return NULL;
-        ListNode* slow = head;
-        ListNode* fast = head;
-        while (fast != NULL && fast->next != NULL) {
-            slow = slow->next;
-            fast = fast->next->next;
-            if (slow == fast) break;
+        ListNode * fastNode = head, * slowNode = head;
+        while (fastNode != NULL && fastNode->next != NULL) {
+            fastNode = fastNode->next->next;
+            slowNode = slowNode->next;
+            if (fastNode == slowNode) break;
         }
-        if (slow == fast) {
-            fast = head;
-            while (slow != fast) {
-                slow = slow->next;
-                fast = fast->next;
-            }
-            return fast;
+        if (fastNode != slowNode) return NULL;
+
+        fastNode = head;
+        while (fastNode != slowNode) {
+            fastNode = fastNode->next;
+            slowNode = slowNode->next;
         }
-        return NULL;
+        return fastNode;
     }
 };
 
