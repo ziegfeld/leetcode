@@ -40,15 +40,15 @@ public:
         }
         preTail->next->next = curNode;
         preTail->next = preNode;
-		return deleteNode(newHead);
+        return deleteNode(newHead);
     }
 
-	ListNode * deleteNode(ListNode * curNode) {
-		ListNode * toDel = curNode;
-		curNode = curNode->next;
-		delete toDel;
-		return curNode;
-	}
+    ListNode * deleteNode(ListNode * curNode) {
+        ListNode * toDel = curNode;
+        curNode = curNode->next;
+        delete toDel;
+        return curNode;
+    }
 };
 
 int main() {

@@ -24,30 +24,30 @@ using namespace std;
 
 class Solution {
 public:
-	int ladderLength(string start, string end, unordered_set<string> & dict) {
-		queue<pair<string, int> > queue;
-		queue.push(make_pair(start, 1));
-		while (!queue.empty()) {
-			auto cur = queue.front();
-			queue.pop();
-			if (cur.first == end) return cur.second;
+    int ladderLength(string start, string end, unordered_set<string> & dict) {
+        queue<pair<string, int> > queue;
+        queue.push(make_pair(start, 1));
+        while (!queue.empty()) {
+            auto cur = queue.front();
+            queue.pop();
+            if (cur.first == end) return cur.second;
 
-			for (int i = 0; i < (int)cur.first.size(); i++) {
-				string copy = cur.first;
-				for (char c = 'a'; c <= 'z'; c++) {
-					if (c == copy[i]) continue;
-					copy[i] = c;
-					if (dict.find(copy) == dict.end() && copy != end) continue;
-					queue.push(make_pair(copy, cur.second+1));
-					dict.erase(copy);
-				}
-			}
-		}
+            for (int i = 0; i < (int)cur.first.size(); i++) {
+                string copy = cur.first;
+                for (char c = 'a'; c <= 'z'; c++) {
+                    if (c == copy[i]) continue;
+                    copy[i] = c;
+                    if (dict.find(copy) == dict.end() && copy != end) continue;
+                    queue.push(make_pair(copy, cur.second+1));
+                    dict.erase(copy);
+                }
+            }
+        }
 
-		return 0;
-	}
+        return 0;
+    }
 };
 
 int main() {
-	return 0;
+    return 0;
 }

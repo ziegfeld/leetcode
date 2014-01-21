@@ -31,12 +31,12 @@ public:
         return deleteNode(head);
     }
 
-	ListNode * deleteNode(ListNode * curNode) {
-		ListNode * toDel = curNode;
-		curNode = curNode->next;
-		delete toDel;
-		return curNode;
-	}
+    ListNode * deleteNode(ListNode * curNode) {
+        ListNode * toDel = curNode;
+        curNode = curNode->next;
+        delete toDel;
+        return curNode;
+    }
 };
 
 int main() {

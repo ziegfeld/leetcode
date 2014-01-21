@@ -30,52 +30,52 @@ using namespace std;
 
 class Solution {
 public:
-	vector<vector<string> > findLadders(string start, string end, unordered_set<string> & dict) {
-		unordered_map<string, vector<string> > graph;
-		vector<vector<string> > res;
-		unordered_set<string> curr, prev;
-		prev.insert(start);
-		while (true) {
-			for (auto word : prev) dict.erase(word);
-			for (auto word : prev) {
-				for (int i = 0; i < (int)word.size(); i++) {
-					string copy = word;
-					for (char c = 'a'; c <= 'z'; c++) {
-						if (copy[i] == c) continue;
-						copy[i] = c;
-						if (dict.find(copy) == dict.end()) continue;
-						graph[copy].push_back(word);
-						curr.insert(copy);
-					}
-				}
-			} 
+    vector<vector<string> > findLadders(string start, string end, unordered_set<string> & dict) {
+        unordered_map<string, vector<string> > graph;
+        vector<vector<string> > res;
+        unordered_set<string> curr, prev;
+        prev.insert(start);
+        while (true) {
+            for (auto word : prev) dict.erase(word);
+            for (auto word : prev) {
+                for (int i = 0; i < (int)word.size(); i++) {
+                    string copy = word;
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        if (copy[i] == c) continue;
+                        copy[i] = c;
+                        if (dict.find(copy) == dict.end()) continue;
+                        graph[copy].push_back(word);
+                        curr.insert(copy);
+                    }
+                }
+            } 
 
-			if (curr.size() == 0) return res;
-			if (curr.find(end) != curr.end()) break;
+            if (curr.size() == 0) return res;
+            if (curr.find(end) != curr.end()) break;
 
-			prev = curr;
-			curr.clear();
-		}
+            prev = curr;
+            curr.clear();
+        }
 
-		vector<string> path;
-		getPath(end, start, graph, path, res);
-		return res;
-	}
+        vector<string> path;
+        getPath(end, start, graph, path, res);
+        return res;
+    }
 
-	void getPath(string & start, string & end, unordered_map<string, vector<string> > & graph, vector<string> & path, vector<vector<string> > & res) {
-		path.push_back(start);
-		if (start == end) {
-			res.push_back(vector<string>(path.rbegin(), path.rend()));
-		}
-		else {
-			for (auto it : graph[start]) {
-				getPath(it, end, graph, path, res);
-			}
-		}
-		path.pop_back();
-	}
+    void getPath(string & start, string & end, unordered_map<string, vector<string> > & graph, vector<string> & path, vector<vector<string> > & res) {
+        path.push_back(start);
+        if (start == end) {
+            res.push_back(vector<string>(path.rbegin(), path.rend()));
+        }
+        else {
+            for (auto it : graph[start]) {
+                getPath(it, end, graph, path, res);
+            }
+        }
+        path.pop_back();
+    }
 };
 
 int main() {
-	return 0;
+    return 0;
 }
