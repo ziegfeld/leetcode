@@ -5,9 +5,15 @@
 //
 // Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 // Output: 7 -> 0 -> 8
+//
+// Complexity:
+// O(m+n)
 //============================================================================
 
-#include <cstdlib>
+#include <iostream>
+
+using namespace std;
+
 /**
  * Definition for singly-linked list.
  */
@@ -20,31 +26,44 @@ struct ListNode {
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        ListNode *l3 = NULL, *node = NULL;
+        ListNode * head = new ListNode(-1), * curNode = head;
         int c = 0;
-        while (true) {
-            int a, b;
-            if (l1 != NULL) {
-                a = l1->val;
-                l1 = l1->next;
-            }
-            else a = 0;
-            if (l2 != NULL) {
-                b = l2->val;
-                l2 = l2->next;
-            }
-            else b = 0;
-            int s = a + b + c;
-            c = s / 10;
-            if (l3 == NULL) l3 = node = new ListNode(s % 10);
-            else node->next = new ListNode(s % 10), node = node->next;
-            if (l1 == NULL && l2 == NULL) break;
+        while (l1 != NULL || l2 != NULL) {
+            int s = c;
+            if (l1 != NULL) s += l1->val, l1 = l1->next;
+            if (l2 != NULL) s += l2->val, l2 = l2->next;
+            curNode->next = new ListNode(s%10);
+            curNode = curNode->next;
+            c = s/10;
         }
-        if (c == 1) node->next = new ListNode(1);
-        return l3;
+        if (c != 0) curNode->next = new ListNode(c);
+        return deleteNode(head);
+    }
+
+    ListNode * deleteNode(ListNode * curNode) {
+        ListNode * toDel = curNode;
+        curNode = curNode->next;
+        delete toDel;
+        return curNode;
     }
 };
 
 int main() {
+    Solution sol;
+
+    {
+        ListNode * l1 = new ListNode(2);
+        l1->next = new ListNode(4);
+        l1->next->next = new ListNode(3);
+        ListNode * l2 = new ListNode(5);
+        l2->next = new ListNode(6);
+        l2->next->next = new ListNode(4);
+        ListNode * res = sol.addTwoNumbers(l1, l2);
+        while (res != NULL) {
+            cout << res->val << " ";
+            res = res->next;
+        }
+        cout << endl;
+    }
     return 0;
 }

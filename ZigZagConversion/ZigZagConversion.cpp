@@ -12,45 +12,40 @@
 //
 // string convert(string text, int nRows);
 // convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
+//
+// Complexity
+// O(n) time
 //============================================================================
 
 #include <iostream>
+
 using namespace std;
 
-class Solution
-{
+class Solution {
 public:
-    string convert(string s, int nRows)
-    {
-        if (nRows < 2) return s;
-        int N = s.size();
-        int L = 2 * (nRows - 1); // provide offset
+    string convert(string s, int nRows) {
+        if (nRows < 2 || s.empty()) return s;
         string res;
-        res.clear();
-        for (int i = 0; i < N; i += L)
-        {
-            res.push_back(s[i]);
-        }
-        for (int i = 1; i < nRows - 1; i++)
-        {
-            for (int j = i; j < N; j += L)
-            {
+        int N = s.size(), L = 2*(nRows-1);
+        for (int i = 0; i < nRows; i++) {
+            for (int j = i; j < N; j += L) {
                 res.push_back(s[j]);
-                // j - i: provide offset L for each row
-                // L - i: provide reverse for each column
-                int k = (j - i) + (L - i);
-                if (k < N) res.push_back(s[k]);
+                if (i > 0 && i < nRows-1) {
+                    int k = j+L-2*i;
+                    if (k < N) res.push_back(s[k]);
+                }
             }
-        }
-        for (int i = nRows - 1; i < N; i += L)
-        {
-            res.push_back(s[i]);
         }
         return res;
     }
 };
 
-int main()
-{
+int main() {
+    Solution sol;
+
+    {
+        cout << sol.convert("PAYPALISHIRING", 3) << endl;
+    }
+
     return 0;
 }

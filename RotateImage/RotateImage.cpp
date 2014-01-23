@@ -9,29 +9,24 @@
 //============================================================================
 
 #include <vector>
+
 using namespace std;
 
 class Solution {
 public:
     void rotate(vector<vector<int> > &matrix) {
-        int n = matrix.size();
-        for (int j = 0; j < n/2; ++j) {
-            int first = j;
-            int last = n - j - 1;
-            for (int i = first; i < last; ++i) {
-                int offset = i - first;
-                int top = matrix[first][i];  // save top
-                //left -> top
-                matrix[first][i] = matrix[last-offset][first];
-                //bottom -> left
+        if (matrix.empty()) return;
+        int N = matrix.size();
+        for (int i = 0; i <= N/2; i++) {
+            int first = i, last = N-i-1;
+            for (int j = first; j < last; j++) {
+                int top = matrix[first][j], offset = j-first;
+                matrix[first][j] = matrix[last-offset][first];
                 matrix[last-offset][first] = matrix[last][last-offset];
-                //right -> bottom
-                matrix[last][last-offset] = matrix[i][last];
-                //top -> right
-                matrix[i][last] = top;
+                matrix[last][last-offset] = matrix[j][last];
+                matrix[j][last] = top;
             }
         }
-
     }
 };
 

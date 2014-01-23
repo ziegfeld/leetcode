@@ -5,35 +5,29 @@
 //============================================================================
 
 #include <iostream>
-#include <map>
 #include <string>
+
 using namespace std;
+
+int ints[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+string romans[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
 
 class Solution {
 public:
-    map<int, string> dict;
     string intToRoman(int num) {
-        dict.clear();
-        dict[1] = "I";
-        dict[4] = "IV";
-        dict[5] = "V";
-        dict[9] = "IX";
-        dict[10] = "X";
-        dict[40] = "XL";
-        dict[50] = "L";
-        dict[90] = "XC";
-        dict[100] = "C";
-        dict[400] = "CD";
-        dict[500] = "D";
-        dict[900] = "CM";
-        dict[1000] = "M";
-        string result = "";
-        for (map<int, string>::reverse_iterator it = dict.rbegin(); it != dict.rend(); it++) {
-            while (num >= it->first) {
-                result += it->second;
-                num -= it->first;
+        string res;
+        int i = 0;
+        while (num > 0) {
+            while (num >= ints[i]) {
+                num -= ints[i];
+                res += romans[i];
             }
+            i++;
         }
-        return result;
+        return res;
     }
 };
+
+int main() {
+    return 0;
+}

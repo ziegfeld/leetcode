@@ -5,35 +5,33 @@
 // Input is guaranteed to be within the range from 1 to 3999.
 //============================================================================
 
-#include <map>
-#include <string>
+#include <iostream>
+#include <unordered_map>
+
 using namespace std;
+
+unordered_map<char, int> table = {
+    {'M', 1000},
+    {'D', 500},
+    {'C', 100},
+    {'L', 50},
+    {'X', 10},
+    {'V', 5},
+    {'I', 1}
+};
 
 class Solution {
 public:
-    map<char, int> dict;
     int romanToInt(string s) {
-        dict['M'] = 1000;
-        dict['D'] = 500;
-        dict['C'] = 100;
-        dict['L'] = 50;
-        dict['X'] = 10;
-        dict['V'] = 5;
-        dict['I'] = 1;
-        int res = 0;
-        size_t i = 0;
-        while (i < s.size() - 1) {
-            if (dict[s[i]] < dict[s[i+1]]) res -= dict[s[i]];
-            else res += dict[s[i]];
-            i++;
+        int res = 0, N = s.size();
+        for (int i = 0; i < N; i++) {
+            if (i < N-1 && table[s[i]] < table[s[i+1]]) res -= table[s[i]];
+            else res += table[s[i]];
         }
-        res += dict[s[i]];
         return res;
     }
 };
 
 int main() {
-    Solution sol;
-    sol.romanToInt("MMMMM");
     return 0;
 }

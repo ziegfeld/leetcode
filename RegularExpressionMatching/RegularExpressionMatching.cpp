@@ -21,28 +21,37 @@
 //============================================================================
 
 #include <iostream>
-#include <cassert>
+
 using namespace std;
 
 class Solution {
 public:
     bool isMatch(const char *s, const char *p) {
-        assert(s && p);
-        if (*p == '\0') return *s == '\0';
+        if (*s == '\0' && *p == '\0') return true;
+        if (*p == '\0') return false;
+        if (*(p+1) == '*') {
+            while (equals(*s, *p)) {
+                if (isMatch(s, p+2)) return true;
+                s++;
+            }
+            return isMatch(s, p+2);
+        }
+        return equals(*s, *p) && isMatch(s+1, p+1);
+    }
 
-        if (*(p+1) != '*') {
-            assert(*p != '*');
-            return ((*p == *s) || (*p == '.' && *s != '\0')) && isMatch(s+1, p+1);
-        }
-        // next char is '*'
-        while ((*p == *s) || (*p == '.' && *s != '\0')) {
-            if (isMatch(s, p+2)) return true;
-            s++;
-        }
-        return isMatch(s, p+2);
-    };
+    bool equals(char x, char y) {
+        return ((x == y) || (y == '.' && x != '\0'));
+    }
 };
 
 int main() {
+    Solution sol;
+    cout << sol.isMatch("aa","a") << endl;
+    cout << sol.isMatch("aa","aa") << endl;
+    cout << sol.isMatch("aaa","aa") << endl;
+    cout << sol.isMatch("aa", "a*") << endl;
+    cout << sol.isMatch("aa", ".*") << endl;
+    cout << sol.isMatch("ab", ".*") << endl;
+    cout << sol.isMatch("aab", "c*a*b")  << endl;
     return 0;
 }

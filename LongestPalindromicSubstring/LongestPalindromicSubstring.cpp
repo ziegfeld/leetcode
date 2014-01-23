@@ -2,71 +2,69 @@
 // Given a string S, find the longest palindromic substring in S. You may
 // assume that the maximum length of S is 1000, and there exists one unique
 // longest palindromic substring.
+// 
+// Complexity:
+// dp, take O(n^2) time, O(n^2) space
+// greedy, take O(n^2) time, O(1) space
 //============================================================================
 
 #include <iostream>
+
 using namespace std;
+
 
 class Solution {
 public:
     string longestPalindrome(string s) {
-        return longestPalindrome1(s);    
-    }    
-    
-    // take O(n^2) time, O(n^2) space
-    string longestPalindrome1(string s) {
-        int n = s.size();
-        if (n == 0) return ""; 
-        int maxi = 0;
-        int maxl = 1;
-        bool dp[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                dp[i][j] = false;
-        for (int i = 0; i < n; i++) {
-            dp[i][i] = true;
-        }   
-        for (int i = 0; i < n-1; i++) {
-            if (s[i] == s[i+1]) {
-                dp[i][i+1] = true;
-                maxl = 2;
-                maxi = i;
-            }   
-        }   
-        for (int l = 3; l <= n; l++) {
-            for (int i = 0; i < n-l+1; i++) {
-                int j = i+l-1;
-                if (s[i] == s[j] && dp[i+1][j-1]) {
-                    dp[i][j] = true;
-                    maxl = l;
-                    maxi = i;
-                }   
-            }   
-        }   
-        return s.substr(maxi, maxl);
+        return longestPalindrome1(s);
     }
-    
-    // take O(n^2) time, O(1) space
-    string longestPalindrome2(string s) {
-        int n = s.size();
-        if (n == 0) return "";
-        int maxi = 0;
-        int maxl = 1;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < 2; j++) {
-                int start = i - j;
-                int end = i + 1;
-                while (start >= 0 && end < n && s[start] == s[end])
-                    start--, end++;
-                start++, end--;
-                int len = end - start + 1;
-                if (len > maxl) maxi = start, maxl = len;
+
+    bool dp[1000][1000];
+
+    string longestPalindrome1(string s) {
+        memset(dp, 0, sizeof(dp[0][0])*1000*1000);
+        int N = s.size(), maxi = 0, maxl = 1;
+        for (int l = 1; l <= N; l++) {
+            for (int i = 0; i < N-l+1; i++) {
+                int j = i+l-1;
+                if (l == 1) dp[i][j] = true;
+                else if (l == 2 && s[i] == s[j]) dp[i][j] = true;
+                else if (s[i] == s[j] && dp[i+1][j-1]) dp[i][j] = true;
+                if (dp[i][j] && l > maxl) maxl = l, maxi = i;
             }
         }
         return s.substr(maxi, maxl);
     }
+
+    string longestPalindrome2(string s) {
+        int maxl = 0, N = s.size();
+        string res;
+        for (int k = 0; k < N; k++) {
+            expand(s, k, k, maxl, res);
+            expand(s, k, k+1, maxl, res);
+        }
+        return res;
+    }
+
+    void expand(string & s, int i, int j, int & maxl, string & res) {
+        int N = s.size();
+        while (i >= 0 && j <= N-1 && s[i] == s[j]) i--, j++;
+        i++, j--;
+        int l = j-i+1;
+        if (l > maxl) maxl = l, res = s.substr(i, l);
+    }
 };
 
 int main() {
+    Solution sol;
+
+    {
+        cout << sol.longestPalindrome("abccbd") << endl;
+    }
+
+    {
+        cout << sol.longestPalindrome("bbbbb") << endl;
+    }
+
     return 0;
 }

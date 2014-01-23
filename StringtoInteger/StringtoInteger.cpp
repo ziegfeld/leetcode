@@ -30,29 +30,26 @@
 
 #include <iostream>
 #include <climits>
+
 using namespace std;
 
 class Solution {
 public:
     int atoi(const char *str) {
-        int sign = 1;
-        while(*str == ' ') str++;
+        if (str == NULL) return 0;
+        while(isspace(*str)) str++;
+        int sn = 1;
         if (*str == '+') str++;
-        else if (*str == '-') str++, sign = -1;
-        long long val = 0;
-        int digit;
-        while (*str != '\0') {
-            if (*str < '0' || *str > '9') break;
-            digit = (*str - '0');
-            val = val * 10 + digit;
-            str++;
-        }
-        if (sign == -1) val = -val;
-        if (val < INT_MIN) val = INT_MIN;
-        if (val > INT_MAX) val = INT_MAX;
-        return val;
+        else if (*str == '-') str++, sn = -1;
+        long long res = 0;
+        while (*str != '\0' && isdigit(*str)) res = res*10+(*str-'0'), str++;
+        res *= sn;
+        if (res < INT_MIN) res = INT_MIN;
+        if (res > INT_MAX) res = INT_MAX;
+        return (int)res;
     }
 };
+
 int main() {
     return 0;
 }

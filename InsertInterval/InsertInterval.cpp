@@ -13,6 +13,9 @@
 // [1,2],[3,10],[12,16].
 //
 // This is because the new interval [4,9] overlaps with [3,5],[6,7],[8,10].
+//
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <iostream>
@@ -33,22 +36,26 @@ public:
 class Solution {
 public:
     vector<Interval> insert(vector<Interval> &intervals, Interval newInterval) {
-        vector<Interval> result;
-        bool merge_finished = false;
-        for (vector<Interval>::iterator it = intervals.begin(); it != intervals.end(); it++) {
-            if ((*it).start <= newInterval.end && newInterval.start <= (*it).end) {
-                newInterval.start = (newInterval.start > (*it).start) ? (*it).start : newInterval.start;
-                newInterval.end = ((newInterval.end < (*it).end) ? (*it).end : newInterval.end);
-                continue;
+        vector<Interval> res;
+        bool done = false;
+        for (auto it : intervals) {
+            if (it.end < newInterval.start) {
+                res.push_back(it);
             }
-            if (!merge_finished && (*it).start > newInterval.end) {
-                result.push_back(newInterval);
-                merge_finished = true;
+            else if (newInterval.end < it.start) {
+                if (!done) {
+                    res.push_back(newInterval);
+                    done = true;
+                }
+                res.push_back(it);
             }
-            result.push_back(*it);
+            else {
+                newInterval.start = min(newInterval.start, it.start);
+                newInterval.end = max(newInterval.end, it.end);
+            }
         }
-        if (!merge_finished) result.push_back(newInterval);
-        return result;
+        if (!done) res.push_back(newInterval);
+        return res;
     }
 };
 

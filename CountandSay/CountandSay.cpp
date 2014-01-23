@@ -8,35 +8,42 @@
 // Given an integer n, generate the nth sequence.
 //
 // Note: The sequence of integers will be represented as a string.
-//
-//
 //============================================================================
 
 #include <iostream>
+#include <string>
 #include <sstream>
+
 using namespace std;
 
 class Solution {
 public:
     string countAndSay(int n) {
         if (n < 1) return "";
-        string res("1");
-        while (n > 1) {
-            ostringstream oss;
-            int i = 0;
-            while (i < res.size()) {
+        string res = "1";
+        for (; n > 1; n--) {
+            int N = res.size(), i = 0;
+            ostringstream os;
+            while (i < N) {
                 int j = i;
-                while (j < res.size() && res[j] == res[i]) j++;
-                oss << (j-i) << res[i];
+                while (j < N && res[j] == res[i]) j++;
+                os << (j-i) << res[i];
                 i = j;
             }
-            res = oss.str();
-            n--;
+            res = os.str();
         }
         return res;
     }
 };
 
 int main() {
+
+    Solution sol;
+
+    {
+        for (int i = 1; i < 6; i++)
+            cout << sol.countAndSay(i) << endl;
+    }
+    
     return 0;
 }

@@ -13,6 +13,9 @@
 //
 // If there are multiple such windows, you are guaranteed that there will
 // always be only one unique minimum window in S.
+//
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <algorithm>
@@ -24,33 +27,28 @@ using namespace std;
 class Solution {
 public:
     string minWindow(string S, string T) {
-        int needToFind[256] = {0};
-        int hasFound[256] = {0};
-        size_t count = 0;
-        for (size_t i = 0; i < T.size(); i++)
-            needToFind[(int)T[i]]++;
+        int toFind[256];
+        int hasFound[256];
+        memset(toFind, 0, sizeof(toFind));
+        memset(hasFound, 0, sizeof(hasFound));
+        for (char c : T) toFind[c]++;
 
-        string res = "";
-        int min = INT_MAX;
-        for (size_t begin = 0, end = 0; end < S.size(); end++) {
-            if (needToFind[(int)S[end]] == 0) continue;
-            hasFound[(int)S[end]]++;
-            if (hasFound[(int)S[end]] <= needToFind[(int)S[end]]) count++;
-
-            if (count == T.size()) {
-                while (needToFind[(int)S[begin]] == 0 || hasFound[(int)S[begin]] > needToFind[(int)S[begin]]) {
-                    if (hasFound[(int)S[begin]] > needToFind[(int)S[begin]]) hasFound[(int)S[begin]]--;
-                    begin++;
+        int M = S.size(), N = T.size(), count = 0, mini = -1, minl = INT_MAX;
+        for (int start = 0, end = 0; end < M; end++) {
+            if (toFind[S[end]] == 0) continue;
+            hasFound[S[end]]++;
+            if (hasFound[S[end]] <= toFind[S[end]]) count++;
+            if (count == N) {
+                while (toFind[S[start]] == 0 || hasFound[S[start]] > toFind[S[start]]) {
+                    if (hasFound[S[start]] > toFind[S[start]]) hasFound[S[start]]--;
+                    start++;
                 }
-
-                int len = end - begin + 1;
-                if (len < min) {
-                    min = len;
-                    res = S.substr(begin, len);
-                }
+                int len = end-start+1;
+                if (len < minl) minl = len, mini = start;
             }
         }
-        return res;
+
+        return (mini==-1)?"":S.substr(mini, minl);
     }
 };
 

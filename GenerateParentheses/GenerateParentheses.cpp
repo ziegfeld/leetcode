@@ -5,27 +5,49 @@
 // For example, given n = 3, a solution set is:
 //
 // "((()))", "(()())", "(())()", "()(())", "()()()"
+//
+// Complexity:
+// O(n!)
 //============================================================================
 
 #include <vector>
 #include <iostream>
+
 using namespace std;
 
 class Solution {
 public:
     vector<string> generateParenthesis(int n) {
-        vector<string> result;
-        generateParenthesisHeler(n, n, "", result);
-        return result;
-    };
+        string sub;
+        vector<string> res;
+        generateParenthesis(n, n, sub, res);
+        return res;
+    }
 
-    void generateParenthesisHeler(int l, int r, string s, vector<string> &result) {
-        if (l == 0 && r == 0) result.push_back(s);
-        if (l > 0) generateParenthesisHeler(l - 1, r, s + '(', result);
-        if (r > l) generateParenthesisHeler(l, r - 1, s + ')', result);
-    };
+    void generateParenthesis(int l, int r, string & sub, vector<string> & res) {
+        if (l == 0 && r == 0) {
+            res.push_back(sub);
+            return;
+        }
+        if (l > 0) {
+            sub.push_back('(');
+            generateParenthesis(l-1, r, sub, res);
+            sub.pop_back();
+        }
+        if (r > l) {
+            sub.push_back(')');
+            generateParenthesis(l, r-1, sub, res);
+            sub.pop_back();
+        }
+    }
 };
 
 int main() {
+    Solution sol;
+    auto res = sol.generateParenthesis(3);
+    for (auto it1 : res) {
+        for (auto it2 : it1) cout << it2 << " ";
+        cout << endl;
+    }
     return 0;
 }
