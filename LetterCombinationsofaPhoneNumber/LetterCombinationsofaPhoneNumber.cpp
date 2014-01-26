@@ -15,30 +15,68 @@
 
 using namespace std;
 
+
+string keypad[] = { "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
+
 class Solution {
 public:
-    static const string keypad[8];
-
     vector<string> letterCombinations(string digits) {
+        return letterCombinations1(digits);
+    }
+
+    vector<string> letterCombinations1(string digits) {
+        string sub;
         vector<string> res;
-        letterCombinationsHelper(digits, 0, "", res);
+        letterCombinationsHelper1(digits, 0, sub, res);
         return res;
     }
 
-    void letterCombinationsHelper(string& digits, int i, string str, vector<string> & res) {
-        if (i == (int)digits.size()) {
-            res.push_back(str);
+    void letterCombinationsHelper1(string & digits, int start, string & sub, vector<string> & res) {
+        if (start == digits.size()) {
+            res.push_back(sub);
             return;
         }
-        int pos = digits[i] - '2';
-        for (int j = 0; j < (int)keypad[pos].size(); j++) {
-            letterCombinationsHelper(digits, i + 1, str + keypad[pos][j], res);
+
+        int d = digits[start] - '2';
+        for (char c : keypad[d]) {
+            sub.push_back(c);
+            letterCombinationsHelper1(digits, start + 1, sub, res);
+            sub.pop_back();
         }
+    }
+
+    vector<string> letterCombinations2(string digits) {
+        vector<string> res(1, "");
+        for (char c : digits) {
+            int d = c - '2';
+            int M = res.size();
+            for (int i = 0; i < M; i++) {
+                int N = keypad[d].size();
+                for (int j = 0; j < N; j++) {
+                    if (j == N - 1) res[i].push_back(keypad[d][j]);
+                    else {
+                        string copy = res[i];
+                        copy.push_back(keypad[d][j]);
+                        res.push_back(copy);
+                    }
+                }
+            }
+        }
+        return res;
     }
 };
 
-const string Solution::keypad[8] = { "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
-
 int main() {
+    Solution sol;
+    string p0;
+
+    {
+        p0 = "23";
+        auto p1 = sol.letterCombinations(p0);
+        for (auto it : p1) {
+            cout << it << endl;
+        }
+    }
+
     return 0;
 }

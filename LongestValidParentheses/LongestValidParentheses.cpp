@@ -7,38 +7,71 @@
 //
 // Another example is ")()())", where the longest valid parentheses substring
 // is "()()", which has length = 4.
+//
+// Complexity:
+// Stack based, O(n) time, O(n) space
+// Two Scans, O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
-#include <cmath>
+#include <string>
+#include <stack>
 #include <algorithm>
+
 using namespace std;
 
 class Solution {
 public:
     int longestValidParentheses(string s) {
-        int N = s.size();
-        if (N < 2) return 0;
-        int res = 0;
-        int k = 0, l = 0;
-        for (int i = 0; i < N; i++) {
-            if (s[i] == '(') k++, l++;
-            else k--, l++;
-            if (k == 0 && l > res) res = l;
-            else if (k < 0) k = 0, l = 0;
-        }
+        return longestValidParentheses2(s);
+    }
 
-        k = 0, l = 0;
-        for (int i = N-1; i > 0; i--) {
-            if (s[i] == ')') k++, l++;
+    int longestValidParentheses1(string & s) {
+        int N = s.size(), res = 0, last = -1;
+        stack<int> stk;
+        for (int i = 0; i < (int)s.size(); i++) {
+            if (s[i] == '(') {
+                stk.push(i);
+                continue;
+            }
+
+            if (stk.empty()) {
+                last = i;
+            }
+            else {
+                stk.pop();
+                res = max(res, stk.empty() ? (i - last) : (i - stk.top()));
+            }
+        }
+        return res;
+    }
+
+    int longestValidParentheses2(string & s) {
+        int N = s.size();
+        return max(longestValidParenthesesHelper(s, '(', 0, N, 1),
+            longestValidParenthesesHelper(s, ')', N - 1, -1, -1));
+    }
+
+    int longestValidParenthesesHelper(string & s, char c, int start, int end, int step) {
+        int res = 0, k = 0, l = 0;
+        for (int i = start; i != end; i += step) {
+            if (s[i] == c) k++, l++;
             else k--, l++;
-            if (k == 0 && l > res) res = l;
+            if (k == 0) res = max(res, l);
             else if (k < 0) k = 0, l = 0;
         }
         return res;
     }
 };
 
+
 int main() {
+    Solution sol;
+    cout << sol.longestValidParentheses("(()") << endl;
+    cout << sol.longestValidParentheses("()()") << endl;
+    cout << sol.longestValidParentheses("()(()") << endl;
+    cout << sol.longestValidParentheses("(()()") << endl;
+    cout << sol.longestValidParentheses("())()") << endl;
+    cout << sol.longestValidParentheses(")()()") << endl;
     return 0;
 }

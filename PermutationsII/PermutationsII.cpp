@@ -9,41 +9,61 @@
 //============================================================================
 
 #include <vector>
-#include <cassert>
+
 using namespace std;
 
 class Solution {
 public:
-    void reverse(vector<int> &num, int i, int j) {
-        while (i < j) swap(num[i++], num[j--]);
-    };
+    vector<vector<int> > permuteUnique(vector<int> &num) {
+        return permuteUnique2(num);
+    }
 
-    void nextPermutation(vector<int> &num) {
-        int N = num.size();
-        if (N < 2) return;
-        int i = N - 2;
-        while (i >= 0 && num[i] >= num[i+1]) i--;
-        if (i == -1) {
-            reverse(num, 0, N - 1);
+    vector<vector<int> > permuteUnique1(vector<int> & num) {
+        sort(begin(num), end(num));
+        vector<vector<int> > res;
+        do {
+            res.push_back(num);
+        } while (next_permutation(begin(num), end(num)));
+        return res;
+
+    }
+
+    vector<vector<int> > permuteUnique2(vector<int> & num) {
+        vector<vector<int> > res;
+        sort(begin(num), end(num));
+        permuteUnique1Helper2(num, 0, res);
+        return res;
+    }
+
+    void permuteUnique1Helper2(vector<int> & num, int i, vector<vector<int> > & res) {
+        if (i == (int)num.size()) {
+            res.push_back(num);
             return;
         }
-        int j = N - 1;
-        while (j > i && num[j] <= num[i]) j--;
-        assert(j > i);
-        swap(num[i], num[j]);
-        reverse(num, i + 1, N - 1);
-    };
-
-    vector<vector<int> > permuteUnique(vector<int> &num) {
-        vector<vector<int> > result;
-        do {
-            result.push_back(num);
-            nextPermutation(num);
-        } while (!equal(result[0].begin(), result[0].end(), num.begin()));
-        return result;
+        unordered_set<int> visit;
+        for (int j = i; j < (int)num.size(); j++) {
+            if (visit.count(num[j])) continue;
+            visit.insert(num[j]);
+            swap(num[i], num[j]);
+            permuteUnique1Helper2(num, i + 1, res);
+            swap(num[i], num[j]);
+        }
     }
 };
 
 int main() {
+    Solution sol;
+
+    {
+        vector<int> p0 = { 1, 1, 2 };
+        auto p1 = sol.permuteUnique(p0);
+
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+        cout << p1.size() << endl;
+    }
+
     return 0;
 }

@@ -7,28 +7,53 @@
 //============================================================================
 
 #include <vector>
+
 using namespace std;
 
 class Solution {
 public:
-    void permuteHelper(vector<int> num, int i, vector<vector<int> > &result) {
-        if (i == num.size()) result.push_back(num);
-        else {
-            for (int j = i; j < num.size(); j++) {
-                swap(num[i], num[j]);
-                permuteHelper(num, i + 1, result);
-                swap(num[i], num[j]);
-            }
-        }
+    vector<vector<int> > permute(vector<int> &num) {
+        return permute2(num);
     }
 
-    vector<vector<int> > permute(vector<int> &num) {
-        vector<vector<int> > result;
-        permuteHelper(num, 0, result);
-        return result;
+    vector<vector<int> > permute1(vector<int> & num) {
+        sort(begin(num), end(num));
+        vector<vector<int> > res;
+        do {
+            res.push_back(num);
+        } while (next_permutation(begin(num), end(num)));
+        return res;
+
+    }
+
+    vector<vector<int> > permute2(vector<int> & num) {
+        vector<vector<int> > res;
+        permuteHelper2(num, 0, res);
+        return res;
+    }
+
+    void permuteHelper2(vector<int> & num, int i, vector<vector<int> > & res) {
+        if (i == (int)num.size()) {
+            res.push_back(num);
+            return;
+        }
+
+        for (int j = i; j < (int)num.size(); j++) {
+            swap(num[i], num[j]);
+            permuteHelper2(num, i + 1, res);
+            swap(num[i], num[j]);
+        }
     }
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0 = { 1, 2, 3 };
+    auto p1 = sol.permute(p0);
+
+    for (auto it1 : p1) {
+        for (auto it2 : it1) cout << it2 << " ";
+        cout << endl;
+    }
     return 0;
 }

@@ -18,6 +18,9 @@
 //  [1,2],
 //  []
 // ]
+//
+// Complexity:
+// O(2^n)
 //============================================================================
 
 #include <iostream>
@@ -25,52 +28,57 @@
 #include <algorithm>
 
 using namespace std;
+
 class Solution {
 public:
-    vector<vector<int> > subsets(vector<int> &S) {
+    vector<vector<int> > subsets(vector<int> & S) {
         return subsets1(S);
-        //return subsets2(S);
     }
 
-    vector<vector<int> > subsets1(vector<int> &S) {
+    vector<vector<int> > subsets1(vector<int> & S) {
         sort(begin(S), end(S));
-        int N = S.size();
-        int max = 1 << N;
+        vector<int> sub;
         vector<vector<int> > res;
-        for (int i = 0; i < max; i++) {
-            vector<int> sub;
-            int k = i;
-            int j = 0;
-            while (k > 0) {
-                if (k & 0x01) sub.push_back(S[j]);
-                k >>= 1;
-                j++;
+        subsetsHelper1(S, 0, sub, res);
+        return res;
+    }
+
+    void subsetsHelper1(vector<int> & S, int start, vector<int> & sub, vector<vector<int> > & res) {
+        res.push_back(sub);
+        for (int i = start; i < S.size(); i++) {
+            auto copy = sub;
+            copy.push_back(S[i]);
+            subsetsHelper1(S, i + 1, copy, res);
+        }
+    }
+
+    vector<vector<int> > subsets2(vector<int> & S) {
+        sort(begin(S), end(S));
+        vector<vector<int> > res(1, vector<int>());
+        for (int i = 0; i < S.size(); i++) {
+            int N = res.size();
+            for (int j = 0; j < N; j++) {
+                auto copy = res[j];
+                copy.push_back(S[i]);
+                res.push_back(copy);
             }
-            res.push_back(sub);
         }
-        sort(begin(res), end(res));
         return res;
-    }
-
-    vector<vector<int> > subsets2(vector<int> &S) {
-        sort(begin(S), end(S));
-        vector<vector<int> > res;
-        subsetsHelper(S, 0, vector<int>(), res);
-        sort(begin(res), end(res));
-        return res;
-    }
-
-    void subsetsHelper(vector<int> &S, int i, vector<int> sol, vector<vector<int> > & res) {
-        res.push_back(sol);
-        while (i < (int)S.size()) {
-            vector<int> next(sol);
-            next.push_back(S[i]);
-            ++i;
-            subsetsHelper(S, i, next, res);
-        }
     }
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0;
+
+    {
+        p0 = { 1, 2, 3 };
+        auto p1 = sol.subsets(p0);
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
+
     return 0;
 }

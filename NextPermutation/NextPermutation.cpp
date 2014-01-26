@@ -27,14 +27,15 @@ public:
     void nextPermutation(vector<int> &num) {
         int N = num.size();
         if (N < 2) return;
-        int i = N-1;
-        while (i > 0 && num[i-1] >= num[i]) i--;
+        int i = N - 1;
+        while (i > 0 && num[i - 1] >= num[i]) i--;
+        reverse(begin(num) + i, end(num));
         if (i > 0) {
-            int j = N-1;
-            while (j > i && num[j] <= num[i-1]) j--;
-            swap(num[i-1], num[j]);
+            int j = i;
+            i--;
+            while (num[j] <= num[i]) j++;
+            swap(num[i], num[j]);
         }
-        reverse(begin(num)+i, end(num));
     }
 };
 

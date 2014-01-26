@@ -23,29 +23,37 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
-        vector<vector<int> > result;
-        sort(candidates.begin(), candidates.end());
-        if (candidates[0] > target) return result;
-        vector<int> combination;
-        combinationSumHelper(candidates, target, 0, combination, result);
-        return result;
-    };
+        sort(begin(candidates), end(candidates));
+        vector<int> sub;
+        vector<vector<int> > res;
+        combinationSumHelper(candidates, target, 0, sub, res);
+        return res;
+    }
 
-    void combinationSumHelper(vector<int> &candidates, int target, size_t i, vector<int> combination, vector<vector<int> > &result) {
-        if (target <= 0) {
-            if (target == 0)
-                if (find(result.begin(), result.end(), combination) == result.end())
-                    result.push_back(combination);
+    void combinationSumHelper(vector<int> & candidates, int target, int start, vector<int> & sub, vector<vector<int> > & res) {
+        if (target < 0) return;
+        if (target == 0) {
+            res.push_back(sub);
             return;
         }
-        if (i == candidates.size()) return;
-        for (int j = 0; j * candidates[i] <= target; j++) {
-            if (j != 0) combination.push_back(candidates[i]);
-            combinationSumHelper(candidates, target - j * candidates[i], i + 1, combination, result);
+
+        for (int i = start; i < (int)candidates.size(); i++) {
+            sub.push_back(candidates[i]);
+            combinationSumHelper(candidates, target - candidates[i], i, sub, res);
+            sub.pop_back();
         }
-    };
+    }
 };
 
+
 int main() {
+    Solution sol;
+    vector<int> p0 = { 2, 3, 6, 7 };
+    int p1 = 7;
+    auto p2 = sol.combinationSum(p0, p1);
+    for (auto it1 : p2) {
+        for (auto it2 : it1) cout << it2 << " ";
+        cout << endl;
+    }
     return 0;
 }

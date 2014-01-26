@@ -13,7 +13,7 @@
 // [1, 7]
 // [1, 2, 5]
 // [2, 6]
-// 1, 1, 6]
+// [1, 1, 6]
 //============================================================================
 
 #include <iostream>
@@ -25,32 +25,37 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int> > combinationSum2(vector<int> &candidates, int target) {
-        vector<vector<int> > result;
-        int sum = 0;
-        for (vector<int>::iterator it = candidates.begin(); it != candidates.end(); it++) sum += *it;
-        sort(candidates.begin(), candidates.end());
-        if (candidates[0] > target || sum < target) return result;
-        vector<int> combination;
-        combinationSumHelper(candidates, target, 0, combination, result);
-        return result;
-    };
+        sort(begin(candidates), end(candidates));
+        vector<int> sub;
+        vector<vector<int> > res;
+        combinationSumHelper(candidates, target, 0, sub, res);
+        return res;
+    }
 
-    void combinationSumHelper(vector<int> &candidates, int target, size_t i, vector<int> combination, vector<vector<int> > &result) {
-        if (target <= 0) {
-            if (target == 0)
-                if (find(result.begin(), result.end(), combination) == result.end())
-                    result.push_back(combination);
+    void combinationSumHelper(vector<int> & candidates, int target, int start, vector<int> & sub, vector<vector<int> > & res) {
+        if (target < 0) return;
+        if (target == 0) {
+            res.push_back(sub);
             return;
         }
-        if (i == candidates.size()) return;
-        combinationSumHelper(candidates, target, i + 1, combination, result);
-        if (target - candidates[i] >= 0) {
-            combination.push_back(candidates[i]);
-            combinationSumHelper(candidates, target - candidates[i], i + 1, combination, result);
+
+        for (int i = start; i < (int)candidates.size(); i++) {
+            if (i > start && candidates[i] == candidates[i - 1]) continue;
+            sub.push_back(candidates[i]);
+            combinationSumHelper(candidates, target - candidates[i], i + 1, sub, res);
+            sub.pop_back();
         }
-    };
+    }
 };
 
 int main() {
+    Solution sol;
+    vector<int> p0 = { 10, 1, 2, 7, 6, 1, 5 };
+    int p1 = 8;
+    auto p2 = sol.combinationSum2(p0, p1);
+    for (auto it1 : p2) {
+        for (auto it2 : it1) cout << it2 << " ";
+        cout << endl;
+    }
     return 0;
 }
