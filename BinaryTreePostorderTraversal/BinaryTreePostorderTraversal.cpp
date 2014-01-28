@@ -14,6 +14,8 @@
 //
 // Note: Recursive solution is trivial, could you do it iteratively?
 //
+// Complexity:
+// O(n) time, O(k) space, k is the depth of tree
 //============================================================================
 
 #include <iostream>
@@ -33,51 +35,59 @@ struct TreeNode {
 
 class Solution {
 public:
-    vector<int> postorderTraversal(TreeNode* node) {
-        //return postorderTraversal1(node);
-    return postorderTraversal2(node);
+    vector<int> postorderTraversal(TreeNode* root) {
+        return postorderTraversal1(root);
     }
 
-    vector<int> postorderTraversal1(TreeNode* node) {
-        vector<int> result;
-        if (node == NULL) return result;
-        postorderTraversalHelper1(node, result);
-        return result;
+    vector<int> postorderTraversal1(TreeNode* root) {
+        vector<int> res;
+        postorderTraversalHelper1(root, res);
+        return res;
     }
 
-    void postorderTraversalHelper1(TreeNode* node, vector<int> &result) {
+    void postorderTraversalHelper1(TreeNode* node, vector<int> & res) {
         if (node == NULL) return;
-        postorderTraversalHelper1(node->left, result);
-        postorderTraversalHelper1(node->right, result);
-        result.push_back(node->val);
+        postorderTraversalHelper1(node->left, res);
+        postorderTraversalHelper1(node->right, res);
+        res.push_back(node->val);
     }
 
-    vector<int> postorderTraversal2(TreeNode *node) {
-        vector<int> result;
-        if (node == NULL) return result;
+    vector<int> postorderTraversal2(TreeNode *root) {
+        vector<int> res;
         stack<TreeNode*> stk;
-        stk.push(node);
-        TreeNode* preNode = NULL;
-        while (!stk.empty()) {
-            TreeNode* curNode = stk.top();
-            if (!preNode || preNode->left == curNode || preNode->right == curNode) {
-                // we are traversing down
-                if (curNode->left) stk.push(curNode->left);
-                else if (curNode->right) stk.push(curNode->right);
-            }
-            else if(curNode->left == preNode) {
-                // we are traversing up, and from left node
-                if (curNode->right) stk.push(curNode->right);
-            }
-            else {
-                result.push_back(curNode->val);
-                stk.pop();
-            }
-            preNode = curNode;
+        TreeNode * cur = root;
+        while (cur != NULL) {
+            res.push_back(cur->val);
+            stk.push(cur);
+            cur = cur->right;
         }
-        return result;
+        while (!stk.empty()) {
+            cur = stk.top(), stk.pop();
+            cur = cur->left;
+            while (cur != NULL) {
+                res.push_back(cur->val);
+                stk.push(cur);
+                cur = cur->right;
+            }
+        }
+
+        reverse(begin(res), end(res));
+        return res;
     }
 };
+
 int main() {
-   return 0;
+    Solution sol;
+    TreeNode * p0;
+
+    {
+        p0 = new TreeNode(1);
+        p0->right = new TreeNode(2);
+        p0->right->left = new TreeNode(3);
+        auto p1 = sol.postorderTraversal(p0);
+        for (auto it : p1) cout << it << " ";
+        cout << endl;
+    }
+
+    return 0;
 }

@@ -22,6 +22,9 @@
 //  "    2 -> 3 -> NULL   "
 //  "   / \    \          "
 //  "  4-> 5 -> 7 -> NULL "
+//
+// Complexity:
+// O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -38,49 +41,50 @@ struct TreeLinkNode
     TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
-class Solution 
-{
+class Solution {
 public:
-    void connect(TreeLinkNode *root)
-    {
-        connect1(root);
-    }
-
-    void connect1(TreeLinkNode *curNode)
-    {
-        if (!curNode) return;
-        TreeLinkNode* nextHead = NULL;
-        while (curNode)
-        {
-            if(curNode->left)
-            {
-                curNode->left->next = getNextSibling(curNode, true);
-                if (!nextHead) nextHead = curNode->left;
+    void connect(TreeLinkNode *root) {
+        while (root != NULL) {
+            TreeLinkNode * cur = root;
+            while (cur != NULL) {
+                if (cur->left != NULL && cur->right != NULL) cur->left->next = cur->right;
+                TreeLinkNode * next = cur->next;
+                while (next != NULL && next->left == NULL && next->right == NULL) next = next->next;
+                if (next == NULL) break;
+                TreeLinkNode * child = (next->left != NULL) ? next->left : next->right;
+                if (cur->right != NULL) {
+                    cur->right->next = child;
+                }
+                else if (cur->left != NULL) {
+                    cur->left->next = child;
+                }
+                cur = next;
             }
-            if (curNode->right)
-            {
-                curNode->right->next = getNextSibling(curNode, false);
-                if (!nextHead) nextHead = curNode->right;
-            }
-            curNode = curNode->next;
-        }
-        connect1(nextHead);
-    }
 
-    TreeLinkNode* getNextSibling(TreeLinkNode *curNode, bool isLeft)
-    {
-        if (isLeft)
-            if (curNode->right) return curNode->right;
-        while ((curNode = curNode->next))
-        {
-            if (curNode->left) return curNode->left;
-            if (curNode->right) return curNode->right;
+            while (root != NULL && root->left == NULL && root->right == NULL) root = root->next;
+            if (root != NULL) root = (root->left != NULL) ? root->left : root->right;
         }
-        return NULL;
     }
 };
 
-int main()
-{
-    return 0;
+int main() {
+    Solution sol;
+    TreeLinkNode * p0;
+
+    {
+        p0 = new TreeLinkNode(3);
+        p0->left = new TreeLinkNode(9);
+        p0->right = new TreeLinkNode(20);
+        p0->right->left = new TreeLinkNode(15);
+        p0->right->right = new TreeLinkNode(7);
+        sol.connect(p0);
+        vector<TreeLinkNode*> vs = { p0, p0->left, p0->right->left };
+        for (auto cur : vs) {
+            while (cur != NULL) {
+                cout << cur->val << "->";
+                cur = cur->next;
+            }
+            cout << "#" << endl;
+        }
+    }
 }

@@ -5,11 +5,15 @@
 // An example of a height-balanced tree. A height-balanced tree is a tree
 // whose subtrees differ in height by no more than one and the subtrees are
 // height-balanced, too.
+//
+// Top-Down, Pre-Order, O(n^2) time, O(h) space
+// Bottom-Up, Post-Order, O(n) time, O(h) space
 //============================================================================
 
 #include <iostream>
-#include <cmath>
-#include <climits>
+#include <sstream>
+#include <queue>
+
 using namespace std;
 
 /**
@@ -25,44 +29,69 @@ struct TreeNode {
 class Solution {
 public:
     bool isBalanced(TreeNode *root) {
-        return isBalanced1(root);
+        return isBalanced2(root);
     }
 
-    bool isBalanced1(TreeNode *root) {
-        return isBalancedHelper1(root);
+    bool isBalanced1(TreeNode *cur) {
+        if (cur == NULL) return true;
+        return (abs(height(cur->left) - height(cur->right)) <= 1) && isBalanced(cur->left) && isBalanced1(cur->right);
     }
 
-    bool isBalancedHelper1(TreeNode* node) {
-        if (node == NULL) return true;
-        int leftHeight = height(node->left);
-        int rightHeight = height(node->right);
-        if (abs(leftHeight - rightHeight) > 1) return false;
-        return isBalancedHelper1(node->left) && isBalancedHelper1(node->right);
+    int height(TreeNode * cur) {
+        if (cur == NULL) return 0;
+        return max(height(cur->left), height(cur->right)) + 1;
     }
 
-    int height(TreeNode *node) {
-        if (node == NULL) return 0;
-        return (1 + max(height(node->left), height(node->right)));
+    bool isBalanced2(TreeNode * root) {
+        return (isBalancedHelper(root) >= 0);
     }
 
-    bool isBalanced2(TreeNode *root) {
-        int height;
-        return isBalancedHelper2(root, height);
-    }
-
-    bool isBalancedHelper2(TreeNode *node, int &height) {
-        if (node == NULL) {
-            height = 0;
-            return true;
-        }
-        int leftHeight, rightHeight;
-        bool leftBalanced = isBalancedHelper2(node->left, leftHeight);
-        bool rightBalanced = isBalancedHelper2(node->right, rightHeight);
-        height = 1+max(leftHeight, rightHeight);
-        return (leftBalanced && rightBalanced && abs(leftHeight-rightHeight) <= 1);
+    int isBalancedHelper(TreeNode *cur) {
+        if (cur == NULL) return 0;
+        int lh = isBalancedHelper(cur->left), rh = isBalancedHelper(cur->right);
+        if (lh == -1 || rh == -1 || abs(lh - rh) > 1) return -1;
+        return max(lh, rh) + 1;
     }
 };
 
+TreeNode * readNode(istringstream & is) {
+    string str;
+    if (is >> str) {
+        if (str == "#") return NULL;
+        return new TreeNode(stoi(str));
+    }
+    return NULL;
+}
+
+TreeNode * fromString(string str) {
+    str.erase(str.begin());
+    str.pop_back();
+    replace(begin(str), end(str), ',', ' ');
+    istringstream is(str);
+    TreeNode * root = readNode(is);
+    queue<TreeNode *> qs;
+    if (root != NULL) qs.push(root);
+    while (!qs.empty()) {
+        TreeNode * cur = qs.front();
+        qs.pop();
+        if (cur != NULL) {
+            cur->left = readNode(is);
+            if (cur->left != NULL) qs.push(cur->left);
+            cur->right = readNode(is);
+            if (cur->right != NULL) qs.push(cur->right);
+        }
+    }
+    return root;
+}
+
 int main() {
+    Solution sol;
+    TreeNode * p0;
+
+    {
+        p0 = fromString("{1,2,2,3,3,3,3,4,4,4,4,4,4,#,#,5,5}");
+        cout << sol.isBalanced(p0) << endl;
+    }
+
     return 0;
 }

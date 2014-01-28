@@ -16,6 +16,10 @@
 //   [9,20],
 //   [3],
 // ]
+//
+// Complexity:
+// DFS O(n) time, O(h) space, h is the height (max depth) of tree
+// BFS O(n) time, O(n) space
 //============================================================================
 
 #include <iostream>
@@ -34,77 +38,100 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
+
 class Solution {
 public:
-    vector<vector<int> > levelOrderBottom(TreeNode *root)
-    {
-        //return levelOrderBottom1(root);
-        return levelOrderBottom2(root);
+    vector<vector<int> > levelOrderBottom(TreeNode * root) {
+        return levelOrderBottom1(root);
     }
 
-    vector<vector<int> > levelOrderBottom1(TreeNode *root)
-    {
+    vector<vector<int> > levelOrderBottom1(TreeNode * root) {
         vector<vector<int> > res;
-        vector<int> row;
-        for (int level = maxHeight(root); level >= 1; level--)
-        {
-            row.clear();
-            levelOrderBottomHelper(root, level, row);
-            res.push_back(row);
+        int D = maxDepth(root);
+        for (int depth = D; depth >= 1; depth--) {
+            vector<int> path;
+            levelOrderBottomHelper1(root, depth, path);
+            res.push_back(path);
         }
         return res;
     }
 
-    int maxHeight(TreeNode *node)
-    {
-        if(NULL == node) return 0;
-        return 1 + max(maxHeight(node->left), maxHeight(node->right));
-    };
-
-    void levelOrderBottomHelper(TreeNode *node, int level, vector<int> &row)
-    {
-        if (level == 0 || node == NULL) return;
-        if (level == 1)
-        {
-            row.push_back(node->val);
-            return;
-        }
-        levelOrderBottomHelper(node->left, level-1, row);
-        levelOrderBottomHelper(node->right, level-1, row);
+    int maxDepth(TreeNode * cur) {
+        if (cur == NULL) return 0;
+        return max(maxDepth(cur->left), maxDepth(cur->right)) + 1;
     }
 
-    vector<vector<int> > levelOrderBottom2(TreeNode *root)
-    {
+    void levelOrderBottomHelper1(TreeNode * cur, int depth, vector<int> & path) {
+        if (cur == NULL || depth == 0) return;
+        if (depth == 1) path.push_back(cur->val);
+        depth -= 1;
+        levelOrderBottomHelper1(cur->left, depth, path);
+        levelOrderBottomHelper1(cur->right, depth, path);
+    }
+
+    vector<vector<int> > levelOrderBottom2(TreeNode * root) {
         vector<vector<int> > res;
-        if (!root) return res;
-
-        stack<vector<TreeNode*> > stk;
-        stk.push(vector<TreeNode*>(1, root));
-        while(true)
-        {
-            vector<TreeNode*> row;
-            for (vector<TreeNode*>::iterator it = stk.top().begin(); it != stk.top().end(); ++it)
-            {
-                if ((*it)->left) row.push_back((*it)->left);
-                if ((*it)->right) row.push_back((*it)->right);
+        queue<TreeNode *> cq, nq;
+        if (root != NULL) cq.push(root);
+        while (!cq.empty()) {
+            vector<int> path;
+            while (!cq.empty()) {
+                TreeNode * cur = cq.front();
+                cq.pop();
+                path.push_back(cur->val);
+                if (cur->left != NULL) nq.push(cur->left);
+                if (cur->right != NULL) nq.push(cur->right);
             }
-            if (row.empty()) break;
-            stk.push(row);
+            res.push_back(path);
+            swap(cq, nq);
         }
+        reverse(begin(res), end(res));
+        return res;
+    }
 
-        while (!stk.empty())
-        {
-            vector<int> row;
-            for (vector<TreeNode*>::iterator it = stk.top().begin(); it != stk.top().end(); ++it)
-                row.push_back((*it)->val);
-            res.push_back(row);
-            stk.pop();
+    vector<vector<int> > levelOrderBottom3(TreeNode * root) {
+        vector<int> path;
+        vector<vector<int> > res;
+        queue<TreeNode *> qs;
+        if (root != NULL) {
+            qs.push(root);
+            qs.push(NULL);
         }
+        while (!qs.empty()) {
+            TreeNode * cur = qs.front();
+            qs.pop();
+            if (cur == NULL) {
+                res.push_back(path);
+                path.clear();
+                if (!qs.empty()) qs.push(NULL);
+            }
+            else {
+                path.push_back(cur->val);
+                if (cur->left != NULL) qs.push(cur->left);
+                if (cur->right != NULL) qs.push(cur->right);
+            }
+        }
+        reverse(begin(res), end(res));
         return res;
     }
 };
 
-int main()
-{
+int main() {
+    Solution sol;
+    TreeNode * p0;
+
+    {
+        p0 = new TreeNode(3);
+        p0->left = new TreeNode(9);
+        p0->right = new TreeNode(20);
+        p0->right->left = new TreeNode(15);
+        p0->right->right = new TreeNode(7);
+        auto p1 = sol.levelOrderBottom(p0);
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
+
     return 0;
 }

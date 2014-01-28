@@ -32,6 +32,9 @@
 //  "    2 -> 3 -> NULL   "
 //  "   / \  / \          "
 //  "  4->5->6->7 -> NULL "
+//
+// Complexity:
+// O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -48,50 +51,44 @@ struct TreeLinkNode
     TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
 };
 
-class Solution 
-{
+class Solution {
 public:
-    void connect(TreeLinkNode *root)
-    {
-        //connect1(root);
-        connect2(root);
-    }
-
-    void connect1(TreeLinkNode *node)
-    {
-        if (node) node->next = NULL;
-        connectHelper1(node);
-    }
-
-    // BFS
-    void connectHelper1(TreeLinkNode* node) {
-        if (!node || !(node->left) || !(node->right)) return;
-        TreeLinkNode* curr = node;
-        while (curr) {
-            if (curr->left) curr->left->next = curr->right;
-            if (curr->right) curr->right->next = (curr->next) ? curr->next->left : NULL;
-            curr = curr->next;
-        }   
-        connectHelper1(node->left);
-    }   
-
-    void connect2(TreeLinkNode *node)
-    {
-        if (node) node->next = NULL;
-        connectHelper2(node);
-    }
-    
-    // DFS
-    void connectHelper2(TreeLinkNode* node) {
-        if (!node || !(node->left) || !(node->right)) return;
-        node->left->next = node->right;
-        node->right->next = (node->next) ? node->next->left: NULL;
-        connectHelper2(node->left);
-        connectHelper2(node->right);
+    void connect(TreeLinkNode *root) {
+        while (root != NULL) {
+            TreeLinkNode * cur = root;
+            while (cur != NULL) {
+                if (cur->left != NULL) cur->left->next = cur->right;
+                if (cur->right != NULL) cur->right->next = (cur->next == NULL) ? NULL : cur->next->left;
+                cur = cur->next;
+            }
+            root = root->left;
+        }
     }
 };
 
-int main()
-{
-    return 0;    
+int main() {
+    Solution sol;
+    TreeLinkNode * p0;
+
+    {
+        p0 = new TreeLinkNode(1);
+        p0->left = new TreeLinkNode(2);
+        p0->right = new TreeLinkNode(3);
+        p0->left->left = new TreeLinkNode(4);
+        p0->left->right = new TreeLinkNode(5);
+        p0->right->left = new TreeLinkNode(6);
+        p0->right->right = new TreeLinkNode(7);
+        sol.connect(p0);
+        while (p0 != NULL) {
+            TreeLinkNode * cur = p0;
+            while (cur != NULL) {
+                cout << cur->val << "->";
+                cur = cur->next;
+            }
+            cout << "#" << endl;
+            p0 = p0->left;
+        }
+    }
+
+    return 0;
 }

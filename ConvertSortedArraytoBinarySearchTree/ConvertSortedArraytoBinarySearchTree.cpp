@@ -4,6 +4,8 @@
 // Given an array where elements are sorted in ascending order, convert it to
 // a height balanced BST.
 //
+// Pre-Order, O(n) time, O(h) space
+// In-Order, O(n) time, O(h) space
 //============================================================================
 
 #include <iostream>
@@ -22,41 +24,65 @@ struct TreeNode {
 
 class Solution {
 public:
-    TreeNode *sortedArrayToBST(vector<int> &num) {
-        return sortedArrayToBST1(num);    
-    }
-    
-    TreeNode *sortedArrayToBST1(vector<int> &num) {
-        return sortedArrayToBSTHelper1(num, 0, num.size() - 1);
+    TreeNode *sortedArrayToBST(vector<int> & num) {
+        if (num.empty()) return NULL;
+        auto it = num.begin();
+        return sortedArrayToBST2(it, 0, num.size() - 1);
     }
 
-    // pre-order construct tree, takes O(n) time
-    TreeNode* sortedArrayToBSTHelper1(vector<int> &num, int start, int end) {
-        if (start > end) return NULL;
-        int mid = start + (end - start) / 2;
-        TreeNode* node = new TreeNode(num[mid]);
-        node->left = sortedArrayToBSTHelper1(num, start, mid - 1);
-        node->right = sortedArrayToBSTHelper1(num, mid + 1, end);
-        return node;
+    TreeNode *sortedArrayToBST1(vector<int> &num, int l, int u) {
+        if (l > u) return NULL;
+        int m = l + (u - l) / 2;
+        TreeNode * cur = new TreeNode(num[m]);
+        cur->left = sortedArrayToBST1(num, l, m - 1);
+        cur->right = sortedArrayToBST1(num, m + 1, u);
+        return cur;
     }
 
-    TreeNode* sortedArrayToBST2(const int array[], int size) {
-        if (NULL == array or size <= 0) return NULL;
-        int idx = 0;
-        return sortedArrayToBSTHelper2(array, 0, size - 1, idx);
-    }
-
-    TreeNode* sortedArrayToBSTHelper2(const int array[], int start, int end, int& idx) {
-        if (start > end) return NULL;
-        int mid = start + (end - start) / 2;
-        TreeNode* tmpNode = sortedArrayToBSTHelper2(array, start, mid - 1, idx);
-        TreeNode* node = new TreeNode(array[idx++]);
-        node->left = tmpNode;
-        node->right = sortedArrayToBSTHelper2(array, mid + 1, end, idx);
-        return node;
+    TreeNode *sortedArrayToBST2(vector<int>::iterator & it, int l, int u) {
+        if (l > u) return NULL;
+        int m = l + (u - l) / 2;
+        TreeNode * tmp = sortedArrayToBST2(it, l, m - 1);
+        TreeNode * cur = new TreeNode(*it++);
+        cur->left = tmp;
+        cur->right = sortedArrayToBST2(it, m + 1, u);
+        return cur;
     }
 };
 
+string toString(TreeNode * root) {
+    ostringstream os;
+    queue<TreeNode *> cq, nq;
+    cq.push(root);
+    while (!cq.empty()) {
+        vector<int> path;
+        while (!cq.empty()) {
+            TreeNode * cur = cq.front();
+            cq.pop();
+            if (cur == NULL) {
+                os << "#,";
+            }
+            else {
+                os << cur->val << ",";
+                nq.push(cur->left);
+                nq.push(cur->right);
+            }
+        }
+        swap(cq, nq);
+    }
+    string res = os.str();
+    res.pop_back();
+    return "{" + res + "}";
+}
+
 int main() {
+    Solution sol;
+    vector<int> p0;
+
+    {
+        p0 = { 3, 5, 8 };
+        auto p1 = sol.sortedArrayToBST(p0);
+        cout << toString(p1) << endl;
+    }
     return 0;
 }

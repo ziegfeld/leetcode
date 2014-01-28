@@ -17,6 +17,9 @@
 //   [5,4,11,2],
 //   [5,8,4,5]
 // ]
+//
+// Complexity:
+// O(n*h) time, O(n*h) space, h is the height of the tree
 //============================================================================
 
 #include <iostream>
@@ -36,25 +39,65 @@ struct TreeNode {
 class Solution {
 public:
     vector<vector<int> > pathSum(TreeNode *root, int sum) {
-        vector<int> path;
         vector<vector<int> > res;
+        vector<int> path;
         pathSumHelper(root, sum, path, res);
         return res;
     }
 
-    void pathSumHelper(TreeNode* node, int sum, vector<int> path, vector<vector<int> > &res) {
-        if (node == NULL) return;
-        sum -= node->val;
-        path.push_back(node->val);
-        if (sum == 0 && NULL == node->left && NULL == node->right) {
+    void pathSumHelper(TreeNode * cur, int sum, vector<int> path, vector<vector<int> > & res) {
+        if (cur == NULL) return;
+        sum -= cur->val;
+        path.push_back(cur->val);
+        if (cur->left == NULL && cur->right == NULL && sum == 0) {
             res.push_back(path);
             return;
         }
-        pathSumHelper(node->left, sum, path, res);
-        pathSumHelper(node->right, sum, path, res);
+        pathSumHelper(cur->left, sum, path, res);
+        pathSumHelper(cur->right, sum, path, res);
     }
 };
 
+TreeNode * readNode(istringstream & is) {
+    string str;
+    if (is >> str) {
+        if (str == "#") return NULL;
+        return new TreeNode(stoi(str));
+    }
+    return NULL;
+}
+
+TreeNode * fromString(string str) {
+    str.erase(str.begin());
+    str.pop_back();
+    replace(begin(str), end(str), ',', ' ');
+    istringstream is(str);
+    TreeNode * root = readNode(is);
+    queue<TreeNode *> qs;
+    if (root != NULL) qs.push(root);
+    while (!qs.empty()) {
+        TreeNode * cur = qs.front();
+        qs.pop();
+        if (cur != NULL) {
+            cur->left = readNode(is);
+            if (cur->left != NULL) qs.push(cur->left);
+            cur->right = readNode(is);
+            if (cur->right != NULL) qs.push(cur->right);
+        }
+    }
+    return root;
+}
+
 int main() {
-    return 0;
+    Solution sol;
+    TreeNode * p0;
+
+    {
+        p0 = fromString("{5,4,8,11,#,13,4,7,2,#,#,5,1}");
+        auto p1 = sol.pathSum(p0, 22);
+        for (auto it1 : p1) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
 }

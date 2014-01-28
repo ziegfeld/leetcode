@@ -13,9 +13,9 @@
 //
 // Note: Recursive solution is trivial, could you do it iteratively?
 //
-// Reference:
-// http://www.leetcode.com/2010/04/binary-search-tree-in-order-traversal.html
-//
+// Complexity:
+// Recursion or Stack: O(n) time, O(h) space, h is the depth of tree
+// Threaded Binary Tree : O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -36,44 +36,74 @@ struct TreeNode {
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode *root) {
-        //return inorderTraversal1(root);
         return inorderTraversal2(root);
     }
 
-    vector<int> inorderTraversal1(TreeNode* node) {
-        vector<int> result;
-        inorderTraversalHelper1(node, result);
-        return result;
+    vector<int> inorderTraversal1(TreeNode * root) {
+        vector<int> res;
+        inorderTraversalHelper1(root, res);
+        return res;
     }
 
-    void inorderTraversalHelper1(TreeNode* node, vector<int> &result) {
+    void inorderTraversalHelper1(TreeNode * node, vector<int> & res) {
         if (node == NULL) return;
-        inorderTraversalHelper1(node->left, result);
-        result.push_back(node->val);
-        inorderTraversalHelper1(node->right, result);
+        inorderTraversalHelper1(node->left, res);
+        res.push_back(node->val);
+        inorderTraversalHelper1(node->right, res);
     }
 
-    vector<int> inorderTraversal2(TreeNode *node) {
-        vector<int> result;
-        if (node == NULL) return result;
+    vector<int> inorderTraversal2(TreeNode * root) {
+        vector<int> res;
         stack<TreeNode*> stk;
-        TreeNode* curr = node;
-        while (!stk.empty() || curr != NULL) {
-            if (curr != NULL) {
-                stk.push(curr);
-                curr = curr->left;
+        TreeNode * cur = root;
+        while (cur != NULL) stk.push(cur), cur = cur->left;
+        while (!stk.empty()) {
+            cur = stk.top(), stk.pop();
+            res.push_back(cur->val);
+            cur = cur->right;
+            while (cur != NULL) stk.push(cur), cur = cur->left;
+        }
+        return res;
+    }
+
+    vector<int> inorderTraversal3(TreeNode * root) {
+        vector<int> res;
+        TreeNode * cur = root;
+        while (cur != NULL) {
+            if (cur->left != NULL) {
+                TreeNode * pre = cur->left;
+                while (pre->right != NULL && pre->right != cur) pre = pre->right;
+                if (pre->right == NULL) {
+                    pre->right = cur;
+                    cur = cur->left;
+                }
+                else {
+                    pre->right = NULL;
+                    res.push_back(cur->val);
+                    cur = cur->right;
+                }
             }
             else {
-                curr = stk.top();
-                stk.pop();
-                result.push_back(curr->val);
-                curr = curr->right;
+                res.push_back(cur->val);
+                cur = cur->right;
             }
         }
-        return result;
+        return res;
     }
 };
 
 int main() {
+    Solution sol;
+    TreeNode * p0;
+
+    {
+        p0 = new TreeNode(1);
+        p0->right = new TreeNode(2);
+        p0->right->left = new TreeNode(3);
+        auto p1 = sol.inorderTraversal(p0);
+        for (auto it : p1) cout << it << " ";
+        cout << endl;
+    }
+
     return 0;
 }
