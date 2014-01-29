@@ -21,55 +21,52 @@
 //============================================================================
 
 #include <iostream>
+
 using namespace std;
 
 class Solution {
 public:
-    bool isMatch(const char* s, const char* p) {
+    bool isMatch(const char *s, const char *p) {
         return isMatch1(s, p);
     }
 
-    bool isMatch1(const char* s, const char* p) {
-        if (*s == '\0') {
-            if (*p == '\0') return true;
-            if (*p == '*') return isMatch(s,p+1);
-            return false;
+    bool isMatch1(const char *s, const char *p) {
+        if (*p == '\0') return (*s == '\0');
+        if (*p == '*') {
+            p++;
+            while (*s != '\0') {
+                if (isMatch(s, p)) return true;
+                s++;
+            }
+            return isMatch(s, p);
         }
-        if (*p == '\0') return false;
-        if (*p == '?' || *p == *s) return isMatch(s+1, p+1);
-        if (*p=='*') return isMatch(s+1,p) || isMatch(s, p+1);
-        return false;
+        return ((*p == '?' && *s != '\0') || (*p == *s)) && isMatch(s + 1, p + 1);
     }
 
-    bool isMatch2(const char* s, const char* p) {
-        const char *ps, *pp;
-        bool star = false;
-        loopStart:
-        for (ps = s, pp = p; *ps; ++ps, ++pp) {
-            switch (*pp) {
-            case '?':
-                break;
-            case '*':
-                star = true;
-                s = ps, p = pp+1;
-                if (!*p) return true;
-                goto loopStart;
-            default:
-                if (*ps != *pp)
-                    goto starCheck;
-                break;
-            }
+    bool isMatch2(const char *s, const char *p) {
+        const char * ss = s, *sp = NULL;
+        while (*s != '\0') {
+            if ((*p == '?') || (*p == *s)) s++, p++;
+            else if (*p == '*') sp = p, ss = s, p++;
+            else if (sp != NULL) p = sp + 1, s = ss + 1, ss++;
+            else return false;
         }
-        while (*pp == '*') ++pp;
-        return (!*pp);
-        starCheck:
-        if (!star) return false;
-        s++;
-        goto loopStart;
-        return false;
+        while (*p == '*') p++;
+        return (*p == '\0');
     }
 };
 
 int main() {
+    Solution sol;
+
+    cout << sol.isMatch("aa", "a") << "," << 0 << endl;
+    cout << sol.isMatch("aa", "aa") << "," << 1 << endl;
+    cout << sol.isMatch("aaa", "aa") << "," << 0 << endl;;
+    cout << sol.isMatch("aa", "*") << "," << 1 << endl;
+    cout << sol.isMatch("aa", "a*") << "," << 1 << endl;
+    cout << sol.isMatch("ab", "?*") << "," << 1 << endl;
+    cout << sol.isMatch("aab", "c*a*b") << "," << 0 << endl;
+
     return 0;
 }
+

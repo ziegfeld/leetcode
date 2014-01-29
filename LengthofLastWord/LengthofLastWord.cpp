@@ -10,26 +10,34 @@
 // For example,
 // Given s = "Hello World",
 // return 5.
+//
+// Complexity:
+// O(n)
 //============================================================================
 
 #include <cstring>
 #include <iostream>
+
 using namespace std;
 
 class Solution {
 public:
     int lengthOfLastWord(const char *s) {
-        int N = strlen(s);
-        if (N == 0) return 0;
-        int end = N - 1;
-        while (end >= 0 && s[end] == ' ') end--;
-        if (end < 0) return 0;
-        int start = end - 1;
-        while (start >= 0 && s[start] != ' ') start--;
-        return end - start;
+        if (s == NULL || *s == '\0') return 0;
+        int N = strlen(s), i = N - 1;
+        while (i >= 0 && s[i] == ' ') i--;
+        int res = 0;
+        while (i >= 0 && s[i] != ' ') i--, res++;
+        return res;
     }
 };
 
 int main() {
-    return 0;
+    Solution sol;
+    const char *s;
+
+    {
+        s = "hello world";
+        cout << sol.lengthOfLastWord(s) << endl;
+    }
 }

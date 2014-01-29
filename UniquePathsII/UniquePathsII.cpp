@@ -18,40 +18,66 @@
 // The total number of unique paths is 2.
 //
 // Note: m and n will be at most 100.
+//
+// Complexity:
+// DP, O(m*n) time, O(m*n) space
+// DP, O(m*n) time, O(n) space
 //============================================================================
 
 
 #include <iostream>
 #include <cstring>
 #include <vector>
+
 using namespace std;
 
 class Solution {
 public:
     int uniquePathsWithObstacles(vector<vector<int> > &obstacleGrid) {
-        int m = obstacleGrid.size();
-        if (m == 0) return 0;
-        int n = obstacleGrid[0].size();
-        if (n == 0) return 0;
-        if (obstacleGrid[0][0] == 1) return 0;
-        int dp[m][n];
-        memset(dp, 0, sizeof(int)*m*n);
-        dp[0][0] = 1;
-        for (int i = 1; i < m; i++) {
-            dp[i][0] = (obstacleGrid[i][0]) ? 0 : dp[i-1][0];
-        }
-        for (int j = 1; j < n; j++) {
-            dp[0][j] = (obstacleGrid[0][j]) ? 0 : dp[0][j-1];
-        }
-        for (int i = 1; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                dp[i][j] = (obstacleGrid[i][j]) ? 0 : dp[i-1][j] + dp[i][j-1];
+        return uniquePathsWithObstacles1(obstacleGrid);
+    }
+
+    int uniquePathsWithObstacles1(vector<vector<int> > &obstacleGrid) {
+        if (obstacleGrid.empty() || obstacleGrid[0].empty()) return 0;
+        int M = obstacleGrid.size(), N = obstacleGrid[0].size();
+        vector<vector<int> > dp(M, vector<int>(N, 0));
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (obstacleGrid[i][j]) continue;
+                if (i == 0 && j == 0) dp[i][j] = 1;
+                else dp[i][j] = ((i == 0) ? 0 : dp[i - 1][j]) + ((j == 0) ? 0 : dp[i][j - 1]);
             }
         }
-        return dp[m-1][n-1];
+        return dp[M - 1][N - 1];
+    }
+
+    int uniquePathsWithObstacles2(vector<vector<int> > &obstacleGrid) {
+        if (obstacleGrid.empty() || obstacleGrid[0].empty()) return 0;
+        int M = obstacleGrid.size(), N = obstacleGrid[0].size();
+        vector<int> dp(N, 0);
+        dp[0] = 1;
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                if (obstacleGrid[i][j]) dp[j] = 0;
+                else if (j > 0) dp[i] += dp[j - 1];
+            }
+        }
+        return dp[N - 1];
     }
 };
 
 int main() {
+    Solution sol;
+    vector<vector<int> > p0;
+
+    {
+        p0 = {
+            { 0, 0, 0 },
+            { 0, 1, 0 },
+            { 0, 0, 0 }
+        };
+        cout << sol.uniquePathsWithObstacles(p0) << endl;
+    }
+
     return 0;
 }
