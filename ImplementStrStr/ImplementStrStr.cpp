@@ -3,6 +3,11 @@
 //
 // Returns a pointer to the first occurrence of needle in haystack,
 // or null if needle is not part of haystack.
+//
+// Complexity:
+// brute force, O(n*m) time, O(1) space
+// Rabin-Karp (RK), O(n+m) average and O(n*m) worst case time, O(1) space
+// Knuth-Morris-Pratt Algorithm (KMP), O(n+m) time, O(n) space
 //============================================================================
 
 #include <cstring>
@@ -12,7 +17,7 @@
 using namespace std;
 
 #define B 31 // >= size of the alphabet 
-#define M 29989 // a big enough prime number
+#define M 29989 // a large enough prime number
 
 class Solution {
 public:
@@ -25,7 +30,7 @@ public:
         return strStr3(haystack, n, needle, m);
     }
 
-    // brute force, takes O(n*m) time
+
     char *strStr1(char *haystack, int n, char *needle, int m) {
         int i = 0;
         while (i < n-m+1) {
@@ -39,7 +44,6 @@ public:
         return NULL;
     }
 
-    // Rabin-Karp (RK), takes O(n+m) times, but O(n*m) worst case
     char * strStr2(char * haystack, int n, char * needle, int m) {
         int hn = 0;
         for (int i = 0; i < m; i++) hn = mod(hn*B+needle[i], M);
@@ -69,11 +73,9 @@ public:
         return (a%b+b)%b;
     }
 
-    // Knuth-Morris-Pratt Algorithm (KMP), takes O(n+m)
     char * strStr3(char * haystack, int n, char * needle, int m) {
         vector<int> fs = build(needle, m);
         int i = 0, j = 0;
-        int step = 10000;
         while (j < n) {
             if (j == n) break;
             if (haystack[j] == needle[i]) {
@@ -83,8 +85,6 @@ public:
             }
             else if (i > 0) i = fs[i];
             else j++;
-            step--;
-            if (step == 0) break;
         }
         return NULL;
     }

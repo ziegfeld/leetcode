@@ -17,6 +17,8 @@
 // Third node is labeled as 2. Connect node 2 to node 2 (itself), thus 
 // forming a self-cycle.
 //
+// Complexity:
+// BFS or DFS, O(V+E) time, O(E) space
 //============================================================================
 
 #include <iostream>
@@ -38,70 +40,84 @@ struct UndirectedGraphNode {
 class Solution {
 public:
     UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
-        return clone1(node);
+        if (node == NULL) return NULL;
+        return cloneGraph2(node);
     }
 
-    // BFS
-    UndirectedGraphNode *clone1(UndirectedGraphNode *graph) {
-        if (!graph) return NULL;
-        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> table;
-        queue<UndirectedGraphNode *> queue;
-        queue.push(graph);
+    UndirectedGraphNode *cloneGraph1(UndirectedGraphNode *node) {
+        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> visit;
+        visit[node] = new UndirectedGraphNode(node->label);
+        dfs(node, visit);
+        return visit[node];
+    }
 
-        UndirectedGraphNode *res = new UndirectedGraphNode(graph->label);
-        table[graph] = res;
+    void dfs(UndirectedGraphNode * cur, unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> & visit) {
+        for (auto next : cur->neighbors) {
+            if (visit.count(next)) {
+                visit[cur]->neighbors.push_back(visit[next]);
+            }
+            else {
+                visit[next] = new UndirectedGraphNode(next->label);
+                visit[cur]->neighbors.push_back(visit[next]);
+                dfs(next, visit);
+            }
+        }
+    }
 
-        while (!queue.empty()) {
-            UndirectedGraphNode *curNode = queue.front();
-            queue.pop();
-            int n = curNode->neighbors.size();
-            for (int i = 0; i < n; i++) {
-                UndirectedGraphNode* neighbor = curNode->neighbors[i];
-                if (table.find(neighbor) == table.end()) {
-                    // no copy exists
-                    UndirectedGraphNode* newNode = new UndirectedGraphNode(neighbor->label);
-                    (table[curNode]->neighbors).push_back(newNode);
-                    table[neighbor] = newNode;
-                    queue.push(neighbor);
-                } else {
-                    // a copy already exists
-                    UndirectedGraphNode* copy = table[neighbor];
-                    (table[curNode]->neighbors).push_back(copy);
+    UndirectedGraphNode *cloneGraph2(UndirectedGraphNode *node) {
+        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> visit;
+        queue<UndirectedGraphNode*> qs;
+        visit[node] = new UndirectedGraphNode(node->label);
+        qs.push(node);
+        while (!qs.empty()) {
+            auto cur = qs.front();
+            qs.pop();
+            for (auto next : cur->neighbors) {
+                if (visit.count(next)) {
+                    visit[cur]->neighbors.push_back(visit[next]);
+                }
+                else {
+                    visit[next] = new UndirectedGraphNode(next->label);
+                    visit[cur]->neighbors.push_back(visit[next]);
+                    qs.push(next);
                 }
             }
         }
-        return res;
-    }
-
-    // DFS
-    UndirectedGraphNode *clone2(UndirectedGraphNode *graph) {
-        if (graph == NULL) return NULL;
-        UndirectedGraphNode *res = new UndirectedGraphNode(graph->label);
-        unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> table;
-        table[graph] = res;
-        cloneHelper2(graph, table);
-        return res;
-    }
-
-    void cloneHelper2(UndirectedGraphNode *curNode, unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> &table) {
-        for (size_t i = 0; i < curNode->neighbors.size(); i++) {
-            UndirectedGraphNode* neighbor = curNode->neighbors[i];
-            if (table.find(neighbor) == table.end()) {
-                // no copy exists
-                UndirectedGraphNode* newNode = new UndirectedGraphNode(neighbor->label);
-                (table[curNode]->neighbors).push_back(newNode);
-                table[neighbor] = newNode;
-                cloneHelper2(neighbor, table);
-            }
-            else {
-                // a copy already exists
-                UndirectedGraphNode* copy = table[neighbor];
-                (table[curNode]->neighbors).push_back(copy);
-            }
-        }
+        return visit[node];
     }
 };
 
+string toString(UndirectedGraphNode* node) {
+    unordered_set<UndirectedGraphNode*> vs;
+    queue<UndirectedGraphNode*> qs;
+    ostringstream os;
+    qs.push(node);
+    vs.insert(node);
+    while (!qs.empty()) {
+        node = qs.front(), qs.pop();
+        os << node->label << " ";
+        for (auto it : node->neighbors) if (!vs.count(it)) vs.insert(it), qs.push(it);
+    }
+    return os.str();
+}
+
 int main() {
+    Solution sol;
+
+    {
+        vector<UndirectedGraphNode*> p0;
+        for (int i = 0; i <= 2; i++) p0.push_back(new UndirectedGraphNode(i));
+        p0[0]->neighbors.push_back(p0[1]);
+        p0[0]->neighbors.push_back(p0[2]);
+        p0[1]->neighbors.push_back(p0[0]);
+        p0[1]->neighbors.push_back(p0[2]);
+        p0[2]->neighbors.push_back(p0[0]);
+        p0[2]->neighbors.push_back(p0[1]);
+        p0[2]->neighbors.push_back(p0[2]);
+        cout << toString(p0[0]) << endl;
+        auto p1 = sol.cloneGraph(p0[0]);
+        cout << toString(p1) << endl;
+    }
+
     return 0;
 }

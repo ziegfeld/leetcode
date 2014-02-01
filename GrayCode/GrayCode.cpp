@@ -12,23 +12,42 @@
 // 01 - 1
 // 11 - 3
 // 10 - 2
+//
+// Complexity:
+// O(2^n) time
 //============================================================================
 
 #include <vector>
+
 using namespace std;
 
 class Solution {
 public:
     vector<int> grayCode(int n) {
-        vector<int> result;
-        int num = 1 << n;
-        for (int i = 0; i < num; i++) {
-            result.push_back((i >> 1) ^ i);
+        vector<int> res;
+        res.reserve(1 << n);
+        res.push_back(0);
+        for (int i = 0; i < n; i++) {
+            int m = res.size();
+            for (int j = m - 1; j >= 0; j--) {
+                res.push_back(res[j] | (1 << i));
+            }
         }
-        return result;
+        return res;
     }
 };
 
 int main() {
+
+    Solution sol;
+    int p0;
+    vector<int> p1;
+
+    {
+        p0 = 2;
+        p1 = sol.grayCode(p0);
+        for (auto it : p1) cout << it << endl;
+    }
+
     return 0;
 }

@@ -19,30 +19,44 @@ class Solution {
 public:
     vector<string> restoreIpAddresses(string s) {
         vector<string> res;
-        if (s.size() < 4 || s.size() > 12) return res;
-        restoreIpAddressesHelper(s, 0, 4, "", res);
+        string path;
+        restoreIpAddressesHelper(s, 0, 0, path, res);
         return res;
     }
 
-    void restoreIpAddressesHelper(string &s, size_t i, size_t k, string sol, vector<string> &res) {
-        if (k < 0) return;
-        if (i == s.size()) {
-            if (k == 0) res.push_back(sol);
+    void restoreIpAddressesHelper(string & s, int i, int k, string path, vector<string> & res) {
+        if (i == s.size() || k == 4) {
+            if (i == s.size() && k == 4) res.push_back(path);
             return;
         }
+        if (k != 0) path.push_back('.');
         int x = 0;
-        size_t j = i;
-        while (j < s.size()) {
-            x = 10*x+(s[j]-'0');
+        for (int j = i; j < s.size(); j++) {
+            x = x * 10 + s[j] - '0';
             if (x > 255) break;
-            if (k != 4 && i == j) sol.push_back('.');
-            sol.push_back(s[j++]);
-            restoreIpAddressesHelper(s, j, k-1, sol, res);
+            path.push_back(s[j]);
+            restoreIpAddressesHelper(s, j + 1, k + 1, path, res);
             if (x == 0) break;
         }
     }
 };
 
 int main() {
-   return 0;
+    Solution sol;
+    string p0;
+    vector<string> p1;
+
+    {
+        p0 = "25525511135";
+        auto p1 = sol.restoreIpAddresses(p0);
+        for (auto it : p1) cout << it << endl;
+    }
+
+    {
+        p0 = "010010";
+        auto p1 = sol.restoreIpAddresses(p0);
+        for (auto it : p1) cout << it << endl;
+    }
+
+    return 0;
 }

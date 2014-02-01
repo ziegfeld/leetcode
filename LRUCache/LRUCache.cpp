@@ -32,13 +32,13 @@ public:
         _list.erase(it);
         it = _list.begin();
         _map[key] = it;
-        return it->second; 
+        return it->second;
     }
 
     void set(int key, int value) {
         auto it = _map.find(key);
         if (it != _map.end()) {
-           _map.erase(key);
+            _map.erase(key);
             _list.erase(it->second);
             _size--;
         }
@@ -53,7 +53,7 @@ public:
     }
 
     list<pair<int, int> > _list;
-    unordered_map<int, list<pair<int, int>>::iterator> _map;
+    unordered_map<int, list<pair<int, int> >::iterator> _map;
     int _size;
     int _capacity;
 };

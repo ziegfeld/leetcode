@@ -11,46 +11,57 @@
 // Another corner case is the path might contain multiple slashes '/' together,
 // such as "/home//foo/".
 // In this case, you should ignore redundant slashes and return "/home/foo".
+//
+// Vector based, O(n) time, O(n) space
+// In-Place, O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
-#include <deque>
+#include <vector>
+
 using namespace std;
 
 class Solution {
 public:
     string simplifyPath(string path) {
-        int N = path.size();
-        if (N <= 1) return path;
-        deque<char> buffer;
-        for (int i = 0; i < N; i++) {
-            char c = path[i];
-            if (c == '/') {
-                if (buffer.empty() || buffer.back() != '/')
-                    buffer.push_back(path[i]);
+        return simplifyPath2(path);
+    }
+
+    string simplifyPath1(string & path) {
+        replace(begin(path), end(path), '/', ' ');
+        vector<string> vs;
+        istringstream is(path);
+        string str;
+        while (is >> str) {
+            if (str == "..") {
+                if (!vs.empty()) vs.pop_back();
+                continue;
             }
-            else if (c == '.') {
-                if (i+1 < N && path[i+1] == '.') {
-                    i++;
-                    buffer.pop_back();
-                    while (!buffer.empty()) {
-                        if (buffer.back() != '/') buffer.pop_back();
-                        else break;
-                    }
-                }
-            }
-            else {
-                buffer.push_back(path[i]);
-            }
+            if (str != ".") vs.push_back(str);
         }
-        if (buffer.size() < 2) return "/";
-        if (buffer.back() == '/') buffer.pop_back();
+        if (vs.empty()) return "/";
         string res;
-        while (!buffer.empty()) {
-            res.push_back(buffer.front());
-            buffer.pop_front();
-        }
+        for (auto s : vs) res += ('/' + s);
         return res;
+    }
+
+    string simplifyPath2(string & path) {
+        if (path.empty()) return path;
+        if (path.back() != '/') path.push_back('/');
+        int last = 0;
+        for (int start = 0, end = 0; end < path.size(); end++) {
+            if (path[end] != '/') continue;
+            if (end - start == 3 && path[end - 1] == '.' && path[end - 2] == '.') {
+                while (last > 0 && path[--last] != '/');
+            }
+            else if (end - start > 2 || (end - start == 2 && path[end - 1] != '.')) {
+                while (start < end) path[last++] = path[start++];
+            }
+            start = end;
+        }
+
+        if (last == 0) return "/";
+        return path.substr(0, last);
     }
 };
 

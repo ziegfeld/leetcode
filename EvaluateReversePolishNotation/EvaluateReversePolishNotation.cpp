@@ -9,6 +9,9 @@
 // Some examples:
 //  ["2", "1", "+", "3", "*"] -> ((2 + 1) * 3) -> 9
 //  ["4", "13", "5", "/", "+"] -> (4 + (13 / 5)) -> 6
+//
+// Complexity:
+// O(n) time, O(n) space
 //============================================================================
 using namespace std;
 
@@ -30,8 +33,8 @@ public:
                 stk.pop();
                 int op1 = stk.top();
                 stk.pop();
-                if (tokens[i] == "+") 
-                    stk.push(op1 + op2); 
+                if (tokens[i] == "+")
+                    stk.push(op1 + op2);
                 else if (tokens[i] == "-")
                     stk.push(op1 - op2);
                 else if (tokens[i] == "*")
@@ -40,10 +43,7 @@ public:
                     stk.push(op1 / op2);
             }
             else {
-                istringstream stream(tokens[i]);
-                int num;
-                stream >> num;
-                stk.push(num);
+                stk.push(stoi(tokens[i]));
             }
         }
         return stk.top();
