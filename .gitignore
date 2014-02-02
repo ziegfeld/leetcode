@@ -1,5 +1,4 @@
 Makefile
-tags
 test
 *.o
 *.swp
