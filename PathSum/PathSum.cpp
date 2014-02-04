@@ -17,15 +17,18 @@
 // 22.
 //
 // Complexity:
-// O(n) time, O(h) space
+// O(n) time, O(h) space, h is the height of tree
 //============================================================================
 
 #include <iostream>
+#include <queue>
+#include <sstream>
+
 using namespace std;
 
 /**
- * Definition for binary tree
- */
+* Definition for binary tree
+*/
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -39,7 +42,7 @@ public:
         return hasPathSumHelper(root, sum);
     }
 
-    bool hasPathSumHelper(TreeNode *cur, int sum) {
+    bool hasPathSumHelper(TreeNode * cur, int sum) {
         if (cur == NULL) return false;
         sum -= cur->val;
         if (cur->left == NULL && cur->right == NULL) return (sum == 0);
@@ -79,10 +82,23 @@ TreeNode * fromString(string str) {
 
 int main() {
     Solution sol;
-    TreeNode * p0;
+    TreeNode *p0;
+    int p1;
+    bool p2;
 
     {
-        p0 = fromString("{5,4,8,11,#,13,4,7,2,#,#,#,1}");
-        cout << sol.hasPathSum(p0, 22) << endl;
+        p0 = fromString("{5,4,8,11,#,13,4,7,2,#,#,#,#,#,1}");
+        p1 = 22;
+        p2 = sol.hasPathSum(p0, p1);
+        cout << p2 << endl;
     }
+
+    {
+        p0 = fromString("{-2,#,-3}");
+        p1 = -5;
+        p2 = sol.hasPathSum(p0, p1);
+        cout << p2 << endl;
+    }
+
+    return 0;
 }

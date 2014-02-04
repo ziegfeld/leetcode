@@ -13,17 +13,19 @@
 //  
 //  Return 6.
 //
+// Complexity:
+// O(n) time, O(h) space
 //============================================================================
 
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
 /**
- * Definition for binary tree
- */ 
-struct TreeNode 
-{
+* Definition for binary tree
+*/
+struct TreeNode {
     int val;
     TreeNode *left;
     TreeNode *right;
@@ -35,19 +37,17 @@ public:
     int maxPathSum(TreeNode *root) {
         if (root == NULL) return 0;
         int res = INT_MIN;
-        maxPathSumHelper(root, res);
+        maxPathHelper(root, res);
         return res;
     }
 
-    int maxPathSumHelper(TreeNode * cur, int & res) {
+    int maxPathHelper(TreeNode *cur, int & path, int & sum) {
         if (cur == NULL) return 0;
-        int leftPath = maxPathSumHelper(cur->left, res);
-        int rightPath = maxPathSumHelper(cur->right, res);
-        int curPath = cur->val;
-        if (leftPath > 0) curPath += leftPath;
-        if (rightPath > 0) curPath += rightPath;
-        if (curPath > res) res = curPath;
-        return max(cur->val, cur->val + max(leftPath, rightPath));
+        int lsub = maxPathHelper(cur->left, res);
+        int rsub = maxPathHelper(cur->right, res);
+        int sub = max(cur->val, cur->val + max(lsub, rsub));
+        res = max(res, max(sub, cur->val + lsub + rsub));
+        return sub;
     }
 };
 
@@ -83,10 +83,32 @@ TreeNode * fromString(string str) {
 
 int main() {
     Solution sol;
-    TreeNode * p0;
+    TreeNode *p0;
+    int p1;
 
     {
         p0 = fromString("{1,2,3}");
-        cout << sol.maxPathSum(p0) << endl;
+        p1 = sol.maxPathSum(p0);
+        cout << p1 << endl;
     }
+
+    {
+        p0 = fromString("{-3}");
+        p1 = sol.maxPathSum(p0);
+        cout << p1 << endl;
+    }
+
+    {
+        p0 = fromString("{}");
+        p1 = sol.maxPathSum(p0);
+        cout << p1 << endl;
+    }
+
+    {
+        p0 = fromString("{9,6,-3,#,#,-6,2,#,#,2,#,-6,-6,-6}");
+        p1 = sol.maxPathSum(p0);
+        cout << p1 << endl;
+    }
+
+    return 0;
 }

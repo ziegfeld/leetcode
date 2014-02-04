@@ -19,16 +19,18 @@
 // ]
 //
 // Complexity:
-// O(n*h) time, O(n*h) space, h is the height of the tree
+// O(n*h) time, O(h) space, h is the height of the tree
 //============================================================================
 
 #include <iostream>
 #include <vector>
+#include <queue>
+
 using namespace std;
 
 /**
- * Definition for binary tree
- */
+* Definition for binary tree
+*/
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -39,22 +41,20 @@ struct TreeNode {
 class Solution {
 public:
     vector<vector<int> > pathSum(TreeNode *root, int sum) {
-        vector<vector<int> > res;
         vector<int> path;
+        vector<vector<int> > res;
         pathSumHelper(root, sum, path, res);
         return res;
     }
 
-    void pathSumHelper(TreeNode * cur, int sum, vector<int> path, vector<vector<int> > & res) {
+    void pathSumHelper(TreeNode * cur, int sum, vector<int> & path, vector<vector<int> > & res) {
         if (cur == NULL) return;
         sum -= cur->val;
         path.push_back(cur->val);
-        if (cur->left == NULL && cur->right == NULL && sum == 0) {
-            res.push_back(path);
-            return;
-        }
+        if (cur->left == NULL && cur->right == NULL && sum == 0) res.push_back(path);
         pathSumHelper(cur->left, sum, path, res);
         pathSumHelper(cur->right, sum, path, res);
+        path.pop_back();
     }
 };
 
@@ -90,14 +90,20 @@ TreeNode * fromString(string str) {
 
 int main() {
     Solution sol;
-    TreeNode * p0;
+    TreeNode *p0;
+    int p1;
+    vector<vector<int> > p2;
 
     {
         p0 = fromString("{5,4,8,11,#,13,4,7,2,#,#,5,1}");
-        auto p1 = sol.pathSum(p0, 22);
-        for (auto it1 : p1) {
+        p1 = 22;
+        p2 = sol.pathSum(p0, p1);
+        for (auto it1 : p2) {
             for (auto it2 : it1) cout << it2 << " ";
             cout << endl;
         }
+        cout << endl;
     }
+
+    return 0;
 }

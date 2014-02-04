@@ -24,36 +24,43 @@ class Solution {
 public:
     vector<vector<int> > combinationSum(vector<int> &candidates, int target) {
         sort(begin(candidates), end(candidates));
-        vector<int> sub;
         vector<vector<int> > res;
-        combinationSumHelper(candidates, target, 0, sub, res);
+        vector<int> path;
+        combinationSumHelper(candidates, target, 0, path, res);
         return res;
     }
 
-    void combinationSumHelper(vector<int> & candidates, int target, int start, vector<int> & sub, vector<vector<int> > & res) {
+    void combinationSumHelper(vector<int> &candidates, int target, int start, vector<int> & path, vector<vector<int> > & res) {
         if (target < 0) return;
         if (target == 0) {
-            res.push_back(sub);
+            res.push_back(path);
             return;
         }
 
-        for (int i = start; i < (int)candidates.size(); i++) {
-            sub.push_back(candidates[i]);
-            combinationSumHelper(candidates, target - candidates[i], i, sub, res);
-            sub.pop_back();
+        for (; start < candidates.size(); start++) {
+            path.push_back(candidates[start]);
+            combinationSumHelper(candidates, target - candidates[start], start, path, res);
+            path.pop_back();
         }
     }
 };
 
-
 int main() {
     Solution sol;
-    vector<int> p0 = { 2, 3, 6, 7 };
-    int p1 = 7;
-    auto p2 = sol.combinationSum(p0, p1);
-    for (auto it1 : p2) {
-        for (auto it2 : it1) cout << it2 << " ";
+    vector<int> p0;
+    int p1;
+    vector<vector<int> > p2;
+
+    {
+        p0 = { 2, 3, 6, 7 };
+        p1 = 7;
+        p2 = sol.combinationSum(p0, p1);
+        for (auto it1 : p2) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
         cout << endl;
     }
+
     return 0;
 }

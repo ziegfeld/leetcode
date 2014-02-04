@@ -17,8 +17,8 @@
 // n is the total number of rows in the triangle.
 //
 // Complexity:
-// O(n^2) time, O(n^2) space
-// O(n^2) time, O(n) space
+// DP, O(n^2) time, O(n^2) space
+// Squeeze Memory, O(n^2) time, O(n) space
 //============================================================================
 
 #include <iostream>

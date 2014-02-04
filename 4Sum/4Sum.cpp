@@ -13,7 +13,7 @@
 // (-2, -1, 1, 2)
 // (-2,  0, 0, 2)
 //
-// Complexity: O(n^3) time
+// Complexity: O(n^3) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -25,34 +25,26 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int> > fourSum(vector<int> &num, int target) {
-        vector<vector<int> > res;
         int N = num.size();
-        if (N < 4) return res;
         sort(begin(num), end(num));
-        for (int i = 0; i < N-3; i++) {
-            if (i > 0 && num[i-1] == num[i]) continue;
-            for (int j = i+1; j < N-2; j++) {
-                if (j > i+1 && num[j-1] == num[j]) continue;
-                int l = j+1;
-                int r = N-1;
-                while (l < r) {
-                    int sum = num[i]+num[j]+num[l]+num[r];
-                    if (sum < target) l++;
-                    else if (sum > target) r--;
+        vector<vector<int> > res;
+        for (int i = 0; i < N - 3; i++) {
+            if (i > 0 && num[i] == num[i - 1]) continue;
+            for (int j = i + 1; j < N - 2; j++) {
+                if (j > i + 1 && num[j] == num[j - 1]) continue;
+                int r = j + 1, c = N - 1;
+                while (r < c) {
+                    int sum = num[i] + num[j] + num[r] + num[c];
+                    if (sum < target) r++;
+                    else if (sum > target) c--;
                     else {
-                        vector<int> sub;
-                        sub.push_back(num[i]);
-                        sub.push_back(num[j]);
-                        sub.push_back(num[l]);
-                        sub.push_back(num[r]);
-                        res.push_back(sub);
-                        do { l++; } while (l < r && num[l-1] == num[l]);
-                        do { r--; } while (l < r && num[r] == num[r+1]);
+                        res.push_back(vector<int>({ num[i], num[j], num[r], num[c] }));
+                        do { r++; } while (r < c && num[r] == num[r - 1]);
+                        do { c--; } while (r < c && num[c] == num[c + 1]);
                     }
                 }
             }
         }
-
         return res;
     }
 };
@@ -64,14 +56,14 @@ int main() {
     vector<vector<int> > p2;
 
     {
-        int a[] = {1, 0, -1, 0, -2, 2};
-        p0.assign(begin(a), end(a));
+        p0 = { 1, 0, -1, 0, -2, 2 };
         p1 = 0;
         p2 = sol.fourSum(p0, p1);
         for (auto it1 : p2) {
             for (auto it2 : it1) cout << it2 << " ";
             cout << endl;
         }
+        cout << endl;
     }
 
     return 0;

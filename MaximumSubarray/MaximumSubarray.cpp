@@ -18,34 +18,48 @@ using namespace std;
 class Solution {
 public:
     int maxSubArray(int A[], int n) {
-        return maxSubArray2(A, 0, n-1);
+        return maxSubArray2(A, n);
     }
 
     int maxSubArray1(int A[], int n) {
         int sum = 0, res = INT_MIN;
         for (int i = 0; i < n; i++) {
             sum += A[i];
-            res = max(res, sum);
+            if (sum > res) res = sum;
             if (sum < 0) sum = 0;
         }
-
         return res;
     }
 
-    int maxSubArray2(int A[], int l, int u) {
+    int maxSubArray2(int A[], int n) {
+        return maxSubArrayHelper1(A, 0, n - 1);
+    }
+
+    int maxSubArrayHelper1(int A[], int l, int u) {
         if (l > u) return INT_MIN;
-        int m = l+(u-l)/2;
-        int res = 0, sum = 0, lmax = 0, rmax = 0;
-        for (int i = m-1; i >= l; i--) sum += A[i], lmax = max(lmax, sum);
+        int m = l + (u - l) / 2;
+        int sum = 0, lmax = 0, rmax = 0;
+        for (int i = m - 1; i >= l; i--) sum += A[i], lmax = max(lmax, sum);
         sum = 0;
-        for (int i = m+1; i <= u; i++) sum += A[i], rmax = max(rmax, sum);
-        res = lmax+A[m]+rmax;
-        res = max(res, maxSubArray2(A, l, m-1));
-        res = max(res, maxSubArray2(A, m+1, u));
-        return res;
+        for (int i = m + 1; i <= u; i++) sum += A[i], rmax = max(rmax, sum);
+        return max(A[m] + lmax + rmax, max(maxSubArrayHelper1(A, l, m - 1), maxSubArrayHelper1(A, m + 1, u)));
     }
 };
 
 int main() {
+    Solution sol;
+
+    {
+        int p0[] = { -2, 1, -3, 4, -1, 2, 1, -5, 4 };
+        int p1 = sol.maxSubArray(p0, sizeof(p0) / sizeof(int));
+        cout << p1 << endl;
+    }
+
+    {
+        int p0[] = { -2, -1 };
+        int p1 = sol.maxSubArray(p0, sizeof(p0) / sizeof(int));
+        cout << p1 << endl;
+    }
+
     return 0;
 }

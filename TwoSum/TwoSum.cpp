@@ -13,7 +13,9 @@
 // Input: numbers={2, 7, 11, 15}, target=9
 // Output: index1=1, index2=2
 // 
-// Complexity: O(nlog(n)) time, O(n) space
+// Complexity:
+// Sort and Scan, O(nlog(n)) time, O(n) space
+// Hash table, O(n) time, O(n) space
 //============================================================================
 
 #include <iostream>
@@ -25,26 +27,46 @@ using namespace std;
 class Solution {
 public:
     vector<int> twoSum(vector<int> &numbers, int target) {
-        vector<int> res;
+        return twoSum2(numbers, target);
+    }
+
+    vector<int> twoSum1(vector<int> &numbers, int target) {
         int N = numbers.size();
-        if (N < 2) return res;
-
-        vector<int> indexs;
-        for (int i = 0; i < N; i++) indexs.push_back(i);
-        sort(begin(indexs), end(indexs), 
-            [&numbers] (const int i, const int j) { return numbers[i] < numbers[j]; });
-
-        int i = 0, j = N-1;
+        vector<int> vs;
+        for (int i = 0; i < N; i++) vs.push_back(i);
+        sort(begin(vs), end(vs),
+            [&numbers](const int i, const int j) { return numbers[i] < numbers[j]; });
+        vector<int> res(2, -1);
+        int i = 0, j = N - 1;
         while (i < j) {
-            int sum = numbers[indexs[i]]+numbers[indexs[j]];
+            int sum = numbers[vs[i]] + numbers[vs[j]];
             if (sum < target) i++;
             else if (sum > target) j--;
-            else break;
-        }
+            else {
+                res[0] = vs[i] + 1;
+                res[1] = vs[j] + 1;
+                if (res[0] > res[1]) swap(res[0], res[1]);
+                break;
+            }
 
-        if (indexs[i] > indexs[j]) swap(indexs[i], indexs[j]);
-        res.push_back(indexs[i]+1);
-        res.push_back(indexs[j]+1);
+        }
+        return res;
+    }
+
+    vector<int> twoSum2(vector<int> &numbers, int target) {
+        int N = numbers.size();
+        unordered_map<int, int> table;
+        for (int i = 0; i < N; i++) table[numbers[i]] = i;
+        vector<int> res(2, -1);
+        for (int i = 0; i < N; i++) {
+            int num = target - numbers[i];
+            if (table.count(num) && i != table[num]) {
+                res[0] = i + 1;
+                res[1] = table[num] + 1;
+                if (res[0] > res[1]) swap(res[0], res[1]);
+                break;
+            }
+        }
         return res;
     }
 };
@@ -56,12 +78,17 @@ int main() {
     vector<int> p2;
 
     {
-        int a[] = {2, 7, 11, 15};
-        p0.assign(begin(a), end(a));
+        p0 = { 2, 7, 11, 15 };
         p1 = 9;
         p2 = sol.twoSum(p0, p1);
-        for (auto it : p2) cout << it << " ";
-        cout << endl;
+        cout << p2[0] << "," << p2[1] << endl;
+    }
+
+    {
+        vector<int> p0 = { 3, 2, 4 };
+        p1 = 6;
+        p2 = sol.twoSum(p0, p1);
+        cout << p2[0] << "," << p2[1] << endl;
     }
 
     return 0;
