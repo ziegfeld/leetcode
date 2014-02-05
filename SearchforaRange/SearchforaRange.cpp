@@ -19,35 +19,33 @@ using namespace std;
 class Solution {
 public:
     vector<int> searchRange(int A[], int n, int target) {
-        int l = lower_bound(A, n, target);
-        int u = upper_bound(A, n, target)-1;
+        int l = lowerBound(A, n, target);
+        int u = upperBound(A, n, target) - 1;
         vector<int> res(2, -1);
-        if (l > u) return res;
-        res[0] = l;
-        res[1] = u;
+        if (l <= u) res[0] = l, res[1] = u;
         return res;
     }
 
-    int lower_bound(int A[], int n, int target) {
-        int l = 0, u = n-1;
+    int lowerBound(int A[], int n, int target) {
+        int l = 0, u = n - 1;
         while (l < u) {
-            int m = l+(u-l)/2;
-            if (A[m] < target) l = m+1;
+            int m = l + (u - l) / 2;
+            if (A[m] < target) l = m + 1;
             else u = m;
         }
-        if (A[l] < target) return n;
-        return l;
+        if (A[u] < target) return n;
+        return u;
     }
 
-    int upper_bound(int A[], int n, int target) {
-        int l = 0, u = n-1;
+    int upperBound(int A[], int n, int target) {
+        int l = 0, u = n - 1;
         while (l < u) {
-            int m = l+(u-l)/2;
-            if (A[m] <= target) l = m+1;
+            int m = l + (u - l) / 2;
+            if (A[m] <= target) l = m + 1;
             else u = m;
         }
-        if (A[l] <= target) return n;
-        return l;
+        if (A[u] <= target) return n;
+        return u;
     }
 };
 

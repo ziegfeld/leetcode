@@ -28,8 +28,8 @@ public:
             if (A[m] < target) l = m+1;
             else u = m;
         }
-        if (A[l] < target) return n;
-        return l;
+        if (A[u] < target) return n;
+        return u;
     }
 };
 
