@@ -23,20 +23,18 @@ struct ListNode {
 class Solution {
 public:
     ListNode *rotateRight(ListNode *head, int k) {
-       if (head == NULL) return head;
-       ListNode * fastNode = head;
-       int l = 0;
-       while (fastNode != NULL) fastNode = fastNode->next, l++;
-       k %= l;
-       if (k == 0) return head;
-       fastNode = head;
-       while (k > 0) fastNode = fastNode->next, k--;
-       ListNode * slowNode = head;
-       while (fastNode->next != NULL) fastNode = fastNode->next, slowNode = slowNode->next;
-       fastNode->next = head;
-       head = slowNode->next;
-       slowNode->next = NULL;
-       return head;
+        if (head == NULL) return head;
+        int l = 1;
+        ListNode * fast = head;
+        for (; fast->next != NULL; fast = fast->next) l++;
+        k %= l;
+        if (k == 0) return head;
+        ListNode * slow = head;
+        for (; l > k + 1; l--) slow = slow->next;
+        fast->next = head;
+        head = slow->next;
+        slow->next = NULL;
+        return head;
     }
 };
 

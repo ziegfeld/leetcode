@@ -29,7 +29,7 @@ struct ListNode {
 class Solution {
 public:
     void reorderList(ListNode *head) {
-        return reorderList2(head);
+        reorderList2(head);
     }
 
     void reorderList1(ListNode *head) {
@@ -51,28 +51,41 @@ public:
     }
 
     void reorderList2(ListNode *head) {
-        if (head == NULL || head->next == NULL) return;
-        ListNode * fastNode = head, * slowNode = head;
-        while (fastNode->next != NULL && fastNode->next->next != NULL)
-            fastNode = fastNode->next->next, slowNode = slowNode->next;
-        fastNode = slowNode->next;
+        if (head == NULL) return;
+        ListNode * slowNode = head, *fastNode = head;
+        while (fastNode->next != NULL && fastNode->next->next != NULL) slowNode = slowNode->next, fastNode = fastNode->next->next;
+        if (slowNode == fastNode) return;
+        fastNode = reverse(slowNode->next);
         slowNode->next = NULL;
-        slowNode = NULL;
-        while (fastNode != NULL) {
-            ListNode * nextNode = fastNode->next;
-            fastNode->next = slowNode;
-            slowNode = fastNode;
-            fastNode = nextNode;
+        head = merge(head, fastNode);
+    }
+
+    ListNode * reverse(ListNode * curNode) {
+        ListNode * preNode = NULL;
+        while (curNode != NULL) {
+            ListNode * nextNode = curNode->next;
+            curNode->next = preNode;
+            preNode = curNode;
+            curNode = nextNode;
         }
-        fastNode = head;
-        while (slowNode != NULL) {
-            ListNode * fastNext = fastNode->next;
-            ListNode * slowNext = slowNode->next;
-            fastNode->next = slowNode;
-            slowNode->next = fastNext;
-            fastNode = fastNext;
-            slowNode = slowNext;
+        return preNode;
+    }
+
+    ListNode * merge(ListNode * frontNode, ListNode * backNode) {
+        ListNode * head = new ListNode(-1), *curNode = head;
+        while (frontNode != NULL || backNode != NULL) {
+            if (frontNode != NULL) curNode->next = frontNode, frontNode = frontNode->next, curNode = curNode->next;
+            if (backNode != NULL) curNode->next = backNode, backNode = backNode->next, curNode = curNode->next;
         }
+
+        return deleteNode(head);
+    }
+
+    ListNode * deleteNode(ListNode * curNode) {
+        ListNode * toDel = curNode;
+        curNode = curNode->next;
+        delete toDel;
+        return curNode;
     }
 };
 

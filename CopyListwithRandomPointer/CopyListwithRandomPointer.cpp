@@ -28,57 +28,41 @@ public:
         return copyRandomList2(head);
     }
 
-    RandomListNode *copyRandomList1(RandomListNode *head) {
-        unordered_map<RandomListNode*, RandomListNode*> table;
-        table[NULL] = NULL;
-        RandomListNode * curNode = head;
-        while (curNode != NULL) {
-            RandomListNode * copyNode = new RandomListNode(curNode->label);
-            copyNode->random = curNode;
-            table[curNode] = copyNode;
-            curNode = curNode->next;
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if (head == NULL) return head;
+        unordered_map<RandomListNode *, RandomListNode *> table;
+        for (RandomListNode * oldNode = head; oldNode != NULL; oldNode = oldNode->next) {
+            RandomListNode * newNode = new RandomListNode(oldNode->label);
+            table[oldNode] = newNode;
         }
-
-        curNode = head;
-        while (curNode != NULL) {
-            RandomListNode * copyNode = table[curNode];
-            copyNode->next = table[copyNode->random->next];
-            copyNode->random = table[copyNode->random->random];
-            curNode = curNode->next;
+        for (RandomListNode * oldNode = head; oldNode != NULL; oldNode = oldNode->next) {
+            table[oldNode]->next = table[oldNode->next];
+            table[oldNode]->random = table[oldNode->random];
         }
-
         return table[head];
     }
 
-    RandomListNode *copyRandomList2(RandomListNode *head) {
-        if (head == NULL) return head;
-        RandomListNode * curNode = head;
-        while (curNode != NULL) {
-            RandomListNode * copyNode = new RandomListNode(curNode->label);
-            copyNode->next = curNode->next;
-            curNode->next = copyNode;
-            curNode = curNode->next->next;
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if (head == NULL) return NULL;
+        for (RandomListNode * oldNode = head; oldNode != NULL; oldNode = oldNode->next->next) {
+            RandomListNode * newNode = new RandomListNode(oldNode->label);
+            newNode->next = oldNode->next;
+            oldNode->next = newNode;
         }
 
-        curNode = head;
-        while (curNode != NULL) {
-            curNode->next->random = (curNode->random == NULL)?NULL:curNode->random->next;
-            curNode = curNode->next->next;
+        for (RandomListNode * oldNode = head; oldNode != NULL; oldNode = oldNode->next->next) {
+            oldNode->next->random = (oldNode->random == NULL) ? NULL : oldNode->random->next;
         }
 
-        curNode = head;
-        RandomListNode * copyHead = curNode->next;
-        while (curNode != NULL) {
-            RandomListNode * copyNode = curNode->next;
-            curNode->next = curNode->next->next;
-            curNode = curNode->next;
-            if (copyNode->next != NULL) {
-                copyNode->next = copyNode->next->next;
-                copyNode = copyNode->next;
-            }
+        RandomListNode * oldNode = head, *newHead = head->next, *newNode = newHead;
+        while (true) {
+            oldNode->next = newNode->next;
+            oldNode = oldNode->next;
+            if (oldNode == NULL) break;
+            newNode->next = oldNode->next;
+            newNode = newNode->next;
         }
-
-        return copyHead;
+        return newHead;
     }
 };
 

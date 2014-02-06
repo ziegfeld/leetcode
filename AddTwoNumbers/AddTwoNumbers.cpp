@@ -26,27 +26,27 @@ struct ListNode {
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        ListNode * head = new ListNode(-1), * curNode = head;
-        int c = 0;
+        ListNode * l3 = new ListNode(-1), *cur = l3;
+        int sum = 0;
         while (l1 != NULL || l2 != NULL) {
-            int s = c;
-            if (l1 != NULL) s += l1->val, l1 = l1->next;
-            if (l2 != NULL) s += l2->val, l2 = l2->next;
-            curNode->next = new ListNode(s%10);
-            curNode = curNode->next;
-            c = s/10;
+            if (l1 != NULL) sum += l1->val, l1 = l1->next;
+            if (l2 != NULL) sum += l2->val, l2 = l2->next;
+            cur->next = new ListNode(sum % 10);
+            cur = cur->next;
+            sum /= 10;
         }
-        if (c != 0) curNode->next = new ListNode(c);
-        return deleteNode(head);
+        if (sum != 0) cur->next = new ListNode(sum);
+        return deleteNode(l3);
     }
 
-    ListNode * deleteNode(ListNode * curNode) {
-        ListNode * toDel = curNode;
-        curNode = curNode->next;
+    ListNode* deleteNode(ListNode * cur) {
+        ListNode *toDel = cur;
+        cur = cur->next;
         delete toDel;
-        return curNode;
+        return cur;
     }
 };
+
 
 int main() {
     Solution sol;
