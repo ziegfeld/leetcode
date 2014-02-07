@@ -24,13 +24,14 @@ using namespace std;
 class Solution {
 public:
     bool canJump(int A[], int n) {
-        int start = 0, end = 0;
-        while (start <= end) {
-            end = max(end, start+A[start]);
-            if (end >= n-1) return true;
-            start++;
+        int cur = 0, end = 0;
+        while (end < n - 1) {
+            int tmp = end;
+            for (; cur <= end; cur++) tmp = max(tmp, cur + A[cur]);
+            if (tmp <= end) return false;
+            end = tmp;
         }
-        return false;
+        return true;
     }
 };
 

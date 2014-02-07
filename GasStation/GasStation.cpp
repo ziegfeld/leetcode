@@ -23,16 +23,13 @@ using namespace std;
 class Solution {
 public:
     int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {
-        int sumSoFar = 0, sumTotal = 0, res = -1;
-        for (int i = 0; i < (int)gas.size(); i++) {
-            sumSoFar += (gas[i]-cost[i]);
-            sumTotal += (gas[i]-cost[i]);
-            if (sumSoFar < 0) {
-                sumSoFar = 0;
-                res = i;
-            }
+        int sum = 0, total = 0, res = -1;
+        for (int i = 0; i < gas.size(); i++) {
+            sum += gas[i] - cost[i];
+            total += gas[i] - cost[i];
+            if (sum < 0) sum = 0, res = i;
         }
-        return (sumTotal<0)?-1:res+1;
+        return (total < 0) ? -1 : res + 1;
     }
 };
 

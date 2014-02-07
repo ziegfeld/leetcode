@@ -22,8 +22,8 @@ public:
     int maxProfit(vector<int> & prices) {
         int res = 0, minp = INT_MAX;
         for (int p : prices) {
+            res = max(res, (p - minp));
             minp = min(minp, p);
-            res = max(res, (p-minp));
         }
         return res;
     }
