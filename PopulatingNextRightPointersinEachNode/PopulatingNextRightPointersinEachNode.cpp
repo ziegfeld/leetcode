@@ -54,6 +54,28 @@ struct TreeLinkNode
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
+        return connect3(root);
+    }
+
+    void connect1(TreeLinkNode *root) {
+        if (root == NULL) return;
+        if (root->left != NULL) root->left->next = root->right;
+        if (root->right != NULL) root->right->next = (root->next == NULL) ? NULL : root->next->left;
+        connect1(root->left);
+        connect1(root->right);
+    }
+
+    void connect2(TreeLinkNode * root) {
+        queue<TreeLinkNode *> qs;
+        if (root != NULL) qs.push(root);
+        while (!qs.empty()) {
+            root = qs.front(), qs.pop();
+            if (root->left != NULL) root->left->next = root->right, qs.push(root->left);
+            if (root->right != NULL) root->right->next = (root->next == NULL) ? NULL : root->next->left, qs.push(root->right);
+        }
+    }
+
+    void connect3(TreeLinkNode * root) {
         while (root != NULL) {
             TreeLinkNode * cur = root;
             while (cur != NULL) {

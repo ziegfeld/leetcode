@@ -35,42 +35,14 @@ struct TreeNode {
 
 class Solution {
 public:
-    vector<int> postorderTraversal(TreeNode* root) {
-        return postorderTraversal1(root);
-    }
-
-    vector<int> postorderTraversal1(TreeNode* root) {
+    vector<int> postorderTraversal(TreeNode *root) {
         vector<int> res;
-        postorderTraversalHelper1(root, res);
-        return res;
-    }
-
-    void postorderTraversalHelper1(TreeNode* node, vector<int> & res) {
-        if (node == NULL) return;
-        postorderTraversalHelper1(node->left, res);
-        postorderTraversalHelper1(node->right, res);
-        res.push_back(node->val);
-    }
-
-    vector<int> postorderTraversal2(TreeNode *root) {
-        vector<int> res;
-        stack<TreeNode*> stk;
-        TreeNode * cur = root;
-        while (cur != NULL) {
-            res.push_back(cur->val);
-            stk.push(cur);
-            cur = cur->right;
-        }
+        stack<TreeNode *> stk;
+        for (; root != NULL; root = root->right) res.push_back(root->val), stk.push(root);
         while (!stk.empty()) {
-            cur = stk.top(), stk.pop();
-            cur = cur->left;
-            while (cur != NULL) {
-                res.push_back(cur->val);
-                stk.push(cur);
-                cur = cur->right;
-            }
+            root = stk.top()->left, stk.pop();
+            for (; root != NULL; root = root->right) res.push_back(root->val), stk.push(root);
         }
-
         reverse(begin(res), end(res));
         return res;
     }

@@ -39,53 +39,36 @@ public:
         return inorderTraversal2(root);
     }
 
-    vector<int> inorderTraversal1(TreeNode * root) {
+    vector<int> inorderTraversal1(TreeNode *root) {
         vector<int> res;
-        inorderTraversalHelper1(root, res);
-        return res;
-    }
-
-    void inorderTraversalHelper1(TreeNode * node, vector<int> & res) {
-        if (node == NULL) return;
-        inorderTraversalHelper1(node->left, res);
-        res.push_back(node->val);
-        inorderTraversalHelper1(node->right, res);
-    }
-
-    vector<int> inorderTraversal2(TreeNode * root) {
-        vector<int> res;
-        stack<TreeNode*> stk;
-        TreeNode * cur = root;
-        while (cur != NULL) stk.push(cur), cur = cur->left;
+        stack<TreeNode *> stk;
+        for (; root != NULL; root = root->left) stk.push(root);
         while (!stk.empty()) {
-            cur = stk.top(), stk.pop();
-            res.push_back(cur->val);
-            cur = cur->right;
-            while (cur != NULL) stk.push(cur), cur = cur->left;
+            root = stk.top(), stk.pop(), res.push_back(root->val);
+            for (root = root->right; root != NULL; root = root->left) stk.push(root);
         }
         return res;
     }
 
-    vector<int> inorderTraversal3(TreeNode * root) {
+    vector<int> inorderTraversal2(TreeNode * root) {
         vector<int> res;
-        TreeNode * cur = root;
-        while (cur != NULL) {
-            if (cur->left != NULL) {
-                TreeNode * pre = cur->left;
-                while (pre->right != NULL && pre->right != cur) pre = pre->right;
+        while (root != NULL) {
+            if (root->left != NULL) {
+                auto pre = root->left;
+                while (pre->right != NULL && pre->right != root) pre = pre->right;
                 if (pre->right == NULL) {
-                    pre->right = cur;
-                    cur = cur->left;
+                    pre->right = root;
+                    root = root->left;
                 }
                 else {
                     pre->right = NULL;
-                    res.push_back(cur->val);
-                    cur = cur->right;
+                    res.push_back(root->val);
+                    root = root->right;
                 }
             }
             else {
-                res.push_back(cur->val);
-                cur = cur->right;
+                res.push_back(root->val);
+                root = root->right;
             }
         }
         return res;

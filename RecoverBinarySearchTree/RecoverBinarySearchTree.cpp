@@ -48,50 +48,46 @@ public:
     void recoverTree2(TreeNode *root) {
         TreeNode * pre = NULL, *first = NULL, *second = NULL;
         stack<TreeNode *> stk;
-        TreeNode * cur = root;
-        while (cur != NULL) stk.push(cur), cur = cur->left;
+        for (; root != NULL; root = root->left) stk.push(root);
         while (!stk.empty()) {
-            cur = stk.top(), stk.pop();
-            if (pre != NULL && pre->val > cur->val) {
+            root = stk.top(), stk.pop();
+            if (pre != NULL && pre->val > root->val) {
                 if (first == NULL) first = pre;
-                second = cur;
+                second = root;
             }
-            pre = cur;
-            cur = cur->right;
-            while (cur != NULL) stk.push(cur), cur = cur->left;
+            for (root = root->right; root != NULL; root = root->left) stk.push(root);
         }
-
         swap(first->val, second->val);
     }
 
     void recoverTree3(TreeNode *root) {
-        TreeNode * pre = NULL, *first = NULL, *second = NULL;
-        TreeNode * cur = root;
-        while (cur != NULL) {
-            if (cur->left != NULL) {
-                TreeNode * p = cur->left;
-                while (p->right != NULL && p->right != cur) p = p->right;
-                if (p->right == NULL) {
-                    p->right = cur;
-                    cur = cur->left;
+        TreeNode * last = NULL, *first = NULL, *second = NULL;
+
+        while (root != NULL) {
+            if (root->left != NULL) {
+                TreeNode * pre = root->left;
+                while (pre->right != NULL && pre->right != root) pre = pre->right;
+                if (pre->right == NULL) {
+                    pre->right = root;
+                    root = root->left;
                 }
                 else {
-                    p->right = NULL;
-                    if (pre != NULL && pre->val > cur->val) {
-                        if (first == NULL) first = pre;
-                        second = cur;
+                    pre->right = NULL;
+                    if (last != NULL && last->val > root->val) {
+                        if (first == NULL) first = last;
+                        second = root;
                     }
-                    pre = cur;
-                    cur = cur->right;
+                    last = root;
+                    root = root->right;
                 }
             }
             else {
-                if (pre != NULL && pre->val > cur->val) {
-                    if (first == NULL) first = pre;
-                    second = cur;
+                if (last != NULL && last->val > root->val) {
+                    if (first == NULL) first = last;
+                    second = root;
                 }
-                pre = cur;
-                cur = cur->right;
+                last = root;
+                root = root->right;
             }
         }
 

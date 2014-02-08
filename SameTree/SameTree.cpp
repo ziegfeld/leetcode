@@ -32,30 +32,23 @@ public:
 
     bool isSameTree1(TreeNode *p, TreeNode *q) {
         if (p == NULL && q == NULL) return true;
-        if (p == NULL || q == NULL || p->val != q->val) return false;
-        return isSameTree1(p->left, q->left) && isSameTree1(p->right, q->right);
+        if (p == NULL || q == NULL) return false;
+        return (p->val == q->val) && isSameTree1(p->left, q->left) && isSameTree1(p->right, q->right);
     }
 
     bool isSameTree2(TreeNode *p, TreeNode *q) {
-        if (p == NULL && q == NULL) return true;
-        if (p == NULL || q == NULL || p->val != q->val) return false;
         queue<TreeNode *> ps, qs;
-        ps.push(p), qs.push(q);
+        if (p != NULL) ps.push(p);
+        if (q != NULL) qs.push(q);
         while (!ps.empty() && !qs.empty()) {
-            TreeNode * cp = ps.front(), *cq = qs.front();
-            ps.pop(), qs.pop();
-            if (cp->left != NULL && cq->left != NULL) {
-                if (cp->left->val != cq->left->val) return false;
-                ps.push(cp->left), qs.push(cq->left);
-            }
-            else if (!(cp->left == NULL && cq->left == NULL)) return false;
-            if (cp->right != NULL && cq->right != NULL) {
-                if (cp->right->val != cq->right->val) return false;
-                ps.push(cp->right), qs.push(cq->right);
-            }
-            else if (!(cp->right == NULL && cq->right == NULL)) return false;
+            p = ps.front(), ps.pop();
+            q = qs.front(), qs.pop();
+            if (p->val != q->val) return false;
+            if (p->left != NULL && q->left != NULL) ps.push(p->left), qs.push(q->left);
+            else if (!(p->left == NULL && q->left == NULL)) return false;
+            if (p->right != NULL && q->right != NULL) ps.push(p->right), qs.push(q->right);
+            else if (!(p->right == NULL && q->right == NULL)) return false;
         }
-
         return ps.empty() && qs.empty();
     }
 };
