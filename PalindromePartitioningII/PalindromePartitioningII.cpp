@@ -22,39 +22,15 @@ using namespace std;
 class Solution {
 public:
     int minCut(string s) {
-        return minCut2(s);
-    }
-
-    int minCut1(string & s) {
         int N = s.size();
         vector<vector<bool> > dp1(N, vector<bool>(N, false));
-        for (int l = 1; l <= N; l++) {
-            for (int i = 0; i < N - l + 1; i++) {
-                int j = i + l - 1;
-                if (s[i] == s[j] && (l <= 2 || dp1[i + 1][j - 1])) dp1[i][j] = true;
-            }
-        }
-
-        vector<int> dp2(N, 0);
-        for (int i = 1; i < N; i++) {
-            dp2[i] = i;
-            for (int j = 0; j <= i; j++) {
-                if (dp1[j][i]) dp2[i] = min(dp2[i], (j == 0) ? 0 : dp2[j - 1] + 1);
-            }
-        }
-        return dp2[N - 1];
-    }
-
-    int minCut2(string & s) {
-        int N = s.size();
-        vector<vector<bool> > dp1(N, vector<bool>(N, false));
-        vector<int> dp2(N, 0);
-        for (int i = 1; i < N; i++) {
-            dp2[i] = i;
-            for (int j = 0; j <= i; j++) {
-                if (s[j] == s[i] && (i - j < 2 || dp1[j + 1][i - 1])) {
-                    dp1[j][i] = true;
-                    dp2[i] = min(dp2[i], (j == 0) ? 0 : dp2[j - 1] + 1);
+        vector<int> dp2(N, N);
+        for (int j = 0; j < N; j++) {
+            for (int i = j; i >= 0; i--) {
+                if (s[i] == s[j] && (j - i < 2 || dp1[i + 1][j - 1])) {
+                    dp1[i][j] = true;
+                    if (i == 0) dp2[j] = 0;
+                    else dp2[j] = min(dp2[j], dp2[i - 1] + 1);
                 }
             }
         }

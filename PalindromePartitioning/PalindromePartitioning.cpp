@@ -14,7 +14,7 @@
 //   ]
 //
 // Complexity:
-// Recursion, O(2^n) time
+// Recursion + Memoization, O(n^2) time,  O(n^3) space
 // DP, O(n^2) time, O(n^3) space
 //============================================================================
 
@@ -31,47 +31,49 @@ public:
     }
 
     vector<vector<string> > partition1(string & s) {
-        vector<vector<string> > res;
-        vector<string> path;
-        partitionHelper1(s, 0, path, res);
-        return res;
-    }
-
-    void partitionHelper1(string & s, int i, vector<string> & path, vector<vector<string> > & res) {
         int N = s.size();
-        if (i == N) {
-            res.push_back(path);
-            return;
+        vector<vector<bool> > dp1(N, vector<bool>(N, false));
+        vector<vector<vector<string> > > dp2(N, vector<vector<string> >());
+        for (int j = 0; j < N; j++) {
+            for (int i = j; i >= 0; i--) {
+                if (s[i] == s[j] && (j - i < 2 || dp1[i + 1][j - 1])) dp1[i][j] = true;
+            }
         }
 
-        for (int j = i; j < N; j++) {
-            if (!check(s, i, j)) continue;
-            path.push_back(s.substr(i, j - i + 1));
-            partitionHelper1(s, j + 1, path, res);
-            path.pop_back();
-        }
+        return partitionHelper(s, 0, dp1, dp2);
     }
 
-    bool check(string & s, int i, int j) {
-        while (i < j && s[i] == s[j]) i++, j--;
-        return (i >= j);
+    vector<vector<string> > partitionHelper(string & s, int i, vector<vector<bool> > & dp1, vector<vector<vector<string> > > & dp2) {
+        if (i == s.size()) return vector<vector<string> >(1, vector<string>());
+        if (!dp2[i].empty()) return dp2[i];
+        vector<vector<string> > res;
+        for (int j = i; j < s.size(); j++) {
+            if (!dp1[i][j]) continue;
+            auto ps = partitionHelper(s, j + 1, dp1, dp2);
+            for (auto p : ps) {
+                p.insert(p.begin(), s.substr(i, j - i + 1));
+                res.push_back(p);
+            }
+        }
+        return dp2[i] = res;
     }
 
     vector<vector<string> > partition2(string & s) {
         int N = s.size();
         vector<vector<bool> > dp1(N, vector<bool>(N, false));
         vector<vector<vector<string> > > dp2(N, vector<vector<string> >());
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j <= i; j++) {
-                if (s[i] == s[j] && (i - j < 2 || dp1[j + 1][i - 1])) {
-                    dp1[j][i] = true;
-                    if (j == 0) {
-                        dp2[i].push_back(vector<string>(1, s.substr(j, i - j + 1)));
+        for (int j = 0; j < N; j++) {
+            for (int i = j; i >= 0; i--) {
+                int l = j - i + 1;
+                if (s[i] == s[j] && (l <= 2 || dp1[i + 1][j - 1])) {
+                    dp1[i][j] = true;
+                    if (i == 0) {
+                        dp2[j].push_back(vector<string>(1, s.substr(0, l)));
                     }
                     else {
-                        for (auto p : dp2[j - 1]) {
-                            p.push_back(s.substr(j, i - j + 1));
-                            dp2[i].push_back(p);
+                        for (auto p : dp2[i - 1]) {
+                            p.push_back(s.substr(i, l));
+                            dp2[j].push_back(p);
                         }
                     }
                 }

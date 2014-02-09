@@ -20,10 +20,10 @@ public:
     bool isPalindrome(int x) {
         if (x < 0) return false;
         long long d = 1;
-        while (d*10 < x) d *= 10;
-        while (x > 0) {
-            if (x/d != x%10) return false;
-            x = (x%d)/10;
+        while (d * 10 < x) d *= 10;
+        while (x >= 10) {
+            if (x / d != x % 10) return false;
+            x = (x%d) / 10;
             d /= 100;
         }
         return true;
