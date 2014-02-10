@@ -24,14 +24,14 @@ using namespace std;
 class Solution {
 public:
     string convert(string s, int nRows) {
-        if (nRows < 2 || s.empty()) return s;
+        if (nRows < 2) return s;
+        int N = s.size(), L = 2 * (nRows - 1);
         string res;
-        int N = s.size(), L = 2*(nRows-1);
         for (int i = 0; i < nRows; i++) {
             for (int j = i; j < N; j += L) {
                 res.push_back(s[j]);
-                if (i > 0 && i < nRows-1) {
-                    int k = j+L-2*i;
+                if (i > 0 && i < nRows - 1) {
+                    int k = j + L - 2 * i;
                     if (k < N) res.push_back(s[k]);
                 }
             }

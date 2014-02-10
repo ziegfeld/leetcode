@@ -28,14 +28,12 @@ using namespace std;
 class Solution {
 public:
     int reverse(int x) {
-        int sn = 1;
-        if (x < 0) x = -x, sn = -sn;
-        int y = 0;
-        while (x > 0) {
-            y = y*10+x%10;
-            x/= 10;
+        long long y = 0;
+        while (x != 0) {
+            y = y * 10 + x % 10;
+            x /= 10;
         }
-        return sn*y;
+        return (int)y;
     }
 };
 
