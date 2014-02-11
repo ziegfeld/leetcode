@@ -95,33 +95,6 @@ public:
     }
 };
 
-string toStringHelper(TreeNode * cur) {
-    if (cur == NULL) return "#,";
-    string res = to_string(cur->val) + ',';
-    res += toStringHelper(cur->left);
-    res += toStringHelper(cur->right);
-    return res;
-}
-
-string toString(TreeNode * root) {
-    string res = "{";
-    res += toStringHelper(root);
-    res.pop_back();
-    res += "}";
-    return res;
-}
-
 int main() {
-    Solution sol;
-    TreeNode * p0;
-
-    {
-        p0 = new TreeNode(1);
-        p0->right = new TreeNode(2);
-        p0->right->left = new TreeNode(3);
-        sol.recoverTree(p0);
-        cout << toString(p0) << endl;
-    }
-
     return 0;
 }

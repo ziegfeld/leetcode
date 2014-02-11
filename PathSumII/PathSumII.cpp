@@ -58,36 +58,6 @@ public:
     }
 };
 
-TreeNode * readNode(istringstream & is) {
-    string str;
-    if (is >> str) {
-        if (str == "#") return NULL;
-        return new TreeNode(stoi(str));
-    }
-    return NULL;
-}
-
-TreeNode * fromString(string str) {
-    str.erase(str.begin());
-    str.pop_back();
-    replace(begin(str), end(str), ',', ' ');
-    istringstream is(str);
-    TreeNode * root = readNode(is);
-    queue<TreeNode *> qs;
-    if (root != NULL) qs.push(root);
-    while (!qs.empty()) {
-        TreeNode * cur = qs.front();
-        qs.pop();
-        if (cur != NULL) {
-            cur->left = readNode(is);
-            if (cur->left != NULL) qs.push(cur->left);
-            cur->right = readNode(is);
-            if (cur->right != NULL) qs.push(cur->right);
-        }
-    }
-    return root;
-}
-
 int main() {
     Solution sol;
     TreeNode *p0;
@@ -95,7 +65,16 @@ int main() {
     vector<vector<int> > p2;
 
     {
-        p0 = fromString("{5,4,8,11,#,13,4,7,2,#,#,5,1}");
+        p0 = new TreeNode(5);
+        p0->left = new TreeNode(4);
+        p0->right = new TreeNode(8);
+        p0->left->left = new TreeNode(11);
+        p0->right->left = new TreeNode(13);
+        p0->right->right = new TreeNode(4);
+        p0->left->left->left = new TreeNode(7);
+        p0->left->left->right = new TreeNode(2);
+        p0->right->right->left = new TreeNode(5);
+        p0->right->right->right = new TreeNode(1);
         p1 = 22;
         p2 = sol.pathSum(p0, p1);
         for (auto it1 : p2) {

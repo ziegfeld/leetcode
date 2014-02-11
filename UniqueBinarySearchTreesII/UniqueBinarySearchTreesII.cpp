@@ -90,38 +90,6 @@ public:
     }
 };
 
-string toString(TreeNode * root) {
-    ostringstream os;
-    queue<TreeNode *> cq, nq;
-    cq.push(root);
-    while (!cq.empty()) {
-        vector<int> path;
-        while (!cq.empty()) {
-            TreeNode * cur = cq.front();
-            cq.pop();
-            if (cur == NULL) {
-                os << "# ";
-            }
-            else {
-                os << cur->val << " ";
-                nq.push(cur->left);
-                nq.push(cur->right);
-            }
-        }
-        swap(cq, nq);
-    }
-    string res = os.str();
-    res.pop_back();
-    return res;
-}
-
 int main() {
-    Solution sol;
-
-    {
-        auto p1 = sol.generateTrees(3);
-        for (auto it : p1) cout << toString(it) << endl;
-    }
-
     return 0;
 }

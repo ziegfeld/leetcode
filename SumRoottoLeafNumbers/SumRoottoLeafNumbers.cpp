@@ -56,42 +56,14 @@ public:
     }
 };
 
-TreeNode * readNode(istringstream & is) {
-    string str;
-    if (is >> str) {
-        if (str == "#") return NULL;
-        return new TreeNode(stoi(str));
-    }
-    return NULL;
-}
-
-TreeNode * fromString(string str) {
-    str.erase(str.begin());
-    str.pop_back();
-    replace(begin(str), end(str), ',', ' ');
-    istringstream is(str);
-    TreeNode * root = readNode(is);
-    queue<TreeNode *> qs;
-    if (root != NULL) qs.push(root);
-    while (!qs.empty()) {
-        TreeNode * cur = qs.front();
-        qs.pop();
-        if (cur != NULL) {
-            cur->left = readNode(is);
-            if (cur->left != NULL) qs.push(cur->left);
-            cur->right = readNode(is);
-            if (cur->right != NULL) qs.push(cur->right);
-        }
-    }
-    return root;
-}
-
 int main() {
     Solution sol;
     TreeNode * p0;
 
     {
-        p0 = fromString("{1,2,3}");
+        p0 = new TreeNode(1);
+        p0->left = new TreeNode(2);
+        p0->right = new TreeNode(3);
         cout << sol.sumNumbers(p0) << endl;
     }
 }
