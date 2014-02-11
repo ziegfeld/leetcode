@@ -24,24 +24,22 @@ public:
         return letterCombinations1(digits);
     }
 
-    vector<string> letterCombinations1(string digits) {
-        string sub;
+    vector<string> letterCombinations1(string & digits) {
+        string path;
         vector<string> res;
-        letterCombinationsHelper1(digits, 0, sub, res);
+        letterCombinationsHelper1(digits, 0, path, res);
         return res;
     }
 
-    void letterCombinationsHelper1(string & digits, int start, string & sub, vector<string> & res) {
-        if (start == digits.size()) {
-            res.push_back(sub);
+    void letterCombinationsHelper1(string & digits, int begin, string & path, vector<string> & res) {
+        if (begin == digits.size()) {
+            res.push_back(path);
             return;
         }
-
-        int d = digits[start] - '2';
-        for (char c : keypad[d]) {
-            sub.push_back(c);
-            letterCombinationsHelper1(digits, start + 1, sub, res);
-            sub.pop_back();
+        for (char c : keypad[digits[begin] - '2']) {
+            path.push_back(c);
+            letterCombinationsHelper1(digits, begin + 1, path, res);
+            path.pop_back();
         }
     }
 

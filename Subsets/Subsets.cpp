@@ -31,33 +31,35 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<int> > subsets(vector<int> & S) {
-        return subsets1(S);
+    vector<vector<int> > subsets(vector<int> &S) {
+        return subsets2(S);
     }
 
-    vector<vector<int> > subsets1(vector<int> & S) {
+    vector<vector<int> > subsets1(vector<int> &S) {
         sort(begin(S), end(S));
-        vector<int> sub;
+        vector<int> path;
         vector<vector<int> > res;
-        subsetsHelper1(S, 0, sub, res);
+        subsetsHelper1(S, 0, path, res);
         return res;
     }
 
-    void subsetsHelper1(vector<int> & S, int start, vector<int> & sub, vector<vector<int> > & res) {
-        res.push_back(sub);
-        for (int i = start; i < S.size(); i++) {
-            auto copy = sub;
-            copy.push_back(S[i]);
-            subsetsHelper1(S, i + 1, copy, res);
+    void subsetsHelper1(vector<int> &S, int begin, vector<int> & path, vector<vector<int> > & res) {
+        res.push_back(path);
+        int end = S.size();
+        for (int cur = begin; cur < end; cur++) {
+            path.push_back(S[cur]);
+            subsetsHelper1(S, cur + 1, path, res);
+            path.pop_back();
         }
     }
 
-    vector<vector<int> > subsets2(vector<int> & S) {
+    vector<vector<int> > subsets2(vector<int> &S) {
         sort(begin(S), end(S));
         vector<vector<int> > res(1, vector<int>());
-        for (int i = 0; i < S.size(); i++) {
-            int N = res.size();
-            for (int j = 0; j < N; j++) {
+        int N = S.size();
+        for (int i = 0; i < N; i++) {
+            int M = res.size();
+            for (int j = 0; j < M; j++) {
                 auto copy = res[j];
                 copy.push_back(S[i]);
                 res.push_back(copy);
