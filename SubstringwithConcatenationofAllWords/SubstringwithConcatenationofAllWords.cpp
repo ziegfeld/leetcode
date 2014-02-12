@@ -50,39 +50,32 @@ public:
 
     vector<int> findSubstring2(string S, vector<string> &L) {
         vector<int> res;
-        if (L.empty() || L[0].empty()) return res;
+        if (S.empty() || L.empty()) return res;
         unordered_map<string, int> toFind;
-        for (auto it : L) toFind[it]++;
-        int M = L.size(), K = L[0].size(), N = S.size();
+        for (auto & str : L) toFind[str]++;
+        int N = S.size(), M = L.size(), K = L[0].size();
         for (int k = 0; k < K; k++) {
             unordered_map<string, int> hasFound;
-            int count = 0;
+            int cnt = 0;
             for (int start = k, end = k; end < N; end += K) {
-                if (toFind.count(S.substr(end, K)) == 0) {
+                if (!toFind.count(S.substr(end, K))) {
                     hasFound.clear();
-                    count = 0;
-                    start = end+K;
-                    continue;
+                    cnt = 0;
+                    start = end + K;
                 }
-
-                if (hasFound[S.substr(end, K)] < toFind[S.substr(end, K)]) {
+                else if (hasFound[S.substr(end, K)] < toFind[S.substr(end, K)]) {
                     hasFound[S.substr(end, K)]++;
-                    count++;
-                    if (count == M) {
-                        res.push_back(start);
-                        hasFound[S.substr(start, K)]--;
-                        count--;
-                        start += K;
-                    }
+                    cnt++;
                 }
                 else {
                     while (S.substr(start, K) != S.substr(end, K)) {
                         hasFound[S.substr(start, K)]--;
-                        count--;
+                        cnt--;
                         start += K;
                     }
                     start += K;
                 }
+                if (cnt == M) res.push_back(start);
             }
         }
         return res;

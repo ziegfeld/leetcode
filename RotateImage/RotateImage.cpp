@@ -8,6 +8,7 @@
 // Could you do this in-place?
 //============================================================================
 
+#include <iostream>
 #include <vector>
 
 using namespace std;
