@@ -39,10 +39,12 @@ public:
     vector<int> preorderTraversal(TreeNode *root) {
         vector<int> res;
         stack<TreeNode *> stk;
-        for (; root != NULL; root = root->left) res.push_back(root->val), stk.push(root);
+        if (root != NULL) stk.push_back(root);
         while (!stk.empty()) {
-            root = stk.top()->right, stk.pop();
-            for (; root != NULL; root = root->left) res.push_back(root->val), stk.push(root);
+            root = stk.top(), stk.pop();
+            res.push_back(root->val);
+            if (root->right != NULL) res.push_back(root->right);
+            if (root->left != NULL) res.push_back(root->left);
         }
         return res;
     }

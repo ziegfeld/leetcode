@@ -37,13 +37,13 @@ public:
         auto pre = intervals[0];
         for (int i = 1; i < (int)intervals.size(); i++) {
             auto cur = intervals[i];
-            if (cur.start <= pre.end) {
-                pre.start = min(pre.start, cur.start);
-                pre.end = max(pre.end, cur.end);
-            }
-            else {
+            if (pre.end < cur.start) {
                 res.push_back(pre);
                 pre = cur;
+            }
+            else {
+                pre.start = min(pre.start, cur.start);
+                pre.end = max(pre.end, cur.end);
             }
         }
         res.push_back(pre);

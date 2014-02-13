@@ -23,8 +23,23 @@ public:
         if (height.empty()) return 0;
         return largestRectangleArea2(height);
     }
-    
+
     int largestRectangleArea1(vector<int> &height) {
+        int res = 0, N = height.size();
+        height.push_back(0);
+        stack<int> stk;
+        for (int i = 0; i <= N; i++) {
+            while (!stk.empty() && height[stk.top()] >= height[i]) {
+                int h = height[stk.top()];
+                stk.pop();
+                res = max(res, ((stk.empty() ? i : i - stk.top() - 1))*h);
+            }
+            stk.push(i);
+        }
+        return res;
+    }
+    
+    int largestRectangleArea2(vector<int> &height) {
         int N = height.size();
         vector<int> vs(4*N, 0);
         build(height, vs, 1, 0, N-1);
@@ -63,23 +78,6 @@ public:
         if (q2 == -1) return vs[n] = q1;
         if (hs[q1] <= hs[q2]) return vs[n] = q1;
         return vs[n] = q2;
-    }
-
-    int largestRectangleArea2(vector<int> &height) {
-        height.push_back(0);
-        int N = height.size(), i = 0, res = 0;
-        stack<int> stk;
-        while (i < N) {
-            if (stk.empty() || height[stk.top()] <= height[i]) {
-                stk.push(i++);
-                continue;
-            }
-            int t = stk.top();
-            stk.pop();
-            res = max(res, height[t]*(stk.empty()?i:(i-stk.top()-1)));
-        }
-
-        return res;
     }
 };
 

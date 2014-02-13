@@ -38,13 +38,21 @@ public:
     vector<int> postorderTraversal(TreeNode *root) {
         vector<int> res;
         stack<TreeNode *> stk;
-        for (; root != NULL; root = root->right) res.push_back(root->val), stk.push(root);
+        pushPath(stk, root);
         while (!stk.empty()) {
-            root = stk.top()->left, stk.pop();
-            for (; root != NULL; root = root->right) res.push_back(root->val), stk.push(root);
+            root = stk.top(), stk.pop();
+            res.push_back(root->val);
+            if (!stk.empty() && root == stk.top()->left) pushPath(stk.top()->right);
         }
-        reverse(begin(res), end(res));
         return res;
+    }
+
+    void pushPath(stack<TreeNode *> & stk, TreeNode * cur) {
+        while (cur != NULL) {
+            stk.push(cur);
+            if (cur->left != NULL) cur = cur->left;
+            else cur = cur->right;
+        }
     }
 };
 
