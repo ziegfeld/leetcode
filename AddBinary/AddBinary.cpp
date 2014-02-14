@@ -18,45 +18,19 @@ using namespace std;
 class Solution {
 public:
     string addBinary(string a, string b) {
-        return addBinary1(a, b);
-    }
-
-    string addBinary1(string & a, string & b) {
-        reverse(begin(a), end(a));
-        reverse(begin(b), end(b));
-        if (a.size() < b.size()) swap(a, b);
-        int na = a.size(), nb = b.size();
-        int c = 0;
-        string res(na, '0');
-        for (int i = 0; i < na; i++) {
-            int s = a[i] - '0';
-            s += (i < nb) ? b[i] - '0' : 0;
-            s += c;
-            res[i] = '0' + s % 2;
-            c = s / 2;
+        string res;
+        int i = a.size() - 1, j = b.size() - 1, sum = 0;
+        while (i >= 0 || j >= 0) {
+            sum += (i == -1 ? 0 : a[i--] - '0');
+            sum += (j == -1 ? 0 : b[j--] - '0');
+            res.insert(res.begin(), '0' + sum % 2);
+            sum /= 2;
         }
-        if (c == 1) res.push_back('1');
-        reverse(begin(res), end(res));
-        return res;
-    }
-
-    string addBinary2(string & a, string & b) {
-        if (a.size() < b.size()) swap(a, b);
-        int na = a.size(), nb = b.size();
-        int c = 0;
-        string res(na, '0');
-        for (int i = na - 1; i >= 0; i--) {
-            int j = nb - na + i;
-            int s = a[i] - '0';
-            s += (j >= 0) ? b[j] - '0' : 0;
-            s += c;
-            res[i] = '0' + s % 2;
-            c = s / 2;
-        }
-        if (c == 1) res.insert(res.begin(), '1');
+        if (sum == 1) res.insert(res.begin(), '1');
         return res;
     }
 };
+
 
 int main() {
     Solution sol;

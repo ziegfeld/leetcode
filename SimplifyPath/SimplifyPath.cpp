@@ -27,41 +27,38 @@ public:
         return simplifyPath2(path);
     }
 
-    string simplifyPath1(string & path) {
+    string simplifyPath(string path) {
+        if (path.empty()) return "/";
         replace(begin(path), end(path), '/', ' ');
         vector<string> vs;
         istringstream is(path);
         string str;
         while (is >> str) {
-            if (str == "..") {
-                if (!vs.empty()) vs.pop_back();
-                continue;
-            }
-            if (str != ".") vs.push_back(str);
+            if (str == "..") { if (!vs.empty()) vs.pop_back(); }
+            else { if (str != ".") vs.push_back(str); }
         }
         if (vs.empty()) return "/";
-        string res;
-        for (auto s : vs) res += ('/' + s);
-        return res;
+        ostringstream os;
+        for (auto v : vs) os << "/" << v;
+        return os.str();
     }
 
     string simplifyPath2(string & path) {
-        if (path.empty()) return path;
+        if (path.empty()) return "/";
         if (path.back() != '/') path.push_back('/');
-        int last = 0;
-        for (int start = 0, end = 0; end < path.size(); end++) {
+        int len = 0;
+        for (int begin = 0, end = 0; end < path.size(); end++) {
             if (path[end] != '/') continue;
-            if (end - start == 3 && path[end - 1] == '.' && path[end - 2] == '.') {
-                while (last > 0 && path[--last] != '/');
+            if (end - begin == 3 && path[end - 2] == '.' && path[end - 1] == '.') {
+                if (len > 0) len--;
+                while (len > 0 && path[len] != '/') len--;
             }
-            else if (end - start > 2 || (end - start == 2 && path[end - 1] != '.')) {
-                while (start < end) path[last++] = path[start++];
+            else if (end - begin > 2 || (end - begin == 2 && path[end - 1] != '.')) {
+                while (begin < end) path[len++] = path[begin++];
             }
-            start = end;
+            begin = end;
         }
-
-        if (last == 0) return "/";
-        return path.substr(0, last);
+        return len == 0 ? "/" : path.substr(0, len);
     }
 };
 

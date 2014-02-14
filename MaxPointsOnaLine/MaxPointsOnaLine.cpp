@@ -25,30 +25,28 @@ struct Point {
     Point(int x, int y) : x(x), y(y) {}
 };
 
+
 class Solution {
 public:
-    int maxPoints(vector<Point> & ps) {
-        int N = ps.size();
-        if (N <= 2) return N;
-
+    int maxPoints(vector<Point> &points) {
+        int N = points.size();
+        if (N < 3) return N;
         int res = 1;
-        for (int i = 0; i < N - 1; i++) {
-            int o = 1, v = 0;
+        for (int i = 0; i < N; i++) {
+            int o = 1, u = 0, v = 0;
             unordered_map<int, int> ks;
-            for (int j = i + 1; j < N; j++) {
-                int yy = ps[j].y - ps[i].y;
-                int xx = ps[j].x - ps[i].x;
+            for (int j = 0; j < N; j++) {
+                if (i == j) continue;
+                int xx = points[j].x - points[i].x;
+                int yy = points[j].y - points[i].y;
                 if (xx == 0 && yy == 0) o++;
                 else if (xx == 0) v++;
-                else ks[1e6 * yy / xx]++;
+                else u = max(u, ++ks[1e6 * yy / xx]);
             }
-            res = max(res, o + v);
-            for (auto k : ks) res = max(res, o + k.second);
+            res = max(res, o + max(u, v));
         }
-
         return res;
     }
-
 };
 
 int main() {

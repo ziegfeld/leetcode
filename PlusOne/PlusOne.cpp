@@ -7,24 +7,22 @@
 //============================================================================
 
 #include <vector>
-#include <algorithm>
+
 using namespace std;
 
 class Solution {
 public:
     vector<int> plusOne(vector<int> &digits) {
-        int N = digits.size();
-        for (int i = N - 1; i >= 0; i--) {
-            if (digits[i] < 9) {
-                digits[i]++;
-                return;
+        vector<int> res = digits;
+        int i = res.size() - 1;
+        for (; i >= 0; i--) {
+            if (res[i] < 9) {
+                res[i]++;
+                break;
             }
-            else {
-                digits[i] = 0;
-            }
+            else res[i] = 0;
         }
-        vector<int> res(N + 1, 0);
-        res[0] = 1;
+        if (i == -1) res.insert(res.begin(), 1);
         return res;
     }
 };
