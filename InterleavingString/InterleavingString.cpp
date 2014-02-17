@@ -31,11 +31,11 @@ public:
         return dfs(s1, s2, s3, 0, 0, memo);
     }
 
-    bool dfs(string & s1, string & s2, string & s3, int i, int j, vector<vector<int> > & memo) {
+    bool isInterleaveHelper1(string & s1, string & s2, string & s3, int i, int j, vector<vector<int> > & memo) {
         if (memo[i][j] != -1) return memo[i][j];
         if (i == s1.size() && j == s2.size()) return memo[i][j] = true;
-        if (i < s1.size() && s1[i] == s3[i + j] && dfs(s1, s2, s3, i + 1, j, memo)) return memo[i][j] = true;
-        if (j < s2.size() && s2[j] == s3[i + j] && dfs(s1, s2, s3, i, j + 1, memo)) return memo[i][j] = true;
+        if (i < s1.size() && s1[i] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i + 1, j, memo)) return memo[i][j] = true;
+        if (j < s2.size() && s2[j] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i, j + 1, memo)) return memo[i][j] = true;
         return memo[i][j] = false;
     }
 

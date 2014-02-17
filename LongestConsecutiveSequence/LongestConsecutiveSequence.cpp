@@ -19,25 +19,24 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> twoSum(vector<int> &numbers, int target) {
-        int N = numbers.size();
-        if (N < 2) return vector<int>();
-        vector<int> indexs;
-        for (int i = 0; i < N; i++) indexs.push_back(i);
-        sort(begin(indexs), end(indexs),
-            [&numbers](const int x, const int y) { return numbers[i] < numbers[j]; });
-        int i = 0, j = N - 1;
-        while (i < j) {
-            int sum = numbers[indexs[i]] + numbers[indexs[j]]
-                if (sum == target) return vector<int>(min(indexs[i], indexs[j]), max(indexs[i], indexs[j]));
-                if (sum < target) i++;
-                else j--;
+    int longestConsecutive(vector<int> &num) {
+        unordered_map<int, int> tb;
+        int res = 1;
+        for (auto it : num) {
+            if (tb.count(it)) continue;
+            tb[it] = 1;
+            if (tb.count(it - 1)) res = max(res, merge(tb, it - 1, it));
+            if (tb.count(it + 1)) res = max(res, merge(tb, it, it + 1));
         }
-        return vector<int>();
+        return res;
+    }
+
+    int merge(unordered_map<int, int> & tb, int l, int r) {
+        int nl = l - tb[l] + 1;
+        int nr = r + tb[r] - 1;
+        return tb[nl] = tb[nr] = nr - nl + 1;
     }
 };
-
-
 
 int main() {
     vector<int> p0;

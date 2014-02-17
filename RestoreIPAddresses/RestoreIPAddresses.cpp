@@ -20,11 +20,11 @@ public:
     vector<string> restoreIpAddresses(string s) {
         vector<string> res;
         string path;
-        dfs(s, 0, 0, path, res);
+        restoreIpAddressesHelper(s, 0, 0, path, res);
         return res;
     }
 
-    void dfs(string & s, int begin, int step, string & path, vector<string> & res) {
+    void restoreIpAddressesHelper(string & s, int begin, int step, string & path, vector<string> & res) {
         if (begin == s.size() || step == 4) {
             if (begin == s.size() && step == 4) res.push_back(path);
             return;
@@ -36,7 +36,7 @@ public:
             num = num * 10 + s[begin] - '0';
             copy.push_back(s[begin]);
             if (num > 255) break;
-            dfs(s, begin + 1, step + 1, copy, res);
+            restoreIpAddressesHelper(s, begin + 1, step + 1, copy, res);
             if (num == 0) break;
         }
     }
