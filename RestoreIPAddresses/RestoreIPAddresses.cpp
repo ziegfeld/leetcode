@@ -20,23 +20,24 @@ public:
     vector<string> restoreIpAddresses(string s) {
         vector<string> res;
         string path;
-        restoreIpAddressesHelper(s, 0, 0, path, res);
+        dfs(s, 0, 0, path, res);
         return res;
     }
 
-    void restoreIpAddressesHelper(string & s, int i, int k, string path, vector<string> & res) {
-        if (i == s.size() || k == 4) {
-            if (i == s.size() && k == 4) res.push_back(path);
+    void dfs(string & s, int begin, int step, string & path, vector<string> & res) {
+        if (begin == s.size() || step == 4) {
+            if (begin == s.size() && step == 4) res.push_back(path);
             return;
         }
-        if (k != 0) path.push_back('.');
-        int x = 0;
-        for (int j = i; j < s.size(); j++) {
-            x = x * 10 + s[j] - '0';
-            if (x > 255) break;
-            path.push_back(s[j]);
-            restoreIpAddressesHelper(s, j + 1, k + 1, path, res);
-            if (x == 0) break;
+        string copy = path;
+        if (begin != 0) copy.push_back('.');
+        int num = 0;
+        for (; begin < s.size(); begin++) {
+            num = num * 10 + s[begin] - '0';
+            copy.push_back(s[begin]);
+            if (num > 255) break;
+            dfs(s, begin + 1, step + 1, copy, res);
+            if (num == 0) break;
         }
     }
 };

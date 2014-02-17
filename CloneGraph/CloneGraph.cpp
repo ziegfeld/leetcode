@@ -45,23 +45,17 @@ public:
     }
 
     UndirectedGraphNode *cloneGraph1(UndirectedGraphNode *node) {
+        if (node == NULL) return NULL;
         unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> visit;
-        visit[node] = new UndirectedGraphNode(node->label);
-        dfs(node, visit);
-        return visit[node];
+        return dfs(node, visit);
     }
 
-    void dfs(UndirectedGraphNode * cur, unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> & visit) {
-        for (auto next : cur->neighbors) {
-            if (visit.count(next)) {
-                visit[cur]->neighbors.push_back(visit[next]);
-            }
-            else {
-                visit[next] = new UndirectedGraphNode(next->label);
-                visit[cur]->neighbors.push_back(visit[next]);
-                dfs(next, visit);
-            }
-        }
+    UndirectedGraphNode * dfs(UndirectedGraphNode * cur, unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> & visit) {
+        if (visit.count(cur)) return visit[cur];
+        auto copy = new UndirectedGraphNode(cur->label);
+        visit[cur] = copy;
+        for (auto next : cur->neighbors) copy->neighbors.push_back(dfs(next, visit));
+        return copy;
     }
 
     UndirectedGraphNode *cloneGraph2(UndirectedGraphNode *node) {

@@ -22,33 +22,25 @@ using namespace std;
 class Solution {
 public:
     bool wordBreak(string s, unordered_set<string> &dict) {
+        if (s.empty()) return false;
         int N = s.size();
-        vector<bool> dp(N+1, false);
+        vector<bool> dp(N + 1, false);
         dp[0] = true;
-        for (int i = 1; i <= N; i++) {
-            for (int j = 0; j < i; j++) {
-                if (dp[j] && dict.count(s.substr(j, i-j))) {
-                    dp[i] = true;
+        for (int j = 1; j <= N; j++) {
+            for (int i = 0; i < l; i++) {
+                if (dict.count(s.substr(i, j - i)) && dp[i]) {
+                    dp[j] = true;
                     break;
                 }
             }
         }
-
         return dp[N];
     }
 };
 
 int main() {
     Solution sol;
-    string p0;
-    unordered_set<string> p1;
-
-    {
-        p0 = "leetcode";
-        p1.insert("leet");
-        p1.insert("code");
-        cout << sol.wordBreak(p0, p1) << "," << 1 << endl;
-    }
-
+    unordered_set<string> dict = { "leet", "code" };
+    cout << sol.wordBreak("leetcode", dict) << endl;
     return 0;
 }

@@ -32,42 +32,35 @@ public:
 
     vector<int> twoSum1(vector<int> &numbers, int target) {
         int N = numbers.size();
+        if (N < 2) return vector<int>();
         vector<int> vs;
         for (int i = 0; i < N; i++) vs.push_back(i);
         sort(begin(vs), end(vs),
-            [&numbers](const int i, const int j) { return numbers[i] < numbers[j]; });
-        vector<int> res(2, -1);
+            [&numbers](const int x, const int y) { return numbers[x] < numbers[y]; });
         int i = 0, j = N - 1;
         while (i < j) {
-            int sum = numbers[vs[i]] + numbers[vs[j]];
+            int x = vs[i], y = vs[j];
+            int sum = numbers[x] + numbers[y];
+            if (sum == target) return vector<int>({ min(x, y) + 1, max(x, y) + 1 });
             if (sum < target) i++;
-            else if (sum > target) j--;
-            else {
-                res[0] = vs[i] + 1;
-                res[1] = vs[j] + 1;
-                if (res[0] > res[1]) swap(res[0], res[1]);
-                break;
-            }
-
+            else j--;
         }
-        return res;
+        return vector<int>();
     }
 
     vector<int> twoSum2(vector<int> &numbers, int target) {
         int N = numbers.size();
-        unordered_map<int, int> table;
-        for (int i = 0; i < N; i++) table[numbers[i]] = i;
-        vector<int> res(2, -1);
+        if (N < 2) return vector<int>();
+        unordered_map<int, int> tb;
+        for (int i = 0; i < N; i++) tb[numbers[i]] = i;
         for (int i = 0; i < N; i++) {
             int num = target - numbers[i];
-            if (table.count(num) && i != table[num]) {
-                res[0] = i + 1;
-                res[1] = table[num] + 1;
-                if (res[0] > res[1]) swap(res[0], res[1]);
-                break;
+            if (tb.count(num)) {
+                int j = tb[num];
+                if (i != j) return vector<int>({ min(i, j) + 1, max(i, j) + 1 });
             }
         }
-        return res;
+        return vector<int>();
     }
 };
 
