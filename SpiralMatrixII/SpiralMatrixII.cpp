@@ -24,29 +24,68 @@
 using namespace std;
 
 class Solution {
+
+    vector<vector<int>> inc = { 
+        {0, 1},
+        {1, 0},
+        {0, -1},
+        {-1, 0}
+    };
+
 public:
+    
     vector<vector<int> > generateMatrix(int n) {
-        vector<vector<int> > res(n, vector<int>(n, 0));
-        spiralOrderHelper(res, 0, n, 0);
+        if (n == 0) {
+            vector<vector<int>> res;
+            return res;
+        }
+        
+        vector<vector<int>> res(n, vector<int>(n, 0));
+        //first row is special.
+        for (int i = 0; i < n; ++i)
+            res[0][i] = i + 1;
+        
+        int i = 0, j = n - 1;
+        int i_inc = 1, value = n;
+        int length = n - 1;
+        for (; length != 0; length --) {
+            for (int k = 0; k < length; k++) {
+                i += inc[i_inc][0];
+                j += inc[i_inc][1];
+                res[i][j] = ++ value;
+            }
+            i_inc = (++i_inc) % 4;
+            for (int k = 0; k < length; k++) {
+                i += inc[i_inc][0];
+                j += inc[i_inc][1];
+                res[i][j] = ++ value;
+            }
+            i_inc = (++i_inc) % 4;
+        }
         return res;
     }
+    
+    // this version does four lines (i_inc from 0 to 3) for a round intead of my way - 2 lines a round.
+    //https://github.com/anson627/leetcode/blob/master/SpiralMatrixII/SpiralMatrixII.cpp
+    vector<vector<int> > generateMatrix1(int n) {
+        vector<vector<int> > res;
+        if (n <= 0) return res;
+        for (int i = 0; i < n; i++) res.push_back(vector<int>(n, 0));
+        for (int k = 0, v = 1; n > 0; k++, n -= 2) {
+            int i = 0, j = 0;
+            if (n == 1) {
+                res[k + i][k + j] = v++;
+                return res;
+            }
 
-    void spiralOrderHelper(vector<vector<int> > &res, int k, int n, int v) {
-        if (n <= 0) return;
-        if (n == 1) {
-            res[k][k] = ++v;
-            return;
+            for (; j < n - 1; j++) res[k + i][k + j] = v++;
+            for (; i < n - 1; i++) res[k + i][k + j] = v++;
+            for (; j > 0; j--) res[k + i][k + j] = v++;
+            for (; i > 0; i--) res[k + i][k + j] = v++;
         }
-
-        int i = 0, j = 0;
-        for (; j < n-1; j++) res[k+i][k+j] = ++v;
-        for (; i < n-1; i++) res[k+i][k+j] = ++v;
-        for (; j > 0; j--) res[k+i][k+j] = ++v;
-        for (; i > 0; i--) res[k+i][k+j] = ++v;
-        spiralOrderHelper(res, k+1, n-2, v);
+        return res;
     }
 };
-
 
 int main() {
     Solution sol;
