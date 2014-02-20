@@ -41,7 +41,6 @@ public:
         return cur;
     }
 };
-
 int main() {
     Solution sol;
 
