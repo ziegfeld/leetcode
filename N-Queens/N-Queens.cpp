@@ -16,64 +16,61 @@ using namespace std;
 class Solution {
 public:
     vector<vector<string> > solveNQueens(int n) {
-        return solveNQueens2(n);
-    }
-
-    vector<vector<string> > solveNQueens1(int n) {
-        vector<int> board(n, -1);
+        vector<int> pos(n,0);  // pos[i]= j means row i, col j has a queen.
         vector<vector<string> > res;
-        solveNQueensHelper1(board, 0, res);
+        
+        //helper1(pos,n,0,res);
+        helper2(pos,n,0, 0,0,0,res);
         return res;
     }
-
-    void solveNQueensHelper1(vector<int> & board, int row, vector<vector<string> > & res) {
-        int N = board.size();
-        if (row == N) {
-            vector<string> sub(N, string(N, '.'));
-            for (int r = 0; r < N; r++) sub[r][board[r]] = 'Q';
-            res.push_back(sub);
+    
+    void helper2(vector<int> & pos, int n, int row, int flagColomn, int zhuDuijiao, int fuDuijiao, vector<vector<string> > & res) {
+        if (row == n) {
+            res.push_back(board(pos, n));
             return;
         }
-        for (int col = 0; col < N; col++) {
-            if (!isValid(board, row, col)) continue;
-            board[row] = col;
-            solveNQueensHelper1(board, row + 1, res);
-        }
-    }
-
-    bool isValid(vector<int> & board, int row, int col) {
-        for (int r = 0; r < row; r++) if (board[r] == col || abs(board[r] - col) == row - r) return false;
-        return true;
-    }
-
-    vector<vector<string> > solveNQueens2(int n) {
-        vector<int> board(n, -1);
-        vector<vector<string> > res;
-        solveNQueensHelper2(board, 0, 0, 0, 0, res);
-        return res;
-    }
-
-    void solveNQueensHelper2(vector<int> & board, int row, int cur, int ld, int rd, vector<vector<string> > & res) {
-        int N = board.size();
-        int mask = (1 << N) - 1;
-        if (cur == mask) {
-            vector<string> sub(N, string(N, '.'));
-            for (int r = 0; r < N; r++) {
-                for (int c = 0; c < N; c++) {
-                    if (board[r] & (1 << c)) sub[r][c] = 'Q';
-                }
+        //y is (1<<n - 1) wrong?  cuz n-1 is cal'ed first then 1<<!! should be (1<<n) - 1
+        int mask =  (1<<n) - 1;
+        zhuDuijiao &= mask;
+        int curBit = 1, flag = flagColomn | fuDuijiao | zhuDuijiao;
+        for (int j = 0; j < n; j++) {
+            if ((flag & curBit) == 0) {
+                pos[row] = j;     
+                helper2(pos,n,row+1, flagColomn|curBit, (zhuDuijiao|curBit)<<1, (fuDuijiao|curBit)>>1, res);
             }
-            res.push_back(sub);
+            curBit <<= 1;
+        }
+    }
+    void helper1(vector<int> & pos, int n, int i, vector<vector<string> > & res) {
+        if (i == n) {
+            res.push_back(board(pos, n));
             return;
         }
-
-        int cs = ~(cur | ld | rd) & mask;
-        while (cs > 0) {
-            int p = cs & -cs;
-            cs -= p;
-            board[row] = p;
-            solveNQueensHelper2(board, row + 1, cur | p, (ld | p) << 1, (rd | p) >> 1, res);
+        for (int j = 0; j < n; j++) {
+            // check if (i,j) cell feasible
+            bool legal = true;
+            for (int k = 0; k < i; k++)
+                if (pos[k] == j || oneLine(i,j,k,pos[k]) ) {
+                    legal = false;
+                    break;
+                }
+            if (legal) {
+                pos[i] = j;
+                helper1(pos,n,i+1,res);
+            }
         }
+        
+    }
+    
+    vector<string> board(vector<int> pos, int n) {
+        vector<string> res(n,string(n,'.'));
+        for (int i = 0; i < n; i ++)
+            res[i][pos[i]] = 'Q';
+        return res;
+    }
+    
+    inline bool oneLine(int x1, int y1, int x2, int y2) {
+        return ((x1-x2 == y1-y2) || (x1 - x2 == y2 - y1));
     }
 };
 
