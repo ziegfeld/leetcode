@@ -21,30 +21,23 @@ struct TreeNode {
     TreeNode *right;
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
-
 class Solution {
 public:
-    int maxDepth(TreeNode * root) {
-        return maxDepth2(root);
-    }
-
-    int maxDepth1(TreeNode * cur) {
-        if (cur == NULL) return 0;
-        return 1 + max(maxDepth1(cur->left), maxDepth1(cur->right));
-    }
-
-    int maxDepth2(TreeNode * root) {
+    // int maxDepth(TreeNode * cur) {
+    //     if (cur == NULL) return 0;
+    //     return 1 + max(maxDepth(cur->left), maxDepth(cur->right));
+    // }
+    int maxDepth(TreeNode *root) {
         if (root == NULL) return 0;
         int res = 0;
         queue<TreeNode*> qs;
         qs.push(root);
         qs.push(NULL);
-
         while (!qs.empty()) {
             TreeNode * cur = qs.front();
             qs.pop();
             if (cur == NULL) {
-                res++;
+                res ++;
                 if (!qs.empty()) qs.push(NULL);
             }
             else {
@@ -54,8 +47,8 @@ public:
         }
         return res;
     }
+    
 };
-
 int main() {
     Solution sol;
     TreeNode * p0;
