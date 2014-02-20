@@ -16,11 +16,16 @@ using namespace std;
 class Solution {
 public:
     void merge(int A[], int m, int B[], int n) {
-        int i = m-1, j = n-1, k = m+n-1;
-        while (k >= 0) {
-            if (j == -1 || (i >= 0 && A[i] >= B[j])) A[k--] = A[i--];
-            else A[k--] = B[j--];
-        }
+        int cur = (m--) + (n--) - 1;
+        // start from the end point of new array (index = m+n-1) and go backward. stop when j=0; or i=0 and copy all B[0-j];
+        while (n!=-1 && m!=-1) 
+            if (A[m]>B[n]) A[cur--] = A[m--];
+            else A[cur--] = B[n--];
+            
+        if (m == -1 && n != -1) 
+            for (m=0; m<=n; m++) A[m]=B[m];
+
+        return;
     }
 };
 
