@@ -35,18 +35,19 @@ public:
         return res;
     }
 
-    void permuteUnique1Helper2(vector<int> & num, int i, vector<vector<int> > & res) {
-        if (i == (int)num.size()) {
+    void permuteUnique1Helper2(vector<int> & num, int begin, vector<vector<int> > & res) {
+        int end = num.size();
+        if (begin == end) {
             res.push_back(num);
             return;
         }
         unordered_set<int> visit;
-        for (int j = i; j < (int)num.size(); j++) {
-            if (visit.count(num[j])) continue;
-            visit.insert(num[j]);
-            swap(num[i], num[j]);
-            permuteUnique1Helper2(num, i + 1, res);
-            swap(num[i], num[j]);
+        for (int cur = begin; cur < end; cur++) {
+            if (visit.count(num[cur])) continue;
+            visit.insert(num[cur]);
+            swap(num[begin], num[cur]);
+            permuteUnique1Helper2(num, begin + 1, res);
+            swap(num[begin], num[cur]);
         }
     }
 };
