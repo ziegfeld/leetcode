@@ -20,18 +20,46 @@ using namespace std;
 class Solution {
 public:
     int search(int A[], int n, int target) {
-        int l = 0, u = n - 1;
-        while (l <= u) {
-            int m = l + (u - l) / 2;
-            if (A[m] == target) return m;
-            if (A[l] <= A[m]) {
-                if (A[l] <= target && target < A[m]) u = m - 1;
-                else l = m + 1;
-            }
-            else {
-                if (A[m] < target && target <= A[u]) l = m + 1;
-                else u = m - 1;
-            }
+        return search1(A,n,target);
+    }
+    
+    int search1(int A[], int n, int target) {
+        if (n==0) return -1;
+        int p = 0;
+        // find pivot
+        if (A[0]<A[n-1]) {
+            // its just simple sorted array!
+            return binSearch(A,0,n-1,target);
+        }
+        int i = 0, j = n - 1;
+        while (i<j) {
+            p = (i + j) / 2;
+            if (A[i]<A[p])
+                i = p;
+            else
+                j = p;
+        }
+        //++ p;
+        //p must be less than n, p=n means A[0]<A[n-1], which is dealt with alrdy.
+        if (A[0]<=target && (p==0 || A[p]>=target)) {
+            return binSearch(A,0,p,target);
+        } else if (target<=A[n-1] && (p == n-1 || A[p+1]<=target )) {
+            return binSearch(A,p+1,n-1,target);
+        }
+        return -1;
+    }
+    
+    int binSearch(int A[], int l, int u, int target) {
+        if (l>u) return -1;
+        int res = -1;
+        while (l<=u) {
+            int m = (l + u) / 2;
+            if (A[m] == target) 
+                return m;
+            if (A[m]>target)
+                u = m - 1;
+            else
+                l = m + 1;
         }
         return -1;
     }
