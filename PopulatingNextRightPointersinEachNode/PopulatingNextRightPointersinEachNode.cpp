@@ -53,7 +53,14 @@ struct TreeLinkNode
 
 class Solution {
 public:
+    
     void connect(TreeLinkNode *root) {
+        connectMyVersion(root);
+        //connectAnson(root);
+    }
+    
+    //this version: https://github.com/anson627/leetcode/blob/master/PopulatingNextRightPointersinEachNode/PopulatingNextRightPointersinEachNode.cpp
+    void connectAnson(TreeLinkNode *root) {
         while (root != NULL) {
             TreeLinkNode * cur = root;
             while (cur != NULL) {
@@ -63,6 +70,37 @@ public:
             }
             root = root->left;
         }
+    }
+
+    void connectMyVersion(TreeLinkNode *root) {
+        if ( root == NULL || (root -> left == NULL)) return ;
+        connectLeft(root);
+    }
+    
+    void connectLeft(TreeLinkNode *root) {
+        TreeLinkNode * left, * right;
+        left = root -> left;
+        right = root -> right;
+        
+        left -> next = right;
+        if (left -> left) 
+            connectLeft(left);
+        connectRight(right,root);
+
+    }
+    
+    void connectRight(TreeLinkNode *root, TreeLinkNode *grandpa) {
+        if (grandpa -> next)
+            root -> next = grandpa -> next -> left;
+        
+        TreeLinkNode * left = root -> left;
+        if (not left) return;
+        TreeLinkNode * right = root -> right;
+
+        left -> next = right;
+        if (left -> left)
+            connectLeft(left);
+        connectRight(right,root);
     }
 };
 
