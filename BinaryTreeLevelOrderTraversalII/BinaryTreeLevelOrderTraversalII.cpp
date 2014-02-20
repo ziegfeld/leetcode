@@ -38,57 +38,40 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
-
 class Solution {
 public:
-    vector<vector<int> > levelOrderBottom(TreeNode * root) {
-        return levelOrderBottom1(root);
-    }
 
-    vector<vector<int> > levelOrderBottom1(TreeNode * root) {
-        vector<vector<int> > res;
-        int D = maxDepth(root);
-        for (int depth = D; depth >= 1; depth--) {
-            vector<int> path;
-            levelOrderBottomHelper1(root, depth, path);
-            res.push_back(path);
-        }
-        return res;
-    }
-
-    int maxDepth(TreeNode * cur) {
-        if (cur == NULL) return 0;
-        return max(maxDepth(cur->left), maxDepth(cur->right)) + 1;
-    }
-
-    void levelOrderBottomHelper1(TreeNode * cur, int depth, vector<int> & path) {
-        if (cur == NULL || depth == 0) return;
-        if (depth == 1) path.push_back(cur->val);
-        depth -= 1;
-        levelOrderBottomHelper1(cur->left, depth, path);
-        levelOrderBottomHelper1(cur->right, depth, path);
-    }
-
-    vector<vector<int> > levelOrderBottom2(TreeNode * root) {
-        vector<vector<int> > res;
-        queue<TreeNode *> cq, nq;
-        if (root != NULL) cq.push(root);
-        while (!cq.empty()) {
-            vector<int> path;
-            while (!cq.empty()) {
-                TreeNode * cur = cq.front();
-                cq.pop();
-                path.push_back(cur->val);
-                if (cur->left != NULL) nq.push(cur->left);
-                if (cur->right != NULL) nq.push(cur->right);
+    
+    vector<vector<int> > levelOrderBottom(TreeNode *root) {
+        vector<vector<int>> tree;
+        //if (! root) return tree;
+        if (root == NULL) return tree;
+        vector<int> level;
+        //tree.push_back(new vector<int> {root->val});
+        queue<TreeNode*> qtree;
+        qtree.push(root);
+        qtree.push(NULL);
+        while (!qtree.empty()) {
+            TreeNode * node = qtree.front();
+            qtree.pop();
+            if (node) {
+                if (node->left) qtree.push(node->left);
+                if (node->right) qtree.push(node->right);
+                level.push_back(node->val);
+            } else {
+                //tree.insert(tree.begin(),level); insert is linear time
+                tree.push_back(level);//push_back constant time
+                if (!qtree.empty()) qtree.push(NULL);
+                level.clear();
             }
-            res.push_back(path);
-            swap(cq, nq);
+            
         }
-        reverse(begin(res), end(res));
-        return res;
+        reverse(begin(tree),end(tree));
+        return tree;
     }
-
+    
+    
+    // github.com/anson627/leetcode/blob/master/BinaryTreeLevelOrderTraversalII/BinaryTreeLevelOrderTraversalII.cpp
     vector<vector<int> > levelOrderBottom3(TreeNode * root) {
         vector<int> path;
         vector<vector<int> > res;
