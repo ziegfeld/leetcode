@@ -20,13 +20,27 @@ using namespace std;
 class Solution {
 public:
     vector<int> getRow(int rowIndex) {
-        vector<int> res(rowIndex+1, 1);
-        for (int r = 2; r <= rowIndex; r++)
-            for (int c = r-1; c > 0; c--)
-                res[c] += res[c-1];
+        vector<int> res;
+        
+        res.push_back(1);
+        if (rowIndex==0) return res;
+        int n = rowIndex + 1;
+        
+        for (int r = 1; r < n; r++)
+            res.push_back(0);
+        for (int r = 1; r < n; r++) {
+            int curMinus1 = 1;
+            for (int c = 1; c <= r; c++) {
+                int cur = res[c];
+                res[c] = curMinus1 + cur;
+                curMinus1 = cur;
+            }
+        }
+        
         return res;
     }
 };
+
 
 int main() {
     return 0;
