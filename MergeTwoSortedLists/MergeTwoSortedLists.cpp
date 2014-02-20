@@ -22,20 +22,32 @@ struct ListNode {
 class Solution {
 public:
     ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {
-        ListNode * head = new ListNode(-1), * curNode = head;
-        while(l1 != NULL || l2 != NULL) {
-            if (l2 == NULL || (l1 != NULL && l1->val < l2->val)) curNode->next = l1, l1 = l1->next;
-            else curNode->next = l2, l2 = l2->next;
-            curNode = curNode->next;
+        if (l1==NULL) return l2;
+        
+        ListNode * res = new ListNode (0);
+        res->next = l1;
+        l1 = res;
+        
+        while (l1->next != NULL) {
+            if (l2==NULL) return res->next;
+            ListNode *cur = l1->next;
+            if (cur->val > l2->val) {
+                l1->next = l2;
+                l2 = l2->next;
+                l1->next->next = cur;
+            } else
+                l1 = l1->next;
         }
-        return deleteNode(head);
-    }
-
-    ListNode * deleteNode(ListNode * curNode) {
-        ListNode * toDel = curNode;
-        curNode = curNode->next;
+        l1->next = l2;
+        
+        //3 lines to delete the dummy head.
+        ListNode * toDel = res;
+        res = res->next;
         delete toDel;
-        return curNode;
+        
+        return res;
+        
+        
     }
 };
 
