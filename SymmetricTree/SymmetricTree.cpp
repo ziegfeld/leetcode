@@ -38,42 +38,69 @@ struct TreeNode {
 
 class Solution {
 public:
-    bool isSymmetric(TreeNode * root) {
+    bool isSymmetric(TreeNode *root) {
         return isSymmetric2(root);
     }
-
-    bool isSymmetric1(TreeNode * root) {
+    
+    bool isSymmetric1(TreeNode *root) {
+        if (!root) return true;
+        if (root->left == NULL)
+            if (root->right == NULL) return true;
+            else return false;
+        else if (root->right == NULL) return false;
+            else return mirrorSubtree(root->left, root->right);
+    }
+    
+    bool mirrorSubtree(TreeNode *left, TreeNode *right) {
+        if (left->val != right->val) return false;
+        
+        if (left->right == NULL) {
+            if (right -> left != NULL) return false;
+        } else if ((right -> left == NULL) || !mirrorSubtree(left->right, right->left))
+            return false;
+            
+        if (left->left == NULL) {
+            if (right -> right != NULL) return false;
+        } else if ((right -> right == NULL) || !mirrorSubtree(left->left, right->right)) return false;
+        
+        return true; 
+    }
+    
+    //these 3 func are from Symmetric1 of https://github.com/anson627/leetcode/blob/master/SymmetricTree/SymmetricTree.cpp  
+    
+    bool isSymmetric2(TreeNode *root) {
         if (root == NULL) return true;
-        return isSymmetricHelper1(root->left, root->right);
+        //return isSymmetric2(root->left, root->right);
+        return isSymmetric3(root->left, root->right);
     }
-    bool isSymmetricHelper1(TreeNode *p, TreeNode *q) {
+        
+    // DFS. only diff. from mine is that they judge NULL after going into next level of the recursive function.
+    // WHICH IS MORE INDUSTRIAL STANDARD.
+    bool isSymmetric2(TreeNode *p, TreeNode *q) {
         if (p == NULL && q == NULL) return true;
-        if (p == NULL || q == NULL || p->val != q->val) return false;
-        return isSymmetricHelper1(p->left, q->right) && isSymmetricHelper1(p->right, q->left);
+        if (p == NULL || q == NULL) return false;
+        return (p->val == q->val) && isSymmetric2(p->left, q->right) && isSymmetric2(p->right, q->left);
     }
-
-    bool isSymmetric2(TreeNode * root) {
-        if (root == NULL || (root->left == NULL && root->right == NULL)) return true;
-        if (root->left == NULL || root->right == NULL || root->left->val != root->right->val) return false;
+    
+    
+    // BFS. with Queue.  LEARN!!!!!!
+    bool isSymmetric3(TreeNode * p, TreeNode *q) {
         queue<TreeNode *> ps, qs;
-        ps.push(root->left), qs.push(root->right);
+        if (p) ps.push(p);
+        if (q) qs.push(q);
         while (!ps.empty() && !qs.empty()) {
-            TreeNode * cp = ps.front(), *cq = qs.front();
-            ps.pop(), qs.pop();
-            if (cp->left != NULL && cq->right != NULL) {
-                if (cp->left->val != cq->right->val) return false;
-                ps.push(cp->left), qs.push(cq->right);
-            }
-            else if (!(cp->left == NULL && cq->right == NULL)) return false;
-            if (cp->right != NULL && cq->left != NULL) {
-                if (cp->right->val != cq->left->val) return false;
-                ps.push(cp->right), qs.push(cq->left);
-            }
-            else if (!(cp->right == NULL && cq->left == NULL)) return false;
+            p = ps.front(), ps.pop();
+            q = qs.front(), qs.pop();
+            if (p->val != q->val) return false;
+            if (p->left && q->right) ps.push(p->left),qs.push(q->right);
+            else if (!(!p->left && !q->right)) return false;
+            if (p->right && q->left) ps.push(p->right),qs.push(q->left);
+            else if (!(!p->right && !q->left)) return false;
         }
-
         return ps.empty() && qs.empty();
     }
+
+        
 };
 
 int main() {
