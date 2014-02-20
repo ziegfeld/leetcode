@@ -15,15 +15,23 @@
 class Solution {
 public:
     int removeDuplicates(int A[], int n) {
-        if (n < 2) return n;
-        int i = 1, j = 1;
-        bool first = true;
-        while (i < n) {
-            if (A[i-1] != A[i]) A[j++] = A[i], first = true;
-            else if (first) A[j++] = A[i], first = false;
-            i++;
-        }
-        return j;
+        if (n<3) return n;
+        int i = 0, j = 1;
+        bool dupli = false; // A[i] appeared twice
+        do {
+            if (A[j]!=A[i]) {
+                A[++i]=A[j++];
+                dupli = false;
+            }
+            else if (! dupli) {
+                A[++i]=A[j++];
+                dupli = true;
+            } else {
+                ++j;
+                //dupli = false;  // duplicates might still goes on!
+            }
+        } while (j<n);
+        return i+1;
     }
 };
 
