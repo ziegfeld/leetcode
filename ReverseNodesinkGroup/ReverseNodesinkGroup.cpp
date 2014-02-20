@@ -22,14 +22,29 @@
 #include <iostream>
 using namespace std;
 
+
+
 /**
- * Definition for singly-linked list.
- */
+* Definition for singly-linked list.
+*/
 struct ListNode {
     int val;
     ListNode *next;
     ListNode(int x) : val(x), next(NULL) {}
 };
+
+ListNode * pushDummy(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popDummy(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
 
 class Solution {
 public:
@@ -43,21 +58,22 @@ public:
 
     ListNode *reverseKGroup1(ListNode * curNode, int k, int l) {
         if (l < k) return curNode;
-        ListNode * curTail = curNode, * preNode = NULL;
+        ListNode * curTail = curNode, *preNode = NULL;
         for (int i = 0; i < k; i++) {
             ListNode * nextNode = curNode->next;
             curNode->next = preNode;
             preNode = curNode;
             curNode = nextNode;
         }
-        curTail->next = reverseKGroup1(curNode, k, l-k);
+        curTail->next = reverseKGroup1(curNode, k, l - k);
         return preNode;
     }
 
     ListNode *reverseKGroup2(ListNode *head, int k, int l) {
         if (l < k) return head;
-        ListNode * preTail = NULL, * curTail = NULL, * curNode = head;
-        for (int i = 0; i < l/k; i++) {
+        head = pushDummy(head);
+        ListNode * preTail = head, *curTail = NULL, *curNode = head->next;
+        for (int i = 0; i < l / k; i++) {
             ListNode * preNode = NULL;
             curTail = curNode;
             for (int j = 0; j < k; j++) {
@@ -66,12 +82,11 @@ public:
                 preNode = curNode;
                 curNode = nextNode;
             }
-            if (preTail == NULL) head = preNode;
-            else preTail->next = preNode;
+            preTail->next = preNode;
             preTail = curTail;
         }
         curTail->next = curNode;
-        return head;
+        return popDummy(head);
     }
 };
 
@@ -105,3 +120,4 @@ int main() {
         }
         cout << endl;
     }
+}

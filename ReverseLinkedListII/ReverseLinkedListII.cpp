@@ -23,31 +23,36 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+ListNode * pushDummy(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popDummy(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
+
 class Solution {
 public:
     ListNode *reverseBetween(ListNode *head, int m, int n) {
-        ListNode * newHead = new ListNode(-1);
-        newHead->next = head;
-        ListNode * preNode = NULL, * curNode = newHead;
-        for (int i = 0; i < m; i++) preNode = curNode, curNode = curNode->next;
-        ListNode * preTail = preNode;
-        preNode = NULL;
-        for (int i = 0; i <= n-m; i++) {
+        if (head == NULL || m < 1 || n < 1 || m > n) return head;
+        head = pushDummy(head);
+        ListNode * curNode = head, *lastNode = NULL;
+        for (; m > 0; m--, n--) lastNode = curNode, curNode = curNode->next;
+        ListNode *preNode = NULL;
+        for (; n >= 0; n--) {
             ListNode * nextNode = curNode->next;
             curNode->next = preNode;
             preNode = curNode;
             curNode = nextNode;
         }
-        preTail->next->next = curNode;
-        preTail->next = preNode;
-        return deleteNode(newHead);
-    }
-
-    ListNode * deleteNode(ListNode * curNode) {
-        ListNode * toDel = curNode;
-        curNode = curNode->next;
-        delete toDel;
-        return curNode;
+        lastNode->next->next = curNode;
+        lastNode->next = preNode;
+        return popDummy(head);
     }
 };
 

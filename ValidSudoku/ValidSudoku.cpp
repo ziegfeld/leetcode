@@ -17,40 +17,31 @@ using namespace std;
 
 class Solution {
 public:
-    bool isValidSudoku(vector<vector<char> > & board) {
-        if (board.size() != 9 || board[0].size() != 9) return false;
-        for (int i = 0; i < 9; i++) {
-            memset(visit, 0, sizeof(visit));
-            for (int j = 0; j < 9; j++) {
-                if (!isValid(board[i][j])) return false;
-            }
+    bool isValidSudoku(vector<vector<char> > &board) {
+        if (board.size() != 9) return false;
+        for (int r = 0; r < 9; r++) if (board[r].size() != 9) return false;
+        for (int r = 0; r < 9; r++) {
+            vector<bool> visit(9, false);
+            for (int c = 0; c < 9; c++) if (!check(board, r, c, visit)) return false;
         }
-
-        for (int i = 0; i < 9; i++) {
-            memset(visit, 0, sizeof(visit));
-            for (int j = 0; j < 9; j++) {
-                if (!isValid(board[j][i])) return false;
-            }
+        for (int c = 0; c < 9; c++) {
+            vector<bool> visit(9, false);
+            for (int r = 0; r < 9; r++) if (!check(board, r, c, visit)) return false;
         }
-
         for (int i = 0; i < 9; i++) {
-            memset(visit, 0, sizeof(visit));
-            for (int j = 0; j < 9; j++) {
-                int r = i / 3 * 3 + j / 3, c = i % 3 * 3 + j % 3;
-                if (!isValid(board[r][c])) return false;
-            }
+            vector<bool> visit(9, false);
+            for (int j = 0; j < 9; j++) if (!check(board, i / 3 * 3 + j / 3, i % 3 * 3 + j % 3, visit)) return false;
         }
-
         return true;
     }
 
-    bool isValid(char c) {
-        if (c == '.') return true;
-        if (c < '1' || c > '9' || visit[c - '1']) return false;
-        return visit[c - '1'] = true;
+    bool check(vector<vector<char> > &board, int r, int c, vector<bool> & visit) {
+        if (board[r][c] == '.') return true;
+        if (board[r][c] < '1' || board[r][c] > '9') return false;
+        int n = board[r][c] - '1';
+        if (visit[n]) return false;
+        return visit[n] = true;
     }
-
-    bool visit[9];
 };
 
 

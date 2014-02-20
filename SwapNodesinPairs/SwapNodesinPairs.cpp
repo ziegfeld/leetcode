@@ -23,6 +23,19 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+ListNode * pushDummy(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popDummy(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
+
 class Solution {
 public:
     ListNode *swapPairs(ListNode *head) {
@@ -38,19 +51,17 @@ public:
     }
 
     ListNode *swapPairs2(ListNode *head) {
-        ListNode * preNode = NULL, * curNode = head;
-        while (curNode != NULL) {
+        head = pushDummy(head);
+        ListNode *preNode = head, *curNode = head->next;
+        while (curNode != NULL && curNode->next != NULL) {
             ListNode * nextNode = curNode->next;
-            if (nextNode == NULL) return head;
-            if (preNode == NULL) head = nextNode;
-            else preNode->next = nextNode;
             curNode->next = nextNode->next;
             nextNode->next = curNode;
+            preNode->next = nextNode;
             preNode = curNode;
             curNode = curNode->next;
         }
-
-        return head;
+        return popDummy(head);
     }
 };
 

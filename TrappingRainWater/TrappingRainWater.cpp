@@ -17,6 +17,10 @@ using namespace std;
 class Solution {
 public:
     int trap(int A[], int n) {
+        return trap1(A, n);
+    }
+
+    int trap1(int A[], int n) {
         if (n < 3) return 0;
 
         vector<int> ls(n, 0);
@@ -33,6 +37,20 @@ public:
             if (h > A[i]) res += (h-A[i]);
         }
 
+        return res;
+    }
+
+    int trap2(int A[], int n) {
+        int maxi = 0, res = 0;
+        for (int i = 1; i < n; i++) if (A[i] > A[maxi]) maxi = i;
+        for (int i = 0, h = 0; i < maxi; i++) {
+            if (A[i] > h) h = A[i];
+            else res += (h - A[i]);
+        }
+        for (int i = n - 1, h = 0; i > maxi; i--) {
+            if (A[i] > h) h = A[i];
+            else res += (h - A[i]);
+        }
         return res;
     }
 };

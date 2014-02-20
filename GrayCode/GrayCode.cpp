@@ -24,6 +24,10 @@ using namespace std;
 class Solution {
 public:
     vector<int> grayCode(int n) {
+        return grayCode1(n);
+    }
+
+    vector<int> grayCode1(int n) {
         vector<int> res;
         res.reserve(1 << n);
         res.push_back(0);
@@ -33,6 +37,12 @@ public:
                 res.push_back(res[j] | (1 << i));
             }
         }
+        return res;
+    }
+
+    vector<int> grayCode2(int n) {
+        vector<int> res;
+        for (int i = 0; i < (1 << n); i++) res.push_back(i ^ (i >> 1));
         return res;
     }
 };

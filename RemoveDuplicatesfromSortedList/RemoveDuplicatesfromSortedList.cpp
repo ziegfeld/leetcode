@@ -26,19 +26,17 @@ struct ListNode {
 class Solution {
 public:
     ListNode *deleteDuplicates(ListNode *head) {
-        ListNode * cur = head;
-        while (cur != NULL && cur->next != NULL) {
-            if (cur->val == cur->next->val) cur->next = deleteNode(cur->next);
-            else cur = cur->next;
+        if (head == NULL || head->next == NULL) return head;
+        ListNode * curNode = head;
+        while (curNode != NULL && curNode->next != NULL) {
+            if (curNode->val == curNode->next->val) {
+                ListNode * nextNode = curNode->next;
+                curNode->next = nextNode->next;
+                delete nextNode;
+            }
+            else curNode = curNode->next;
         }
-        return head;
-    }
-
-    ListNode* deleteNode(ListNode * cur) {
-        ListNode *toDel = cur;
-        cur = cur->next;
-        delete toDel;
-        return cur;
+        return  head;
     }
 };
 

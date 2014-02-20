@@ -29,26 +29,30 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {};
 };
 
+ListNode * pushHead(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popHead(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
+
 class Solution {
 public:
     ListNode *removeNthFromEnd(ListNode *head, int n) {
-        if (head == NULL || n < 1) return head;
-        ListNode * newNode = new ListNode(-1);
-        newNode->next = head;
-        head = newNode;
-        ListNode * slow = head, *fast = head;
-        while (n > 0 && fast->next != NULL) fast = fast->next, n--;
-        if (n > 0) return deleteNode(head);
-        while (fast->next != NULL) fast = fast->next, slow = slow->next;
-        slow->next = deleteNode(slow->next);
-        return deleteNode(head);
-    }
-
-    ListNode* deleteNode(ListNode * cur) {
-        ListNode *toDel = cur;
-        cur = cur->next;
-        delete toDel;
-        return cur;
+        head = pushHead(head);
+        ListNode * fastNode = head;
+        for (; n > 0 && fastNode != NULL; n--) fastNode = fastNode->next;
+        if (fastNode == NULL) return popHead(head);
+        ListNode * slowNode = head;
+        for (; fastNode->next != NULL; fastNode = fastNode->next) slowNode = slowNode->next;
+        slowNode->next = popHead(slowNode->next)
+        return popHead(head);
     }
 };
 
