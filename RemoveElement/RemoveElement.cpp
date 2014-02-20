@@ -13,12 +13,15 @@
 class Solution {
 public:
     int removeElement(int A[], int n, int elem) {
-        int i = 0, j = 0;
-        while (i < n) {
-            if (A[i] != elem) A[j++] = A[i];
-            i++;
+        int newLength = n;
+        int i = 0;
+        while (i<newLength && newLength) {
+            if (A[i]==elem)
+                A[i]=A[--newLength];
+            else
+                i++;
         }
-        return j;
+        return newLength;
     }
 };
 
