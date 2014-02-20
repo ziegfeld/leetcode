@@ -32,26 +32,28 @@ struct TreeNode {
     TreeNode *right;
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
-
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode *root) {
-        return inorderTraversal2(root);
+        return inorderTraversal1(root);
     }
-
-    vector<int> inorderTraversal1(TreeNode * root) {
+    
+    //my version. 02072014
+    vector<int> inorderTraversal1(TreeNode *root) {
         vector<int> res;
-        inorderTraversalHelper1(root, res);
+        if (not root) return res;
+        inorder(root, res);
         return res;
     }
-
-    void inorderTraversalHelper1(TreeNode * node, vector<int> & res) {
-        if (node == NULL) return;
-        inorderTraversalHelper1(node->left, res);
-        res.push_back(node->val);
-        inorderTraversalHelper1(node->right, res);
+    
+    void inorder(TreeNode *root, vector<int> & res) {
+        if (root -> left)
+            inorder(root -> left, res);
+        res.push_back(root -> val);
+        if (root -> right)
+            inorder(root -> right, res);
     }
-
+    
     vector<int> inorderTraversal2(TreeNode * root) {
         vector<int> res;
         stack<TreeNode*> stk;
@@ -66,6 +68,7 @@ public:
         return res;
     }
 
+    // 用手把所有根节点连带右侧节点挂到左侧子树的最最后面（即最右下方叶子的新右子树），直到树中再没有一个左侧子节点为止
     vector<int> inorderTraversal3(TreeNode * root) {
         vector<int> res;
         TreeNode * cur = root;
