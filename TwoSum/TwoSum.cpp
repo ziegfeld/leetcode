@@ -26,47 +26,57 @@ using namespace std;
 
 class Solution {
 public:
-    vector<int> twoSum(vector<int> &numbers, int target) {
-        return twoSum2(numbers, target);
-    }
-
+    // mine : Time Limit Exceeded
     vector<int> twoSum1(vector<int> &numbers, int target) {
-        int N = numbers.size();
-        vector<int> vs;
-        for (int i = 0; i < N; i++) vs.push_back(i);
-        sort(begin(vs), end(vs),
-            [&numbers](const int i, const int j) { return numbers[i] < numbers[j]; });
-        vector<int> res(2, -1);
-        int i = 0, j = N - 1;
-        while (i < j) {
-            int sum = numbers[vs[i]] + numbers[vs[j]];
-            if (sum < target) i++;
-            else if (sum > target) j--;
-            else {
-                res[0] = vs[i] + 1;
-                res[1] = vs[j] + 1;
-                if (res[0] > res[1]) swap(res[0], res[1]);
-                break;
+        vector<int> res(2,0);
+        int i,j,k, N = numbers.size();
+        vector<int> ind;
+        for (i = 1; i <= N ; i++){
+            ind.push_back(i);
+        }
+        for (i = 0; i < N - 1; i++){
+            k = i;
+            for (j = i + 1; j < N; j++)
+                if (numbers[j]<numbers[k])
+                    k = j;
+            if (k != i) {
+                swap(numbers[k],numbers[j]);
+                swap(ind[k],ind[j]);
             }
-
+        }
+        i = 0, j = N -1;
+        while (i<j){
+            if (numbers[i]+numbers[j] == target) {
+                if (ind[i]<ind[j])
+                    res[0] = ind[i], res[1] = ind[j];
+                else
+                    res[0] = ind[j], res[1] = ind[i];
+                return res;
+            }
+            if (numbers[i]+numbers[j]<target)
+                i++;
+            else
+                j--;
         }
         return res;
     }
-
-    vector<int> twoSum2(vector<int> &numbers, int target) {
+    
+    vector<int> twoSum(vector<int> &numbers, int target) {
+        unordered_map<int, int> tb;
+        vector<int> res(2,0);
         int N = numbers.size();
-        unordered_map<int, int> table;
-        for (int i = 0; i < N; i++) table[numbers[i]] = i;
-        vector<int> res(2, -1);
-        for (int i = 0; i < N; i++) {
-            int num = target - numbers[i];
-            if (table.count(num) && i != table[num]) {
+        vector<int> ind;
+        for (int i = 0; i < N; i++)
+            tb[numbers[i]] = i + 1;
+        for (int i = 0; i < N; i++)
+            if (tb[target - numbers[i]]) {
                 res[0] = i + 1;
-                res[1] = table[num] + 1;
-                if (res[0] > res[1]) swap(res[0], res[1]);
-                break;
+                res[1] = tb[ target - numbers[i]];
+                
+                if (res[0]>res[1])
+                    swap(res[0],res[1]);
+                if (res[0]!=res[1]) return res;
             }
-        }
         return res;
     }
 };
