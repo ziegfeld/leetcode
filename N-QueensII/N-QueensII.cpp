@@ -12,56 +12,29 @@
 #include <iostream>
 
 using namespace std;
-
 class Solution {
 public:
     int totalNQueens(int n) {
-        return totalNQueens1(n);
-    }
-
-    int totalNQueens1(int n) {
-        vector<int> board(n, -1);
         int res = 0;
-        totalNQueensHelper1(board, 0, res);
+        helper2(n,0, 0,0,0,res);
         return res;
     }
 
-    void totalNQueensHelper1(vector<int> & board, int row, int & res) {
-        int N = board.size();
-        if (row == N) {
+    void helper2(int n, int row, int flagColomn, int zhuDuijiao, int fuDuijiao, int & res) {
+        if (row == n) {
             res++;
             return;
         }
-        for (int col = 0; col < N; col++) {
-            if (!isValid(board, row, col)) continue;
-            board[row] = col;
-            totalNQueensHelper1(board, row + 1, res);
-        }
-    }
-
-    bool isValid(vector<int> & board, int row, int col) {
-        for (int r = 0; r < row; r++) if (board[r] == col || abs(board[r] - col) == row - r) return false;
-        return true;
-    }
-
-    int totalNQueens2(int n) {
-        int res = 0;
-        totalNQueensHelper2(n, 0, 0, 0, 0, res);
-        return res;
-    }
-
-    void totalNQueensHelper2(int N, int row, int cur, int ld, int rd, int & res) {
-        int mask = (1 << N) - 1;
-        if (cur == mask) {
-            res++;
-            return;
-        }
-
-        int cs = ~(cur | ld | rd) & mask;
-        while (cs > 0) {
-            int p = cs & -cs;
-            cs -= p;
-            totalNQueensHelper2(N, row + 1, cur | p, (ld | p) << 1, (rd | p) >> 1, res);
+        //y is (1<<n - 1) wrong?  cuz n-1 is cal'ed first then 1<<!! should be (1<<n) - 1
+        // int mask =  (1<<n) - 1;
+        // zhuDuijiao &= mask;
+        //actually these 2 lines are unneccessary.
+        int curBit = 1, flag = flagColomn | fuDuijiao | zhuDuijiao;
+        for (int j = 0; j < n; j++) {
+            if ((flag & curBit) == 0) { 
+                helper2(n,row+1, flagColomn|curBit, (zhuDuijiao|curBit)<<1, (fuDuijiao|curBit)>>1, res);
+            }
+            curBit <<= 1;
         }
     }
 };
