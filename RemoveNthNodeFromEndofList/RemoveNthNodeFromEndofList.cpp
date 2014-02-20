@@ -32,23 +32,23 @@ struct ListNode {
 class Solution {
 public:
     ListNode *removeNthFromEnd(ListNode *head, int n) {
-        if (head == NULL || n < 1) return head;
-        ListNode * newNode = new ListNode(-1);
-        newNode->next = head;
-        head = newNode;
-        ListNode * slow = head, *fast = head;
-        while (n > 0 && fast->next != NULL) fast = fast->next, n--;
-        if (n > 0) return deleteNode(head);
-        while (fast->next != NULL) fast = fast->next, slow = slow->next;
-        slow->next = deleteNode(slow->next);
-        return deleteNode(head);
-    }
-
-    ListNode* deleteNode(ListNode * cur) {
-        ListNode *toDel = cur;
-        cur = cur->next;
-        delete toDel;
-        return cur;
+        if (!head) return NULL;
+        ListNode * pre = new ListNode(-1);
+        pre -> next = head;
+        ListNode * runner = head;
+        head = pre;
+        
+        while (--n > 0 && runner != NULL)
+            runner = runner -> next;
+        if (runner == NULL && n != 0) return pre -> next;
+        
+        ListNode * res = head;
+        while (runner != NULL)
+            runner = runner -> next, pre = res, res = res -> next;
+        pre -> next = res -> next;
+        delete res;
+        
+        return head -> next;
     }
 };
 
