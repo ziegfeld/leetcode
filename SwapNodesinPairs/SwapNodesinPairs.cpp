@@ -23,35 +23,27 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+
 class Solution {
 public:
     ListNode *swapPairs(ListNode *head) {
-        return swapPairs2(head);
-    }
-
-    ListNode * swapPairs1(ListNode *curNode) {
-        if (curNode == NULL || curNode->next == NULL) return curNode;
-        ListNode * nextNode = curNode->next;
-        curNode->next = swapPairs1(nextNode->next);
-        nextNode->next = curNode;
-        return nextNode;
-    }
-
-    ListNode *swapPairs2(ListNode *head) {
-        ListNode * preNode = NULL, * curNode = head;
-        while (curNode != NULL) {
-            ListNode * nextNode = curNode->next;
-            if (nextNode == NULL) return head;
-            if (preNode == NULL) head = nextNode;
-            else preNode->next = nextNode;
-            curNode->next = nextNode->next;
-            nextNode->next = curNode;
-            preNode = curNode;
-            curNode = curNode->next;
+        if (!head || !head->next) return head;
+        ListNode * pre = new ListNode(-1);
+        pre->next = head;
+        
+        ListNode * p = head, * q = head->next;
+        head = pre;
+        while (p && q){
+            pre->next = q;
+            p->next = q->next;
+            q->next = p;
+         
+            pre = p;
+            p = p->next;
+            q = (p) ? (p->next) : NULL;
         }
-
-        return head;
-    }
+        return head->next;
+    }//better than anson627
 };
 
 int main() {
