@@ -15,13 +15,14 @@ using namespace std;
 class Solution {
 public:
     int singleNumber(int A[], int n) {
-        int res = 0;
+        int res = 0, mask = 1;
         for (int i = 0; i < 32; i++) {
-            int mask = 1<<i;
             int sum = 0;
-            for (int j = 0; j < n; j++)
-                if (A[j]&mask) sum++;
+            for (int j = 0; j < n; j ++)
+                sum += (A[j] & mask) ? 1 : 0;
             if (sum%3) res |= mask;
+            
+            mask = mask << 1;
         }
         return res;
     }
