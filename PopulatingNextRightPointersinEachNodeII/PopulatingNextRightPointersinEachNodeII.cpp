@@ -43,26 +43,34 @@ struct TreeLinkNode
 
 class Solution {
 public:
-    void connect(TreeLinkNode *root) {
-        while (root != NULL) {
-            TreeLinkNode * cur = root;
-            while (cur != NULL) {
-                if (cur->left != NULL && cur->right != NULL) cur->left->next = cur->right;
-                TreeLinkNode * next = cur->next;
-                while (next != NULL && next->left == NULL && next->right == NULL) next = next->next;
-                if (next == NULL) break;
-                TreeLinkNode * child = (next->left != NULL) ? next->left : next->right;
-                if (cur->right != NULL) {
-                    cur->right->next = child;
-                }
-                else if (cur->left != NULL) {
-                    cur->left->next = child;
-                }
-                cur = next;
-            }
 
-            while (root != NULL && root->left == NULL && root->right == NULL) root = root->next;
-            if (root != NULL) root = (root->left != NULL) ? root->left : root->right;
+    void connect(TreeLinkNode *root) {
+        connect_levelOrder(root);
+        
+    }
+            
+    void connect_levelOrder(TreeLinkNode *root) {
+        if (root == NULL) return;
+        queue<TreeLinkNode*> qtree;
+        vector<TreeLinkNode*> qs;
+        qtree.push(root);
+        qtree.push(NULL);
+        TreeLinkNode * curToLink = root;
+        while (!qtree.empty()) {
+            TreeLinkNode * node = qtree.front();
+            qtree.pop();
+            
+            if (node != NULL) {
+                if (node->left != NULL) qtree.push(node->left);
+                if (node->right != NULL) qtree.push(node->right);
+            } else {
+                if (!qtree.empty()) qtree.push(NULL);
+            }
+            
+            //doing link job the the one just pop'ed 
+            if (curToLink != NULL)
+            	curToLink -> next = node;
+            curToLink = node;
         }
     }
 };
