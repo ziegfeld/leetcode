@@ -17,18 +17,33 @@
 
 using namespace std;
 
+
 class Solution {
 public:
-    int maxProfit(vector<int> & prices) {
+    int maxProfit(vector<int> &prices) {
+      return maxProfit_anson627(prices);
+    }
+    
+    // int maxProfit_myWrongAnswer(vector<int> &prices) {
+    //     int res = 0, min = INT_MAX;
+    //     vector<int>::iterator it = prices.begin();
+    //     while (it != prices.end()) {
+    //         res = max(res, *it - min);
+    //         min = min(min, *it++);
+    //     }
+    //     return res;
+    // }
+    
+
+    int maxProfit_anson627(vector<int> &prices) {
         int res = 0, minp = INT_MAX;
-        for (int p : prices) {
-            minp = min(minp, p);
-            res = max(res, (p-minp));
+        for (int p: prices) {
+            res = (res > p - minp)? res : (p - minp);
+            minp = (p<minp) ? p : minp;
         }
         return res;
     }
 };
-
 int main() {
     return 0;
 }
