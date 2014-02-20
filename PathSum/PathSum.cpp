@@ -35,21 +35,62 @@ struct TreeNode {
     TreeNode *right;
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
-
 class Solution {
 public:
     bool hasPathSum(TreeNode *root, int sum) {
-        return hasPathSumHelper(root, sum);
+        return hasPathSum2(root, sum);
     }
-
-    bool hasPathSumHelper(TreeNode * cur, int sum) {
-        if (cur == NULL) return false;
-        sum -= cur->val;
-        if (cur->left == NULL && cur->right == NULL) return (sum == 0);
-        return hasPathSumHelper(cur->left, sum) || hasPathSumHelper(cur->right, sum);
+    
+    bool hasPathSum1(TreeNode *root, int sum) {
+        if (!root) return false;
+        return hasPathSum1_helper(root, sum);
+    }
+        
+    bool hasPathSum1_helper(TreeNode *root, int sum) {
+        sum = sum - root->val;
+        if (! root->left && ! root-> right) return (sum == 0);
+        return ( root->left && hasPathSum1_helper(root->left, sum) || root->right && hasPathSum1_helper(root->right, sum));
+    }
+    
+    // approach 2: stack for DFS incursion
+    bool hasPathSum2(TreeNode *root, int sum) {
+        if (!root) return false;
+        stack<TreeNode *> stree;
+        stack<int> ssum;
+        
+        //pushPath(stree, root, ssum, sum);
+        TreeNode * cur = root;
+        int cur_sum = sum;
+        while (cur){
+            cur_sum -= cur->val;
+            ssum.push(cur_sum);
+            stree.push(cur);
+            cur = (cur->left) ? cur->left : cur->right;
+        }
+        if (cur_sum == 0) return true;
+        
+        while (!stree.empty()){
+            cur = stree.top(), stree.pop();
+            cur_sum = ssum.top(), ssum.pop();
+            if (!stree.empty() && cur == stree.top() -> left) {
+                //pushPath(stree, root, ssum, sum);
+                cur = stree.top() -> right;
+                if (cur) {
+                    cur_sum = ssum.top();
+                    do {
+                        cur_sum -= cur->val;
+                        ssum.push(cur_sum);
+                        stree.push(cur);
+                        cur = (cur->left) ? cur->left : cur->right;
+                    } while (cur);
+                    // if (cur != stree.top()->right && cur_sum == 0) return true;
+                    if (cur_sum == 0) return true;
+                }
+            }
+        }
+        return false;
     }
 };
-
 TreeNode * readNode(istringstream & is) {
     string str;
     if (is >> str) {
