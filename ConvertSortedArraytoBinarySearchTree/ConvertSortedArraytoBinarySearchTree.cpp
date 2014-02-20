@@ -24,28 +24,23 @@ struct TreeNode {
 
 class Solution {
 public:
-    TreeNode *sortedArrayToBST(vector<int> & num) {
+    TreeNode *sortedArrayToBST(vector<int> &num) {
         if (num.empty()) return NULL;
         auto it = num.begin();
         return sortedArrayToBST2(it, 0, num.size() - 1);
     }
-
-    TreeNode *sortedArrayToBST1(vector<int> &num, int l, int u) {
-        if (l > u) return NULL;
-        int m = l + (u - l) / 2;
-        TreeNode * cur = new TreeNode(num[m]);
-        cur->left = sortedArrayToBST1(num, l, m - 1);
-        cur->right = sortedArrayToBST1(num, m + 1, u);
-        return cur;
-    }
-
+    
+    
+    //note the iterator it is reference tranfer. 
+    // and it++ whenever reaching cur = new TreeNode (i.e. in-order new sub-root after l>u for a left subtree)
+    // this is great in the sense that it can be migrated to Sorted List so easily.
     TreeNode *sortedArrayToBST2(vector<int>::iterator & it, int l, int u) {
-        if (l > u) return NULL;
+        if (l>u) return NULL;
         int m = l + (u - l) / 2;
-        TreeNode * tmp = sortedArrayToBST2(it, l, m - 1);
+        TreeNode * left = sortedArrayToBST2(it, l, m-1);
         TreeNode * cur = new TreeNode(*it++);
-        cur->left = tmp;
-        cur->right = sortedArrayToBST2(it, m + 1, u);
+        cur->left = left;
+        cur->right = sortedArrayToBST2(it, m+1, u);
         return cur;
     }
 };
