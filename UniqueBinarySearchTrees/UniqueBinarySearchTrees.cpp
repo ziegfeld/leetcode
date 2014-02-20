@@ -47,6 +47,7 @@ public:
         return dp[n];
     }
 
+    //math way is my approach
     int numTree3(int n) {
         int res = 1;
         for (int i = 1; i <= n; i++)
