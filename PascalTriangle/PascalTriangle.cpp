@@ -21,12 +21,12 @@
 #include <vector>
 
 using namespace std;
-
 class Solution {
 public:
     vector<vector<int> > generate(int numRows) {
-        vector<vector<int> > res;
-        for (int r = 0; r < numRows; r++) res.push_back(vector<int>(r+1, 1));
+        vector<vector<int>> res;
+        for (int r = 0; r < numRows; r++)
+            res.push_back(vector<int>(r+1, 1)); // r+1 amount of 1's.
         for (int r = 2; r < numRows; r++)
             for (int c = 1; c < r; c++)
                 res[r][c] = res[r-1][c-1]+res[r-1][c];
