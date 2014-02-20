@@ -23,38 +23,45 @@ using namespace std;
 class Solution {
 public:
     int uniquePaths(int m, int n) {
-        return uniquePaths1(m, n);
+        //return uniquePaths3(m, n);
+        return pascalTria(m,n);
+        //return uniquePathsDP(m,n);
+        
     }
-
-    int uniquePaths1(int m, int n) {
-        vector<vector<int> > dp(m, vector<int>(n, 0));
-        dp[0][0] = 1;
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (i == 0 || j == 0) dp[i][j] = 1;
-                else dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-            }
-        }
-        return dp[m - 1][n - 1];
-    }
-
-    int uniquePaths2(int m, int n) {
-        vector<int> dp(n, 0);
-        dp[0] = 1;
-        for (int i = 0; i < m; i++) {
-            for (int j = 1; j < n; j++) {
-                dp[j] += dp[j - 1];
-            }
-        }
-        return dp[N - 1];
-    }
-
     int uniquePaths3(int m, int n) {
         long long res = 1;
         for (int i = 1; i < n; i++) {
             res = res * (i + m - 1) / i;
         }
         return (int)res;
+    }
+    int pascalTria(int m, int n) {
+        if (m>n) swap(m,n);
+        --m,--n;
+        
+        ///calculate C(n+m,m) = (n+m)!/m!/(n)!
+        
+        long long res = 1;
+        
+        //cal (n+m)!/m! = (m+1)*(m+2)*..*(n+m);
+        for (int i = 1; i <= n; i++)
+            res = res * (i+m) / i;
+            
+        return (int)res;
+    }
+        
+    int uniquePathsDP(int m, int n) {
+        if (m>n) swap(m,n);
+        // n is the larger
+        
+        vector<int> dp(n,1);
+        //dp[0]=0; // dummy for the 1st 
+        for (int i = 1; i < m; i++) {
+            // dp[0] = dp[0]; // unique path to the 1st cell remains the same ( of the next row);
+            for (int j = 1; j < n; j++)
+                dp[j]+=dp[j-1];
+        }
+        return dp[n-1];
     }
 };
 
