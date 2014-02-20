@@ -22,14 +22,27 @@ using namespace std;
 class Solution {
 public:
     int searchInsert(int A[], int n, int target) {
-        int l = 0, u = n-1;
-        while (l < u) {
-            int m = l+(u-l)/2;
-            if (A[m] < target) l = m+1;
-            else u = m;
+        return searchInsert2(A, 0, n-1, target);
+    }
+    
+    //recursive
+    int searchInsert1(int A[], int left, int right, int target) {
+        if (left > right) return left;
+        int pivot = (right - left) / 2 + left;
+        if (target == A[pivot]) return pivot;
+        if (target < A[pivot]) return searchInsert1(A, left, pivot - 1, target);
+        else return searchInsert1(A, pivot + 1, right, target);
+    }
+    
+    //normal
+    int searchInsert2(int A[], int left, int right, int target) {
+        while (left<=right) {
+            int p = (right - left) / 2 + left;
+            if (target == A[p]) return p;
+            if (target < A[p]) right = p - 1;
+            else left = p + 1;
         }
-        if (A[u] < target) return n;
-        return u;
+        return left;
     }
 };
 
