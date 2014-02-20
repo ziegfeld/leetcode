@@ -18,31 +18,15 @@ using namespace std;
 class Solution {
 public:
     int maxSubArray(int A[], int n) {
-        return maxSubArray2(A, n);
-    }
-
-    int maxSubArray1(int A[], int n) {
-        int sum = 0, res = INT_MIN;
-        for (int i = 0; i < n; i++) {
-            sum += A[i];
-            if (sum > res) res = sum;
-            if (sum < 0) sum = 0;
+        int res = A[0];
+        int cur = 0;
+        for (int i = 0; i < n ; i ++) {
+            cur += A[i];
+            res = (res > cur) ? res : cur;
+            if (cur < 0) cur = 0;
         }
         return res;
-    }
-
-    int maxSubArray2(int A[], int n) {
-        return maxSubArrayHelper1(A, 0, n - 1);
-    }
-
-    int maxSubArrayHelper1(int A[], int l, int u) {
-        if (l > u) return INT_MIN;
-        int m = l + (u - l) / 2;
-        int sum = 0, lmax = 0, rmax = 0;
-        for (int i = m - 1; i >= l; i--) sum += A[i], lmax = max(lmax, sum);
-        sum = 0;
-        for (int i = m + 1; i <= u; i++) sum += A[i], rmax = max(rmax, sum);
-        return max(A[m] + lmax + rmax, max(maxSubArrayHelper1(A, l, m - 1), maxSubArrayHelper1(A, m + 1, u)));
+        
     }
 };
 
