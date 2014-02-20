@@ -28,44 +28,22 @@ struct TreeNode {
 class Solution {
 public:
     int minDepth(TreeNode *root) {
-        return minDepth2(root);
-    }
-
-    int minDepth1(TreeNode * root) {
         if (root == NULL) return 0;
-        int res = INT_MAX;
-        minDepthHelper1(root, 0, res);
-        return res;
-    }
-
-    void minDepthHelper1(TreeNode * cur, int depth, int & res) {
-        if (cur == NULL || depth >= res) return;
-        depth += 1;
-        if (cur->left == NULL && cur->right == NULL) {
-            res = min(res, depth);
-            return;
-        }
-        minDepthHelper1(cur->left, depth, res);
-        minDepthHelper1(cur->right, depth, res);
-    }
-
-    int minDepth2(TreeNode * root) {
-        if (root == NULL) return 0;
-        int res = 0;
+        int res = 1;
         queue<TreeNode *> qs;
         qs.push(root);
         qs.push(NULL);
         while (!qs.empty()) {
             TreeNode * cur = qs.front();
             qs.pop();
-            if (cur == NULL) {
-                res++;
+            if (cur!=NULL) {
+                if (cur->left == NULL && cur->right == NULL)//(!cur->left && !cur->right)
+                    break;
+                if (cur->left) qs.push(cur->left);
+                if (cur->right) qs.push(cur->right);
+            } else  {
+                ++res;
                 if (!qs.empty()) qs.push(NULL);
-            }
-            else {
-                if (cur->left == NULL && cur->right == NULL) return res + 1;
-                if (cur->left != NULL) qs.push(cur->left);
-                if (cur->right != NULL) qs.push(cur->right);
             }
         }
         return res;
