@@ -20,21 +20,23 @@ struct ListNode {
 class Solution {
 public:
     ListNode *detectCycle(ListNode *head) {
-        if (head == NULL || head->next == NULL) return NULL;
-        ListNode * fastNode = head, * slowNode = head;
-        while (fastNode != NULL && fastNode->next != NULL) {
-            fastNode = fastNode->next->next;
-            slowNode = slowNode->next;
-            if (fastNode == slowNode) break;
+        ListNode * runner1 = head;
+        ListNode * runner2 = head;
+        while (runner2 != NULL){
+            runner1 = runner1 -> next;
+            runner2 = runner2 -> next;
+            if (runner2 == NULL || (runner2 = runner2 -> next) == NULL) 
+                break;
+            else if (runner1 == runner2)
+            // find the result node
+            {
+                runner1 = head;
+                while (runner1 != runner2)
+                    runner1 = runner1 -> next, runner2 = runner2 -> next;
+                return runner1;
+            }
         }
-        if (fastNode != slowNode) return NULL;
-
-        fastNode = head;
-        while (fastNode != slowNode) {
-            fastNode = fastNode->next;
-            slowNode = slowNode->next;
-        }
-        return fastNode;
+        return NULL;
     }
 };
 
