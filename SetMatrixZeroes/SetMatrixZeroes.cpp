@@ -17,62 +17,45 @@
 #include <vector>
 
 using namespace std;
-
 class Solution {
 public:
     void setZeroes(vector<vector<int> > &matrix) {
-        setZeroes2(matrix);
-    }
-
-    void setZeroes1(vector<vector<int> > &matrix) {
-        int M = matrix.size(), N = matrix[0].size();
-        vector<int> rows(M, 1);
-        vector<int> cols(N, 1);
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                if (matrix[i][j] == 0) rows[i] = cols[j] = 0;
-            }
-        }
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                if (rows[i] == 0 || cols[j] == 0) matrix[i][j] = 0;
-            }
-        }
-    }
-
-    void setZeroes2(vector<vector<int> > &matrix) {
-        int M = matrix.size(), N = matrix[0].size();
-        int fr = 1;
-        for (int j = 0; j < N; j++) {
-            if (matrix[0][j] == 0) {
-                fr = 0;
-                break;
-            }
-        }
-        int fc = 1;
-        for (int i = 0; i < M; i++) {
+        int m = matrix.size(), n = matrix[0].size();
+        if (m == 0 || n == 0) return;
+        
+        bool is1stColomnZero = false, is1stRowZero = false;
+        for (int i = 0; i < m; i++)
             if (matrix[i][0] == 0) {
-                fc = 0;
+                is1stColomnZero = true;
                 break;
             }
+        for (int j = 0; j < n; j++)
+            if (matrix[0][j] == 0) {
+                is1stRowZero = true;
+                break;
         }
-        for (int i = 1; i < M; i++) {
-            for (int j = 1; j < N; j++) {
-                if (matrix[i][j] == 0) matrix[i][0] = matrix[0][j] = 0;
-            }
-        }
-        for (int i = 1; i < M; i++) {
-            for (int j = 1; j < N; j++) {
-                if (matrix[i][0] == 0 || matrix[0][j] == 0) matrix[i][j] = 0;
-            }
-        }
-        if (fr == 0) {
-            for (int j = 0; j < N; j++) matrix[0][j] = 0;
-        }
+        
+        for (int i = 0; i < m; i++ )
+            for (int j = 0; j < n; j++)
+                if (matrix[i][j] == 0) 
+                    matrix[i][0] = 0, matrix[0][j] = 0;
+                
+        for (int i = 1; i < m; i++ )
+            if (matrix[i][0] == 0) 
+                for (int j = 1; j < n; j++)
+                    matrix[i][j] = 0;
 
-        if (fc == 0) {
-            for (int i = 0; i < M; i++) matrix[i][0] = 0;
-        }
+        for (int j = 1; j < n; j++)
+            if (matrix[0][j] == 0) 
+                for (int i = 1; i < m; i++ )
+                    matrix[i][j] = 0;
+            
+        if (is1stColomnZero)
+            for (int i = 0; i < m; i++)
+                matrix[i][0] = 0;
+        if (is1stRowZero)
+            for (int j = 0; j < n; j++)
+                matrix[0][j] = 0;
     }
 };
 
