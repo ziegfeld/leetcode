@@ -44,7 +44,7 @@ using namespace std;
 /**
  * Definition for binary tree with next pointer.
  */
-struct TreeLinkNode 
+struct TreeLinkNode
 {
     int val;
     TreeLinkNode *left, *right, *next;
@@ -54,33 +54,11 @@ struct TreeLinkNode
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
-        return connect3(root);
-    }
-
-    void connect1(TreeLinkNode *root) {
-        if (root == NULL) return;
-        if (root->left != NULL) root->left->next = root->right;
-        if (root->right != NULL) root->right->next = (root->next == NULL) ? NULL : root->next->left;
-        connect1(root->left);
-        connect1(root->right);
-    }
-
-    void connect2(TreeLinkNode * root) {
-        queue<TreeLinkNode *> qs;
-        if (root != NULL) qs.push(root);
-        while (!qs.empty()) {
-            root = qs.front(), qs.pop();
-            if (root->left != NULL) root->left->next = root->right, qs.push(root->left);
-            if (root->right != NULL) root->right->next = (root->next == NULL) ? NULL : root->next->left, qs.push(root->right);
-        }
-    }
-
-    void connect3(TreeLinkNode * root) {
-        while (root != NULL) {
-            TreeLinkNode * cur = root;
-            while (cur != NULL) {
-                if (cur->left != NULL) cur->left->next = cur->right;
-                if (cur->right != NULL) cur->right->next = (cur->next == NULL) ? NULL : cur->next->left;
+        while (root && root->left) {
+            TreeLinkNode *cur = root;
+            while (cur) {
+                cur->left->next = cur->right;
+                cur->right->next = cur->next ? cur->next->left : NULL;
                 cur = cur->next;
             }
             root = root->left;

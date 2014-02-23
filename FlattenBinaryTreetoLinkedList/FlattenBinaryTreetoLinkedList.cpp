@@ -27,9 +27,7 @@
 // points to the next node of a pre-order traversal.
 //
 // Complexity:
-// Recursion, O(n) time, O(h) space
-// Stack, O(n) time, O(h) space
-// Incremental, O(n) time, O(1) space
+// O(n) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -49,49 +47,16 @@ struct TreeNode {
 class Solution {
 public:
     void flatten(TreeNode *root) {
-        flatten2(root);
-    }
-
-    TreeNode * flatten1(TreeNode * cur) {
-        if (cur == NULL) return NULL;
-        TreeNode * rt = cur->right;
-        if (cur->left != NULL) {
-            cur->right = cur->left;
-            cur->left = NULL;
-            cur = flatten1(cur->right);
-        }
-        if (rt != NULL) {
-            cur->right = rt;
-            cur = flatten1(cur->right);
-        }
-        return cur;
-    }
-
-    void flatten2(TreeNode *cur) {
-        stack<TreeNode *> stk;
-        while (cur != NULL) {
-            if (cur->left != NULL) {
-                if (cur->right != NULL) stk.push(cur->right);
-                cur->right = cur->left;
-                cur->left = NULL;
+        while (root != NULL) {
+            if (root->left != NULL) {
+                TreeNode * rt = root->right;
+                root->right = root->left;
+                root->left = NULL;
+                TreeNode * cur = root;
+                while (cur->right) cur = cur->right;
+                cur->right = rt;
             }
-            if (cur->right == NULL && !stk.empty()) {
-                cur->right = stk.top(), stk.pop();
-            }
-            cur = cur->right;
-        }
-    }
-
-    void flatten3(TreeNode *cur) {
-        while (cur != NULL) {
-            TreeNode * pre = cur->left;
-            while (pre != NULL && pre->right != NULL) pre = pre->right;
-            if (pre != NULL) {
-                pre->right = cur->right;
-                cur->right = cur->left;
-                cur->left = NULL;
-            }
-            cur = cur->right;
+            root = root->right;
         }
     }
 };
