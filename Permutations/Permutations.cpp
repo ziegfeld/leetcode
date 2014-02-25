@@ -34,10 +34,7 @@ public:
 
     void permuteHelper2(vector<int> & num, int begin, vector<vector<int> > & res) {
         int end = num.size();
-        if (begin == end) {
-            res.push_back(num);
-            return;
-        }
+        if (begin == end) res.push_back(num);
         for (int cur = begin; cur < end; cur++) {
             swap(num[begin], num[cur]);
             permuteHelper2(num, begin + 1, res);

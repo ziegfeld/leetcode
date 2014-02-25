@@ -49,17 +49,13 @@ public:
     }
 
     vector<vector<int> > combine2(int n, int k) {
-        vector<vector<int> > res;
+        vector<vector<int> > res(1, vector<int>());
         for (; k > 0; k--) {
-            if (res.empty()) {
-                for (int cur = 1; cur <= n - k + 1; cur++) res.push_back(vector<int>(1, cur));
-                continue;
-            }
             int M = res.size();
             for (int i = 0; i < M; i++) {
-                int begin = res[i].back() + 1, end = n - k + 1;
-                for (int cur = begin; cur <= end; cur++){
-                    if (cur == end) res[i].push_back(cur);
+                int begin = (res[i].empty() ? 0 : res[i].back()) + 1, end = n - k + 1;
+                for (int cur = begin; cur <= end; cur++) {
+                    if (cur == end) res[i].push_back(end);
                     else {
                         auto copy = res[i];
                         copy.push_back(cur);

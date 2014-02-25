@@ -32,21 +32,12 @@ public:
     }
 
     int minDepth1(TreeNode * root) {
-        if (root == NULL) return 0;
-        int res = INT_MAX;
-        minDepthHelper1(root, 0, res);
-        return res;
+        return minDepthHelper1(root, false);
     }
 
-    void minDepthHelper1(TreeNode * cur, int depth, int & res) {
-        if (cur == NULL || depth >= res) return;
-        depth += 1;
-        if (cur->left == NULL && cur->right == NULL) {
-            res = min(res, depth);
-            return;
-        }
-        minDepthHelper1(cur->left, depth, res);
-        minDepthHelper1(cur->right, depth, res);
+    void minDepthHelper1(TreeNode * cur, bool hasSibling) {
+        if (cur == NULL) return hasSibling ? INT_MAX : 0;
+        return 1 + min(minDepthHelper1(cur->left, cur->right != NULL), minDepthHelper1(cur->right, cur->left != NULL));
     }
 
     int minDepth2(TreeNode * root) {

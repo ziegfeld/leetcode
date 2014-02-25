@@ -36,7 +36,6 @@ public:
                 for (int i = 0; i < cur.size(); i++) {
                     char t = cur[i];
                     for (char c = 'a'; c <= 'z'; c++) {
-                        if (t == c) continue;
                         cur[i] = c;
                         if (cur == end) return level + 1;
                         if (dict.count(cur) && !visit.count(cur)) visit.insert(cur), nq.push(cur);

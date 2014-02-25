@@ -30,17 +30,13 @@ public:
 
     vector<vector<int> > permuteUnique2(vector<int> & num) {
         vector<vector<int> > res;
-        sort(begin(num), end(num));
         permuteUnique1Helper2(num, 0, res);
         return res;
     }
 
     void permuteUnique1Helper2(vector<int> & num, int begin, vector<vector<int> > & res) {
         int end = num.size();
-        if (begin == end) {
-            res.push_back(num);
-            return;
-        }
+        if (begin == end) res.push_back(num);
         unordered_set<int> visit;
         for (int cur = begin; j < end; j++) {
             if (visit.count(num[cur])) continue;

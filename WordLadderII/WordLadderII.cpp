@@ -32,19 +32,19 @@ class Solution {
 public:
     vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
         unordered_map<string, vector<string> > from;
-        unordered_set<string> visit;
-        unordered_set<string> cq, nq;
+        unordered_set<string> cq, nq, visit;
         cq.insert(start);
         while (!cq.empty() && !cq.count(end)) {
             for (auto & cur : cq) visit.insert(cur);
             for (auto & cur : cq) {
-                for (int i = 0; i < cur.size(); i++) {
-                    auto next = cur;
+                string next = cur;
+                for (int i = 0; i < next.size(); i++) {
+                    char t = next[i];
                     for (char c = 'a'; c <= 'z'; c++) {
-                        if (next[i] == c) continue;
                         next[i] = c;
-                        if ((dict.count(next) || next == end) && !visit.count(next)) nq.insert(next), from[next].push_back(cur);
+                        if (next == end || (dict.count(next) && !visit.count(next))) from[next].push_back(cur), nq.insert(next);
                     }
+                    next[i] = t;
                 }
             }
             swap(cq, nq);

@@ -22,35 +22,42 @@ public:
 
     ListNode *mergetSort(ListNode * head) {
         if (head == NULL || head->next == NULL) return head;
-        ListNode * frontHead = head, * backHead = split(head);
+        ListNode * frontHead, * backHead;
+        split(head, frontHead, backHead);
         frontHead = mergetSort(frontHead);
         backHead = mergetSort(backHead);
         return merge(frontHead, backHead);
     }
 
-    ListNode * split(ListNode * head) {
+    void split(ListNode * head, ListNode *& frontHead, ListNode *& backHead) {
         ListNode * fastNode = head, * slowNode = head;
         while (fastNode->next != NULL && fastNode->next->next != NULL) fastNode = fastNode->next->next, slowNode = slowNode->next;
-        head = slowNode->next;
+        frontHead = slowNode->next;
         slowNode->next = NULL;
-        return head;
+        backHead = head;
     }
 
     ListNode * merge(ListNode * frontHead, ListNode * backHead) {
-        ListNode * head = new ListNode(-1), * curNode = head;
+        ListNode * head = pushDummy(NULL), *curNode = head;
         while (frontHead != NULL || backHead != NULL) {
             if (backHead == NULL || (frontHead != NULL && frontHead->val <= backHead->val)) curNode->next = frontHead, frontHead = frontHead->next;
             else curNode->next = backHead, backHead = backHead->next;
             curNode = curNode->next;
         }
-        return deleteNode(head);
+        return popDummy(head);
     }
 
-    ListNode * deleteNode(ListNode * curNode) {
-        ListNode * toDel = curNode;
-        curNode = curNode->next;
-        delete toDel;
-        return curNode;
+    ListNode * pushDummy(ListNode * head) {
+        ListNode * newNode = new ListNode(-1);
+        newNode->next = head;
+        return newNode;
+    }
+
+    ListNode * popDummy(ListNode * head) {
+        ListNode * delNode = head;
+        head = head->next;
+        delete delNode;
+        return head;
     }
 };
 
