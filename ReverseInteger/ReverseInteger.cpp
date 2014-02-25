@@ -27,7 +27,7 @@ using namespace std;
 
 class Solution {
 public:
-    int reverse(int x) {
+    int reverseAnson(int x) {
         long long y = 0;
         while (x != 0) {
             y = y * 10 + x % 10;
@@ -35,6 +35,16 @@ public:
         }
         return (int)y;
     }
+    int reverse(int x) {
+        int sign = 1;
+        if (x<0) sign = -1, x = -x; // yong douhao!
+        int y = 0;
+        while (x>0) {
+            y = y*10 + x%10;
+            x /= 10;
+        }
+        return y*sign;
+    }	
 };
 
 int main() {

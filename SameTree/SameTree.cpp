@@ -32,8 +32,10 @@ public:
 
     bool isSameTree1(TreeNode *p, TreeNode *q) {
         if (p == NULL && q == NULL) return true;
-        if (p == NULL || q == NULL) return false;
-        return (p->val == q->val) && isSameTree1(p->left, q->left) && isSameTree1(p->right, q->right);
+        if (p != NULL && q != NULL) {
+            return (p->val == q->val) && isSameTree2(p->left,q->left) && isSameTree2(p->right,q->right);
+        }
+        return false;
     }
 
     bool isSameTree2(TreeNode *p, TreeNode *q) {
