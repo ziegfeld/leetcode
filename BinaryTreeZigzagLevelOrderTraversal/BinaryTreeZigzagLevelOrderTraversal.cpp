@@ -41,27 +41,27 @@ class Solution {
 public:
     vector<vector<int> > zigzagLevelOrder(TreeNode *root) {
         vector<vector<int> > res;
-        stack<TreeNode *> cs, ns;
-        if (root != NULL) cs.push(root);
+        vector<stack<TreeNode *> > stk(2, stack<TreeNode *>());
         bool order = true;
-        while (!cs.empty()) {
+        int pre = 0, cur = 1;
+        if (root != NULL) stk[pre].push(root);
+        while (!stk[pre].empty()) {
             vector<int> path;
-            while (!cs.empty()) {
-                TreeNode * cur = cs.top();
-                cs.pop();
-                path.push_back(cur->val);
+            while (!stk[pre].empty()) {
+                root = stk[pre].top(), stk[pre].pop();
+                path.push_back(root->val);
                 if (order) {
-                    if (cur->left != NULL) ns.push(cur->left);
-                    if (cur->right != NULL) ns.push(cur->right);
+                    if (root->left != NULL) stk[cur].push(root->left);
+                    if (root->right != NULL) stk[cur].push(root->right);
                 }
                 else {
-                    if (cur->right != NULL) ns.push(cur->right);
-                    if (cur->left != NULL) ns.push(cur->left);
+                    if (root->right != NULL) stk[cur].push(root->right);
+                    if (root->left != NULL) stk[cur].push(root->left);
                 }
             }
-            order = !order;
             res.push_back(path);
-            swap(cs, ns);
+            pre = cur, cur = !cur;
+            order = !order;
         }
         return res;
     }

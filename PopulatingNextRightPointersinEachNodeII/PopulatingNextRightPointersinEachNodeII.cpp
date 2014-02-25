@@ -73,6 +73,46 @@ public:
             curToLink = node;
         }
     }
+
+    void connect2(TreeLinkNode * root) {
+        queue<TreeLinkNode *> qs;
+        if (root != NULL) qs.push(root), qs.push(NULL);
+        while (!qs.empty()) {
+            root = qs.front(), qs.pop();
+            if (root == NULL) {
+                if (!qs.empty()) qs.push(NULL);
+            }
+            else {
+                root->next = qs.front();
+                if (root->left != NULL) qs.push(root->left);
+                if (root->right != NULL) qs.push(root->right);
+            }
+        }
+    }
+
+    void connect3(TreeLinkNode * root) {
+        while (root != NULL) {
+            TreeLinkNode * curNode = root;
+            while (curNode != NULL) {
+                if (curNode->left != NULL && curNode->right != NULL) curNode->left->next = curNode->right;
+                TreeLinkNode * nextNode = curNode->next;
+                while (nextNode != NULL && nextNode->left == NULL && nextNode->right == NULL) nextNode = nextNode->next;
+                if (nextNode == NULL) break;
+                TreeLinkNode * childNode = (nextNode->left != NULL) ? nextNode->left : nextNode->right;
+                if (curNode->right != NULL) curNode->right->next = childNode;
+                else if (curNode->left != NULL) curNode->left->next = childNode;
+                curNode = nextNode;
+            }
+
+            while (root != NULL && root->left == NULL && root->right == NULL) root = root->next;
+            if (root != NULL) root = (root->left != NULL) ? root->left : root->right;
+            while (root != NULL && root->left == NULL && root->right == NULL) root = root->next;
+            if (root != NULL) root = (root->left != NULL) ? root->left : root->right;
+
+
+
+        }
+    }
 };
 
 int main() {

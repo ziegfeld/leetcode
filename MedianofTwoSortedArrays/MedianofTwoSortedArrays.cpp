@@ -25,24 +25,20 @@ public:
         return (r1 + r2) / 2.0;
     }
 
-    double findMedianSortedArrays2(int A[], int m, int B[], int n) {
-        int k = (m + n) / 2;
-        if ((m + n) % 2) return findKth(A, m, B, n, k + 1);
-        return (findKth(A, m, B, n, k) + findKth(A, m, B, n, k + 1)) / 2.0;
+    double findMedianSortedArrays(int A[], int m, int B[], int n) {
+        int total = m + n;
+        if (total % 2) return findKth(A, m, B, n, total / 2 + 1);
+        return (findKth(A, m, B, n, total / 2) + findKth(A, m, B, n, total / 2 + 1)) / 2.0;
     }
 
     int findKth(int A[], int m, int B[], int n, int k) {
-        if (n == 0) return A[k - 1];
+        if (m > n) return findKth(B, n, A, m, k);
         if (m == 0) return B[k - 1];
         if (k == 1) return min(A[0], B[0]);
-        if (m / 2 + n / 2 + 1 >= k) {
-            if (A[m / 2] <= B[n / 2]) return findKth(A, m, B, n / 2, k);
-            else return findKth(A, m / 2, B, n, k);
-        }
-        else {
-            if (A[m / 2] <= B[n / 2]) findKth(A + m / 2 + 1, m - (m / 2 + 1), B, n, k - (m / 2 + 1));
-            else return findKth(A, m, B + n / 2 + 1, n - (n / 2 + 1), k - (n / 2 + 1));
-        }
+        int l = min(k / 2, m), r = k - l;
+        if (A[l - 1] < B[r - 1]) return findKth(A + l, m - l, B, n, k - l);
+        else if (A[l - 1] > B[r - 1]) return findKth(A, m, B + r, n - r, k - r);
+        return A[l - 1];
     }
 };
 
@@ -50,10 +46,10 @@ int main() {
     Solution sol;
 
     {
-        int p0[] = {1, 12, 15, 26, 38};
-        int p1 = sizeof(p0)/sizeof(p0[0]);
-        int p2[] = {2, 13, 17, 30, 45};
-        int p3 = sizeof(p2)/sizeof(p2[0]);
+        int p0[] = { 1, 12, 15, 26, 38 };
+        int p1 = sizeof(p0) / sizeof(p0[0]);
+        int p2[] = { 2, 13, 17, 30, 45 };
+        int p3 = sizeof(p2) / sizeof(p2[0]);
         cout << sol.findMedianSortedArrays(p0, p1, p2, p3) << endl;
     }
 

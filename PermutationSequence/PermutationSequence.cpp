@@ -32,29 +32,25 @@ public:
     }
 
     string getPermutation1(int n, int k) {
-        string res;
-        for (int i = 1; i <= n; i++) res.push_back('0' + i);
+        string res(n, '1');
+        for (int i = 0; i < n; i++) res[i] += i;
         for (; k > 1; k--) next_permutation(begin(res), end(res));
         return res;
     }
 
     string getPermutation2(int n, int k) {
-        string res;
-        vector<int> F(n + 1, 0);
-        for (int i = 1; i <= n; i++) {
-            if (i == 1) F[i] = 1;
-            else F[i] = F[i - 1] * i;
-
-        }
-        if (k > F[n]) return res;
-        for (int i = 1; i <= n; i++) res.push_back('0' + i);
+        vector<int> fs(n + 1, 1);
+        for (int i = 2; i <= n; i++) fs[i] = fs[i - 1] * i;
+        string res(n, '1');
+        for (int i = 0; i < n; i++) res[i] += i;
+        if (k > fs[n]) return res;
         k--;
         for (int i = 0; i < n - 1; i++) {
-            int j = k / F[n - 1 - i] + i;
-            char c = res[j];
+            int j = i + k / fs[n - 1 - i];
+            k %= fs[n - 1 - i];
+            char t = res[j];
             for (; j > i; j--) res[j] = res[j - 1];
-            res[i] = c;
-            k %= F[n - 1 - i];
+            res[j] = t;
         }
         return res;
     }

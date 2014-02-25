@@ -12,7 +12,7 @@
 // A solution is ["cats and dog", "cat sand dog"].
 //
 // Complexity:
-// DP + Recursion + Memoization O(n^3) time, O(n^3) space
+// O(n^2) time, O(n^2) space
 //============================================================================
 
 #include <iostream>
@@ -51,10 +51,32 @@ public:
                 memo[i].push_back(s.substr(0, i));
                 continue;
             }
-            auto pres = wordBreakHelper1(s, dp, memo, j);
-            for (auto & p : pres) memo[i].push_back(p + " " + s.substr(j, i - j));
+            auto res = wordBreakHelper1(s, dp, memo, j);
+            for (auto & str : res) memo[i].push_back(str + " " + s.substr(j, i - j));
         }
         return memo[i];
+    }
+
+    vector<string> wordBreak2(string s, unordered_set<string> &dict) {
+        vector<string> res;
+        if (s.empty()) return res;
+        int N = s.size();
+        vector<vector<int> > dp1(N + 1, vector<int>());
+        dp1[0].push_back(0);
+        for (int j = 0; j <= N; j++) {
+            for (int i = 0; i < j; i++) {
+                if (!dp1[i].empty() && dict.count(s.substr(i, j - i))) dp1[j].push_back(i);
+            }
+        }
+        if (dp1[N].empty()) return res;
+        vector<vector<string> > dp2(N + 1, vector<string>());
+        for (int j = 0; j <= N; j++) {
+            for (int i : dp1[j]) {
+                if (i == 0) dp2[j].push_back(s.substr(i, j - i));
+                else for (auto & str : dp2[i]) dp2[j].push_back(str + " " + s.substr(i, j - i));
+            }
+        }
+        return dp2[N];
     }
 };
 

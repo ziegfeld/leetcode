@@ -44,26 +44,33 @@ class Solution {
 public:
     vector<string> fullJustify(vector<string> &words, int L) {
         vector<string> res;
-        int start = 0, end = 0;
+        int begin = 0, end = 0;
         while (end < words.size()) {
-            int len = 0;
+            int len = L;
             for (; end < words.size(); end++) {
-                int tmp = (len == 0) ? words[end].size() : len + words[end].size() + 1;
-                if (tmp > L) break;
+                int tmp = len - (len == L ? words[end].size() : words[end].size() + 1);
+                if (tmp < 0) break;
                 len = tmp;
             }
-            len = L - len;
-            int num = end - start - 1, avg = 0;
-            if (num != 0 && end != words.size()) avg = len / num, len %= num;
-            string line;
-            for (; start < end; start++) {
-                line += words[start];
-                if (start == end - 1) continue;
-                line += string(avg + 1, ' ');
-                if (end != words.size() && len > 0) line += ' ', len--;
+            ostringstream os;
+            int num = end - begin - 1;
+            if (num != 0 && end != words.size()) {
+                int avg = len / num;
+                len %= num;
+                for (; begin < end; begin++) {
+                    if (begin == end - 1) os << words[begin];
+                    else os << words[begin] << string(avg + 1, ' ');
+                    if (len > 0) os << ' ', len--;
+                }
             }
-            if (len > 0) line += string(len, ' ');
-            res.push_back(line);
+            else {
+                for (; begin < end; begin++) {
+                    if (begin == end - 1) os << words[begin];
+                    else os << words[begin] << ' ';
+                }
+                if (len > 0) os << string(len, ' ');
+            }
+            res.push_back(os.str());
         }
         return res;
     }

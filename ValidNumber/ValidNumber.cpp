@@ -31,7 +31,7 @@ enum Type {
 };
 
 // Invalid Space Sign Digit Dot Exp
-int states[9][6] = {
+int table[9][6] = {
     { -1, 0, 1, 2, 3, -1 },        // state 0: leading space
     { -1, -1, -1, 2, 3, -1 },      // state 1: first sign
     { -1, 8, -1, 2, 4, 5 },        // state 2: integer (123)
@@ -46,24 +46,16 @@ int states[9][6] = {
 class Solution {
 public:
     bool isNumber(const char *s) {
-        return isNumber2(string(s));
-    }
-
-    bool isNumber1(string str) {
-        return regex_match(begin(str), end(str), regex("^\\s*[+-]?(\\d+|\\d*\\.\\d+|\\d+\\.\\d*)([eE][+-]?\\d+)?\\s*$"));
-    }
-
-    bool isNumber2(string str) {
+        Type type = Type::Invalid;
         int state = 0;
-        for (char c : str) {
-            auto type = Type::Invalid;
-            if (c == ' ') type = Type::Space;
-            else if (c >= '0' && c <= '9') type = Type::Digit;
-            else if (c == '+' || c == '-') type = Type::Sign;
-            else if (c == '.') type = Type::Dot;
-            else if (c == 'e' || c == 'E') type = Type::Exp;
+        for (; *s != '\0'; s++) {
+            if (*s == ' ') type = Type::Space;
+            else if (*s == '+' || *s == '-') type = Type::Sign;
+            else if (*s >= '0' && *s <= '9') type = Type::Digit;
+            else if (*s == '.') type = Type::Dot;
+            else if (*s == 'e' || *s == 'E') type = Type::Exp;
             else return false;
-            state = states[state][type];
+            state = table[state][type];
             if (state == -1) return false;
         }
         return (state == 2 || state == 4 || state == 7 || state == 8);

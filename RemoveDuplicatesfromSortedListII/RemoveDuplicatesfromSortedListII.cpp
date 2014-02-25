@@ -23,35 +23,39 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+
+ListNode * pushHead(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popHead(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
+
 class Solution {
 public:
     ListNode *deleteDuplicates(ListNode *head) {
-        ListNode * newNode = new ListNode(-1);
-        newNode->next = head;
-        head = newNode;
+        if (head == NULL || head->next == NULL) return head;
+        head = pushHead(head);
         ListNode * preNode = head, *curNode = head->next;
         while (curNode != NULL) {
             ListNode * nextNode = curNode->next;
-            while (nextNode != NULL && nextNode->val == curNode->val) nextNode = nextNode->next;
-            if (curNode->next == nextNode) {
-                preNode = curNode;
-                curNode = nextNode;
-            }
+            while (nextNode != NULL && curNode->val == nextNode->val) nextNode = nextNode->next;
+            if (curNode->next == nextNode) preNode = curNode, curNode = nextNode;
             else {
                 preNode->next = nextNode;
-                while (curNode != nextNode) curNode = deleteNode(curNode);
+                while (curNode != nextNode) curNode = popHead(curNode);
             }
         }
-        return deleteNode(head);
-    }
-
-    ListNode* deleteNode(ListNode * cur) {
-        ListNode *toDel = cur;
-        cur = cur->next;
-        delete toDel;
-        return cur;
+        return popHead(head);
     }
 };
+
 
 int main() {
     Solution sol;

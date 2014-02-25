@@ -49,7 +49,15 @@ public:
         delete res;
         
         return head -> next;
+//        return popHead(head); //anson's newer version
     }
+	ListNode * popHead(ListNode * head) {
+	    ListNode * delNode = head;
+	    head = head->next;
+	    delete delNode;
+	    return head;
+	}
+
 };
 
 int main() {

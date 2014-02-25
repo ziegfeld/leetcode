@@ -25,9 +25,9 @@ public:
     int lengthOfLastWord(const char *s) {
         if (s == NULL || *s == '\0') return 0;
         int N = strlen(s), i = N - 1;
-        while (i >= 0 && s[i] == ' ') i--;
+        while (i >= 0 && isspace(s[i])) i--;
         int res = 0;
-        while (i >= 0 && s[i] != ' ') i--, res++;
+        while (i >= 0 && !isspace(s[i])) i--, res++;
         return res;
     }
 };

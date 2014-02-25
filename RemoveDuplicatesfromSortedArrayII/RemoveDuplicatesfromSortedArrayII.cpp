@@ -32,6 +32,7 @@ public:
             }
         } while (j<n);
         return i+1;
+//        for (int i = 2; i < n; i++) if (A[j - 2] != A[i]) A[j++] = A[i];
     }
 };
 

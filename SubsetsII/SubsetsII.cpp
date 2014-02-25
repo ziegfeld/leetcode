@@ -30,39 +30,40 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<int> > subsetsWithDup(vector<int> & S) {
+    vector<vector<int> > subsetsWithDup(vector<int> &S) {
         return subsetsWithDup2(S);
     }
 
-    vector<vector<int> > subsetsWithDup1(vector<int> & S) {
+    vector<vector<int> > subsetsWithDup1(vector<int> &S) {
         sort(begin(S), end(S));
-        vector<int> sub;
+        vector<int> path;
         vector<vector<int> > res;
-        subsetsWithDupHelper1(S, 0, sub, res);
+        subsetsWithDupHelper1(S, 0, path, res);
         return res;
     }
 
-    void subsetsWithDupHelper1(vector<int> & S, int start, vector<int> & sub, vector<vector<int> > & res) {
-        res.push_back(sub);
-        for (int i = start; i < S.size(); i++) {
-            if (i > start && S[i] == S[i - 1]) continue;
-            auto copy = sub;
-            copy.push_back(S[i]);
-            subsetsWithDupHelper1(S, i + 1, copy, res);
+    void subsetsWithDupHelper1(vector<int> &S, int begin, vector<int> & path, vector<vector<int> > & res) {
+        res.push_back(path);
+        int end = S.size();
+        for (int cur = begin; cur < end; cur++) {
+            if (cur > begin && S[cur - 1] == S[cur]) continue;
+            path.push_back(S[cur]);
+            subsetsWithDupHelper1(S, cur + 1, path, res);
+            path.pop_back();
         }
     }
 
-    vector<vector<int> > subsetsWithDup2(vector<int> & S) {
+    vector<vector<int> > subsetsWithDup2(vector<int> &S) {
         sort(begin(S), end(S));
-        int count = 0;
         vector<vector<int> > res(1, vector<int>());
+        int cnt = 0;
         for (int i = 0; i < S.size(); i++) {
-            if (i > 0 && S[i] == S[i - 1]) count++;
-            else count = 0;
-            int N = res.size();
-            for (int j = 0; j < N; j++) {
-                int K = res[j].size();
-                if (count == 0 || (K >= count && res[j][K - count] == S[i])) {
+            if (i > 0 && S[i - 1] == S[i]) cnt++;
+            else cnt = 0;
+            int M = res.size();
+            for (int j = 0; j < M; j++) {
+                int N = res[j].size();
+                if (cnt == 0 || (N >= cnt && res[j][N - cnt] == S[i])) {
                     auto copy = res[j];
                     copy.push_back(S[i]);
                     res.push_back(copy);
@@ -72,6 +73,7 @@ public:
         return res;
     }
 };
+
 
 int main() {
     Solution sol;

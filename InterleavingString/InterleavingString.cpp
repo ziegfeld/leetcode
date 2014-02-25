@@ -11,14 +11,12 @@
 // When s3 = "aadbbbaccc", return false.
 //
 // Complexity:
-// Recursion + Memoization O(2^n) time
-// DP O(n^2) time, O(n^2) space
+// O(n^2) time, O(n^2) space
 //============================================================================
 
 #include <iostream>
-using namespace std;
 
-int memo[1024][1024];
+using namespace std;
 
 class Solution {
 public:
@@ -26,33 +24,34 @@ public:
         return isInterleave2(s1, s2, s3);
     }
 
-    bool isInterleave1(string & s1, string & s2, string & s3) {
-        memset(memo, -1, sizeof(int)* 1024 * 1024);
-        return isInterleaveHelper1(s1, s2, s3, 0, 0);
+    bool isInterleave1(string & s1, & string s2, & string s3) {
+        int n1 = s1.size(), n2 = s2.size(), n3 = s3.size();
+        if (n1 + n2 != n3) return false;
+        vector<vector<int> > memo(n1 + 1, vector<int>(n2 + 1, -1));
+        return dfs(s1, s2, s3, 0, 0, memo);
     }
 
-    bool isInterleaveHelper1(string & s1, string & s2, string & s3, int i, int j) {
+    bool isInterleaveHelper1(string & s1, string & s2, string & s3, int i, int j, vector<vector<int> > & memo) {
         if (memo[i][j] != -1) return memo[i][j];
-        if (i == s1.size() && j == s2.size() && i + j == s3.size()) return memo[i][j] = true;
-        if (i == s1.size()) return memo[i][j] = (s2[j] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i, j + 1));
-        if (j == s2.size()) return memo[i][j] = (s1[i] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i + 1, j));
-        return memo[i][j] = (s1[i] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i + 1, j)) ||
-            (s2[j] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i, j + 1));
+        if (i == s1.size() && j == s2.size()) return memo[i][j] = true;
+        if (i < s1.size() && s1[i] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i + 1, j, memo)) return memo[i][j] = true;
+        if (j < s2.size() && s2[j] == s3[i + j] && isInterleaveHelper1(s1, s2, s3, i, j + 1, memo)) return memo[i][j] = true;
+        return memo[i][j] = false;
     }
 
     bool isInterleave2(string & s1, string & s2, string & s3) {
-        int M = s1.size(), N = s2.size();
-        if (M + N != s3.size()) return false;
-        vector<vector<bool> > dp(M + 1, vector<bool>(N + 1, 0));
-        for (int i = 0; i <= M; i++) {
-            for (int j = 0; j <= N; j++) {
+        int n1 = s1.size(), n2 = s2.size(), n3 = s3.size();
+        if (n1 + n2 != n3) return false;
+        vector<vector<bool> > dp(n1 + 1, vector<bool>(n2 + 1, false));
+        for (int i = 0; i <= n1; i++) {
+            for (int j = 0; j <= n2; j++) {
                 if (i == 0 && j == 0) dp[i][j] = true;
-                else if (i == 0) dp[i][j] = (s2[j - 1] == s3[j - 1]) && dp[i][j - 1];
-                else if (j == 0) dp[i][j] = (s1[i - 1] == s3[i - 1]) && dp[i - 1][j];
-                else dp[i][j] = ((s2[j - 1] == s3[i + j - 1]) && dp[i][j - 1]) || ((s1[i - 1] == s3[i + j - 1]) && dp[i - 1][j]);
+                else if (i == 0) dp[i][j] = (s2[j - 1] == s3[i + j - 1] && dp[i][j - 1]);
+                else if (j == 0) dp[i][j] = (s1[i - 1] == s3[i + j - 1] && dp[i - 1][j]);
+                else dp[i][j] = (s2[j - 1] == s3[i + j - 1] && dp[i][j - 1]) || (s1[i - 1] == s3[i + j - 1] && dp[i - 1][j]);
             }
         }
-        return dp[M][N];
+        return dp[n1][n2];
     }
 };
 

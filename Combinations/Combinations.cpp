@@ -14,12 +14,11 @@
 // [1,4],
 //]
 //
-// Complexity: O(N!) time
-// Sol 1: combine(n, k) = combine(n-1, k-1) + combine(n-1, k)
-// Sol 2: combine(n, k) = join (1 ~ n-k+1) from k to 1
-// Sol 3: combine(n, k) = combine(n-1, k-1) + (n ~ k)
+// Complexity:
+// O(N!) time
 //============================================================================
 
+#include <iostream>
 #include <vector>
 using namespace std;
 
@@ -30,76 +29,39 @@ public:
     }
 
     vector<vector<int> > combine1(int n, int k) {
-        vector<int> sub;
+        vector<int> path;
         vector<vector<int> > res;
-        combineHelper1(n, k, 1, sub, res);
+        combineHelper(n, k, 1, path, res);
         return res;
     }
 
-    void combineHelper1(int n, int k, int s, vector<int> & sub, vector<vector<int> > & res) {
+    void combineHelper(int n, int k, int begin, vector<int> & path, vector<vector<int> > & res) {
         if (k == 0) {
-            res.push_back(sub);
+            res.push_back(path);
             return;
         }
-        for (int i = s; i <= n - k + 1; i++) {
-            sub.push_back(i);
-            combineHelper1(n, k - 1, i + 1, sub, res);
-            sub.pop_back();
+        int end = n - k + 1;
+        for (int cur = begin; cur <= end; cur++) {
+            path.push_back(cur);
+            combineHelper(n, k - 1, cur + 1, path, res);
+            path.pop_back();
         }
     }
 
     vector<vector<int> > combine2(int n, int k) {
         vector<vector<int> > res(1, vector<int>());
-        for (; k > 0; k--){
-            if (res.empty()) {
-                for (int i = 1; i <= n - k + 1; i++) res.push_back(vector<int>(1, i));
-                continue;
-            }
-
-            int N = res.size();
-            for (int i = 0; i < N; i++) {
-                int j = res[i].back() + 1;
-                for (; j < n - k + 1; j++) {
-                    vector<int> copy = res[i];
-                    copy.push_back(j);
-                    res.push_back(copy);
+        for (; k > 0; k--) {
+            int M = res.size();
+            for (int i = 0; i < M; i++) {
+                int begin = (res[i].empty() ? 0 : res[i].back()) + 1, end = n - k + 1;
+                for (int cur = begin; cur <= end; cur++) {
+                    if (cur == end) res[i].push_back(end);
+                    else {
+                        auto copy = res[i];
+                        copy.push_back(cur);
+                        res.push_back(copy);
+                    }
                 }
-                res[i].push_back(j);
-            }
-        }
-        return res;
-    }
-
-    vector<vector<int> > combine3(int n, int k) {
-        vector<int> sub;
-        vector<vector<int> > res;
-        combineHelper3(n, k, 1, sub, res);
-        return res;
-    }
-
-    void combineHelper3(int n, int k, int s, vector<int> & sub, vector<vector<int> > & res) {
-        if (k == 0) {
-            res.push_back(sub);
-            return;
-        }
-        if (s > n) return;
-        sub.push_back(s);
-        combineHelper3(n, k - 1, s + 1, sub, res);
-        sub.pop_back();
-        combineHelper3(n, k, s + 1, sub, res);
-    }
-
-    vector<vector<int> > combine4(int n, int k) {
-        vector<vector<int> > res;
-        if (k == 1) {
-            for (int i = 1; i <= n; i++) res.push_back(vector<int>(1, i));
-            return res;
-        }
-        for (int i = n; i >= k; i--) {
-            auto last = combine4(i - 1, k - 1);
-            for (auto it : last) {
-                it.push_back(i);
-                res.push_back(it);
             }
         }
         return res;

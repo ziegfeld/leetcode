@@ -30,52 +30,49 @@ using namespace std;
 
 class Solution {
 public:
-    vector<vector<string> > findLadders(string start, string end, unordered_set<string> & dict) {
-        unordered_map<string, vector<string> > graph;
-        vector<vector<string> > res;
-        unordered_set<string> curr, prev;
-        prev.insert(start);
-        while (true) {
-            for (auto word : prev) dict.erase(word);
-            for (auto word : prev) {
-                for (int i = 0; i < (int)word.size(); i++) {
-                    string copy = word;
+    vector<vector<string> > findLadders(string start, string end, unordered_set<string> &dict) {
+        unordered_map<string, vector<string> > from;
+        unordered_set<string> cq, nq, visit;
+        cq.insert(start);
+        while (!cq.empty() && !cq.count(end)) {
+            for (auto & cur : cq) visit.insert(cur);
+            for (auto & cur : cq) {
+                string next = cur;
+                for (int i = 0; i < next.size(); i++) {
+                    char t = next[i];
                     for (char c = 'a'; c <= 'z'; c++) {
-                        if (copy[i] == c) continue;
-                        copy[i] = c;
-                        if (dict.find(copy) == dict.end()) continue;
-                        graph[copy].push_back(word);
-                        curr.insert(copy);
+                        next[i] = c;
+                        if (next == end || (dict.count(next) && !visit.count(next))) from[next].push_back(cur), nq.insert(next);
                     }
+                    next[i] = t;
                 }
-            } 
-
-            if (curr.size() == 0) return res;
-            if (curr.find(end) != curr.end()) break;
-
-            prev = curr;
-            curr.clear();
+            }
+            swap(cq, nq);
+            nq.clear();
         }
-
+        vector<vector<string> > res;
         vector<string> path;
-        getPath(end, start, graph, path, res);
+        getPath(end, start, from, path, res);
         return res;
     }
 
-    void getPath(string & start, string & end, unordered_map<string, vector<string> > & graph, vector<string> & path, vector<vector<string> > & res) {
-        path.push_back(start);
-        if (start == end) {
-            res.push_back(vector<string>(path.rbegin(), path.rend()));
-        }
-        else {
-            for (auto it : graph[start]) {
-                getPath(it, end, graph, path, res);
-            }
-        }
+    void getPath(string & cur, string & start, unordered_map<string, vector<string> > & from, vector<string> & path, vector<vector<string> > & res) {
+        path.push_back(cur);
+        if (cur == start) res.push_back(vector<string>(path.rbegin(), path.rend()));
+        else for (auto next : from[cur]) getPath(next, start, from, path, res);
         path.pop_back();
     }
 };
 
 int main() {
+    Solution sol;
+    {
+        unordered_set<string> dict = { "hot", "dot", "dog", "lot", "log" };
+        auto res = sol.findLadders("hit", "cog", dict);
+        for (auto it1 : res) {
+            for (auto it2 : it1) cout << it2 << " ";
+            cout << endl;
+        }
+    }
     return 0;
 }

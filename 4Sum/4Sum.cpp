@@ -13,7 +13,8 @@
 // (-2, -1, 1, 2)
 // (-2,  0, 0, 2)
 //
-// Complexity: O(n^3) time, O(1) space
+// Complexity: 
+// O(n^3) time, O(1) space
 //============================================================================
 
 #include <iostream>
@@ -25,9 +26,10 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int> > fourSum(vector<int> &num, int target) {
-        int N = num.size();
-        sort(begin(num), end(num));
         vector<vector<int> > res;
+        int N = num.size();
+        if (N < 4) return res;
+        sort(begin(num), end(num));
         for (int i = 0; i < N - 3; i++) {
             if (i > 0 && num[i] == num[i - 1]) continue;
             for (int j = i + 1; j < N - 2; j++) {

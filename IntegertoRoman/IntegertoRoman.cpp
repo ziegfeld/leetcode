@@ -54,7 +54,7 @@ public:
     void int_to_r_10(int i, int digit, string &res){
         string val = "";
         if (digit>8) {
-            // *val ++ = table[i * 2 ];ÁÉ≠Ê≠ª //1
+            // *val ++ = table[i * 2 ];»»À¿ //1
             // *val ++ = table[i * 2 + 2]; //10
             val += table[i * 2 ];    // 1
             val += table[i * 2 + 2]; //10

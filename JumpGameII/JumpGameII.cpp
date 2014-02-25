@@ -24,15 +24,13 @@ using namespace std;
 class Solution {
 public:
     int jump(int A[], int n) {
-        int start = 0, end = 0, step = 0;
-        while (end < n-1) {
+        int cur = 0, end = 0, step = 0;
+        while (end < n - 1) {
             int tmp = end;
-            for (; start <= end; start++) tmp = max(tmp, start+A[start]);
-            if (tmp <= end) return -1;
+            for (; cur <= end; cur++) tmp = max(tmp, cur + A[cur]);
             end = tmp;
             step++;
         }
-
         return step;
     }
 };

@@ -16,7 +16,7 @@
 using namespace std;
 
 
-string keypad[] = { "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
+string keypad[] = { "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
 
 class Solution {
 public:
@@ -24,39 +24,38 @@ public:
         return letterCombinations1(digits);
     }
 
-    vector<string> letterCombinations1(string digits) {
-        string sub;
+    vector<string> letterCombinations1(string & digits) {
+        string path;
         vector<string> res;
-        letterCombinationsHelper1(digits, 0, sub, res);
+        letterCombinationsHelper1(digits, 0, path, res);
         return res;
     }
 
-    void letterCombinationsHelper1(string & digits, int start, string & sub, vector<string> & res) {
-        if (start == digits.size()) {
-            res.push_back(sub);
+    void letterCombinationsHelper1(string & digits, int begin, string & path, vector<string> & res) {
+        if (begin == digits.size()) {
+            res.push_back(path);
             return;
         }
-
-        int d = digits[start] - '2';
-        for (char c : keypad[d]) {
-            sub.push_back(c);
-            letterCombinationsHelper1(digits, start + 1, sub, res);
-            sub.pop_back();
+        for (char c : keypad[digits[begin] - '0']) {
+            path.push_back(c);
+            letterCombinationsHelper1(digits, begin + 1, path, res);
+            path.pop_back();
         }
     }
 
     vector<string> letterCombinations2(string digits) {
         vector<string> res(1, "");
-        for (char c : digits) {
-            int d = c - '2';
+        int N = digits.size();
+        for (int i = 0; i < N; i++) {
+            string & key = keypad[digits[i] - '0'];
             int M = res.size();
-            for (int i = 0; i < M; i++) {
-                int N = keypad[d].size();
-                for (int j = 0; j < N; j++) {
-                    if (j == N - 1) res[i].push_back(keypad[d][j]);
+            for (int j = 0; j < M; j++) {
+                int K = key.size();
+                for (int k = 0; k < K; k++) {
+                    if (k == K - 1) res[j].push_back(key[k]);
                     else {
-                        string copy = res[i];
-                        copy.push_back(keypad[d][j]);
+                        auto copy = res[j];
+                        copy.push_back(key[k]);
                         res.push_back(copy);
                     }
                 }

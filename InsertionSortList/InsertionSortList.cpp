@@ -25,21 +25,20 @@ public:
 
     ListNode *insertionSortList1(ListNode * head) {
         if (head == NULL || head->next == NULL) return head;
-        ListNode * newHead = new ListNode(-1);
+        ListNode * newHead = pushDummy(NULL);
         newHead->next = insertionSortList1(head->next);
         insertNode(newHead, head);
-        return deleteNode(newHead);
+        return popDummy(newHead);
     }
 
     ListNode *insertionSortList2(ListNode * head) {
-        ListNode * newHead = new ListNode(-1);
-        ListNode * curNode = head;
+        ListNode * newHead = pushDummy(NULL), * curNode = head;
         while (curNode != NULL) {
             ListNode * nextNode = curNode->next;
             insertNode(newHead, curNode);
             curNode = nextNode;
         }
-        return deleteNode(newHead);
+        return popDummy(newHead);
     }
 
     void insertNode(ListNode * head, ListNode * newNode) {
@@ -49,11 +48,17 @@ public:
         curNode->next = newNode;
     }
 
-    ListNode * deleteNode(ListNode * curNode) {
-        ListNode * toDel = curNode;
-        curNode = curNode->next;
-        delete toDel;
-        return curNode;
+    ListNode * pushDummy(ListNode * head) {
+        ListNode * newNode = new ListNode(-1);
+        newNode->next = head;
+        return newNode;
+    }
+
+    ListNode * popDummy(ListNode * head) {
+        ListNode * delNode = head;
+        head = head->next;
+        delete delNode;
+        return head;
     }
 };
 

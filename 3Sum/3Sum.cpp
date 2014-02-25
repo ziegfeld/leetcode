@@ -25,9 +25,10 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int> > threeSum(vector<int> &num) {
-        int N = num.size();
-        sort(begin(num), end(num));
         vector<vector<int> > res;
+        int N = num.size();
+        if (N < 3) return res;
+        sort(begin(num), end(num));
         for (int k = 0; k < N - 2; k++) {
             if (k > 0 && num[k - 1] == num[k]) continue;
             int i = k + 1, j = N - 1;

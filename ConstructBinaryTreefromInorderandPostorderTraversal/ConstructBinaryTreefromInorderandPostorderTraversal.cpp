@@ -61,42 +61,6 @@ public:
     }
 };
 
-string toString(TreeNode * root) {
-    ostringstream os;
-    queue<TreeNode *> cq, nq;
-    cq.push(root);
-    while (!cq.empty()) {
-        vector<int> path;
-        while (!cq.empty()) {
-            TreeNode * cur = cq.front();
-            cq.pop();
-            if (cur == NULL) {
-                os << "# ";
-            }
-            else {
-                os << cur->val << " ";
-                nq.push(cur->left);
-                nq.push(cur->right);
-            }
-        }
-        swap(cq, nq);
-    }
-    string res = os.str();
-    res.pop_back();
-    return res;
-}
-
 int main() {
-    Solution sol;
-    vector<int> p0;
-    vector<int> p1;
-
-    {
-        p0 = { 1, 3, 2 };
-        p1 = { 3, 2, 1 };
-        auto p2 = sol.buildTree(p0, p1);
-        cout << toString(p2) << endl;
-    }
-
     return 0;
 }

@@ -23,10 +23,23 @@ struct ListNode {
     ListNode(int x) : val(x), next(NULL) {}
 };
 
+ListNode * pushDummy(ListNode * head) {
+    ListNode * newNode = new ListNode(-1);
+    newNode->next = head;
+    return newNode;
+}
+
+ListNode * popDummy(ListNode * head) {
+    ListNode * delNode = head;
+    head = head->next;
+    delete delNode;
+    return head;
+}
+
 class Solution {
 public:
     ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
-        ListNode * l3 = new ListNode(-1), *cur = l3;
+        ListNode * l3 = pushDummy(NULL), *cur = l3;
         int sum = 0;
         while (l1 != NULL || l2 != NULL) {
             if (l1 != NULL) sum += l1->val, l1 = l1->next;
@@ -35,15 +48,8 @@ public:
             cur = cur->next;
             sum /= 10;
         }
-        if (sum != 0) cur->next = new ListNode(sum);
-        return deleteNode(l3);
-    }
-
-    ListNode* deleteNode(ListNode * cur) {
-        ListNode *toDel = cur;
-        cur = cur->next;
-        delete toDel;
-        return cur;
+        if (sum > 0) cur->next = new ListNode(sum);
+        return popDummy(l3);
     }
 };
 

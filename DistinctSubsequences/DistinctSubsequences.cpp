@@ -14,9 +14,7 @@
 // Return 3.
 //
 // Complexity:
-// Recurision + Memoization O(2^n) time
-// DP O(n^2) time O(n^2) space
-// Squeeze Memory O(n^2) time, O(n) space
+// O(n^2) time O(n^2) space
 //============================================================================
 
 #include <iostream>

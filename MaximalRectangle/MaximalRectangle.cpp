@@ -3,7 +3,6 @@
 // containing all ones and return its area.
 //
 // Complexity:
-// dp O(n^3) time
 // largest rectangle in histogram O(n^2) time
 //============================================================================
 
@@ -17,62 +16,26 @@ class Solution {
 public:
     int maximalRectangle(vector<vector<char> > &matrix) {
         if (matrix.empty() || matrix[0].empty()) return 0;
-        return maximalRectangle2(matrix);
-    };
-
-    int maximalRectangle1(vector<vector<char> > &matrix) {
-        int M = matrix.size();
-        int N = matrix[0].size();
-        vector<vector<int> > dp(M, vector<int>(N, 0));
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                if (matrix[i][j] == '1') {
-                    dp[i][j] = (i==0)?1:dp[i-1][j]+1;
-                }
-            }
-        }
+        int M = matrix.size(), N = matrix[0].size();
         int res = 0;
+        vector<int> hs(N + 1, 0);
         for (int i = 0; i < M; i++) {
             for (int j = 0; j < N; j++) {
-                int minv = dp[i][j];
-                for (int k = i; k >= 0; k--) {
-                    minv = min(minv, dp[k][j]);
-                    res = max(res, minv*(i-k+1));
-                }
+                if (matrix[i][j] == '0') hs[j] = 0;
+                else hs[j] = hs[j] + 1;
             }
-        }
-
-        return res;
-    }
-
-    int maximalRectangle2(vector<vector<char> > &matrix) {
-        int M = matrix.size();
-        int N = matrix[0].size();
-        vector<vector<int> > dp(M, vector<int>(N+1, 0));
-        for (int i = 0; i < M; i++) {
-            for (int j = 0; j < N; j++) {
-                if (matrix[i][j] == '1') {
-                    dp[i][j] = (i==0)?1:dp[i-1][j]+1;
-                }
-            }
-        }
-
-        int res = 0;
-        for (int i = 0; i < M; i++) {
             stack<int> stk;
-            int j = 0;
-            while (j <= N) {
-                if (stk.empty() || dp[i][stk.top()] <= dp[i][j]) {
-                    stk.push(j++);
-                    continue;
+            for (int j = 0; j <= N; j++) {
+                while (!stk.empty() && hs[stk.top()] >= hs[j]) {
+                    int h = hs[stk.top()];
+                    stk.pop();
+                    res = max(res, (stk.empty() ? j : j - stk.top() - 1)*h);
                 }
-                int k = stk.top();
-                stk.pop();
-                res = max(res, dp[i][k]*(stk.empty()?j:(j-stk.top()-1)));
+                stk.push(j);
             }
         }
         return res;
-    }
+    };
 };
 
 int main() {

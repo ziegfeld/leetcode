@@ -12,6 +12,7 @@
 
 using namespace std;
 
+bool dp[1000][1000];
 
 class Solution {
 public:
@@ -19,39 +20,36 @@ public:
         return longestPalindrome1(s);
     }
 
-    bool dp[1000][1000];
-
     string longestPalindrome1(string s) {
-        memset(dp, 0, sizeof(dp[0][0])*1000*1000);
-        int N = s.size(), maxi = 0, maxl = 1;
-        for (int l = 1; l <= N; l++) {
-            for (int i = 0; i < N-l+1; i++) {
-                int j = i+l-1;
-                if (l == 1) dp[i][j] = true;
-                else if (l == 2 && s[i] == s[j]) dp[i][j] = true;
-                else if (s[i] == s[j] && dp[i+1][j-1]) dp[i][j] = true;
-                if (dp[i][j] && l > maxl) maxl = l, maxi = i;
+        memset(dp, 0, sizeof(dp));
+        int maxi = 0, maxl = 1, N = s.size();
+        for (int j = 0; j < N; j++) {
+            for (int i = j; i >= 0; i--) {
+                int l = j - i + 1;
+                if (s[i] == s[j] && (l <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true;
+                    if (l > maxl) maxl = l, maxi = i;
+                }
             }
         }
         return s.substr(maxi, maxl);
     }
 
     string longestPalindrome2(string s) {
-        int maxl = 0, N = s.size();
-        string res;
+        int maxi = 0, maxl = 1, N = s.size();
         for (int k = 0; k < N; k++) {
-            expand(s, k, k, maxl, res);
-            expand(s, k, k+1, maxl, res);
+            expand(s, k, k, maxi, maxl);
+            expand(s, k, k + 1, maxi, maxl);
         }
-        return res;
+        return s.substr(maxi, maxl);
     }
 
-    void expand(string & s, int i, int j, int & maxl, string & res) {
+    void expand(string & s, int i, int j, int & maxi, int & maxl) {
         int N = s.size();
-        while (i >= 0 && j <= N-1 && s[i] == s[j]) i--, j++;
+        while (i >= 0 && j <= N - 1 && s[i] == s[j]) i--, j++;
         i++, j--;
-        int l = j-i+1;
-        if (l > maxl) maxl = l, res = s.substr(i, l);
+        int l = j - i + 1;
+        if (l > maxl) maxl = l, maxi = i;
     }
 };
 

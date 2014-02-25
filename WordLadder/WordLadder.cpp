@@ -24,30 +24,43 @@ using namespace std;
 
 class Solution {
 public:
-    int ladderLength(string start, string end, unordered_set<string> & dict) {
-        queue<pair<string, int> > queue;
-        queue.push(make_pair(start, 1));
-        while (!queue.empty()) {
-            auto cur = queue.front();
-            queue.pop();
-            if (cur.first == end) return cur.second;
-
-            for (int i = 0; i < (int)cur.first.size(); i++) {
-                string copy = cur.first;
-                for (char c = 'a'; c <= 'z'; c++) {
-                    if (c == copy[i]) continue;
-                    copy[i] = c;
-                    if (dict.find(copy) == dict.end() && copy != end) continue;
-                    queue.push(make_pair(copy, cur.second+1));
-                    dict.erase(copy);
+    int ladderLength(string start, string end, unordered_set<string> &dict) {
+        unordered_set<string> visit;
+        queue<string> cq, nq;
+        cq.push(start);
+        int level = 1;
+        while (!cq.empty()) {
+            while (!cq.empty()) {
+                string cur = cq.front();
+                cq.pop();
+                for (int i = 0; i < cur.size(); i++) {
+                    char t = cur[i];
+                    for (char c = 'a'; c <= 'z'; c++) {
+                        cur[i] = c;
+                        if (cur == end) return level + 1;
+                        if (dict.count(cur) && !visit.count(cur)) visit.insert(cur), nq.push(cur);
+                    }
+                    cur[i] = t;
                 }
             }
+            level++;
+            swap(cq, nq);
         }
-
         return 0;
     }
 };
 
 int main() {
+    Solution sol;
+    {
+        unordered_set<string> dict = { "hot", "dot", "dog", "lot", "log" };
+        cout << sol.ladderLength("hit", "cog", dict) << endl;
+    }
+
+    {
+        unordered_set<string> dict = { "a", "b", "c" };
+        cout << sol.ladderLength("a", "c", dict) << endl;
+    }
+
     return 0;
 }

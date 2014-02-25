@@ -33,12 +33,11 @@ public:
     bool isMatch1(const char *s, const char *p) {
         if (*p == '\0') return (*s == '\0');
         if (*p == '*') {
-            p++;
             while (*s != '\0') {
-                if (isMatch(s, p)) return true;
+                if (isMatch(s, p + 1)) return true;
                 s++;
             }
-            return isMatch(s, p);
+            return isMatch(s, p + 1);
         }
         return ((*p == '?' && *s != '\0') || (*p == *s)) && isMatch(s + 1, p + 1);
     }

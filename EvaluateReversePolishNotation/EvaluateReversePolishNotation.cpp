@@ -25,28 +25,32 @@ using namespace std;
 
 class Solution {
 public:
-    int evalRPN(vector<string> tokens) {
+    int evalRPN(vector<string> &tokens) {
         stack<int> stk;
-        for (size_t i = 0; i < tokens.size(); i++) {
-            if (tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/") {
-                int op2 = stk.top();
-                stk.pop();
-                int op1 = stk.top();
-                stk.pop();
-                if (tokens[i] == "+")
-                    stk.push(op1 + op2);
-                else if (tokens[i] == "-")
-                    stk.push(op1 - op2);
-                else if (tokens[i] == "*")
-                    stk.push(op1 * op2);
-                else if (tokens[i] == "/")
-                    stk.push(op1 / op2);
+        for (string str : tokens) {
+            if (str == "+") {
+                int y = stk.top(); stk.pop();
+                int x = stk.top(); stk.pop();
+                stk.push(x + y);
             }
-            else {
-                stk.push(stoi(tokens[i]));
+            else if (str == "-") {
+                int y = stk.top(); stk.pop();
+                int x = stk.top(); stk.pop();
+                stk.push(x - y);
             }
+            else if (str == "*") {
+                int y = stk.top(); stk.pop();
+                int x = stk.top(); stk.pop();
+                stk.push(x * y);
+            }
+            else if (str == "/") {
+                int y = stk.top(); stk.pop();
+                int x = stk.top(); stk.pop();
+                stk.push(x / y);
+            }
+            else stk.push(stoi(str));
         }
-        return stk.top();
+        return stk.empty() ? 0 : stk.top();
     }
 };
 

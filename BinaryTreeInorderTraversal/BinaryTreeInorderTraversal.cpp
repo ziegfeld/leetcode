@@ -68,7 +68,8 @@ public:
         return res;
     }
 
-    // 鐢ㄦ墜鎶婃墍鏈夋牴鑺傜偣杩炲甫鍙充晶鑺傜偣鎸傚埌宸︿晶瀛愭爲鐨勬渶鏈�鍚庨潰锛堝嵆鏈�鍙充笅鏂瑰彾瀛愮殑鏂板彸瀛愭爲锛夛紝鐩村埌鏍戜腑鍐嶆病鏈変竴涓乏渚у瓙鑺傜偣涓烘
+
+    // 用手把所有根节点连带右侧节点挂到左侧子树的最最后面（即最右下方叶子的新右子树），直到树中再没有一个左侧子节点为止
     vector<int> inorderTraversal3(TreeNode * root) {
         vector<int> res;
         TreeNode * cur = root;

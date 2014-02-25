@@ -27,11 +27,29 @@ struct TreeNode {
 class Solution {
 public:
     bool isSameTree(TreeNode *p, TreeNode *q) {
+        return isSameTree2(p, q);
+    }
+
+    bool isSameTree1(TreeNode *p, TreeNode *q) {
         if (p == NULL && q == NULL) return true;
-        if (p != NULL && q != NULL) {
-            return (p->val == q->val) && isSameTree(p->left,q->left) && isSameTree(p->right,q->right);
+        if (p == NULL || q == NULL) return false;
+        return (p->val == q->val) && isSameTree1(p->left, q->left) && isSameTree1(p->right, q->right);
+    }
+
+    bool isSameTree2(TreeNode *p, TreeNode *q) {
+        queue<TreeNode *> ps, qs;
+        if (p != NULL) ps.push(p);
+        if (q != NULL) qs.push(q);
+        while (!ps.empty() && !qs.empty()) {
+            p = ps.front(), ps.pop();
+            q = qs.front(), qs.pop();
+            if (p->val != q->val) return false;
+            if (p->left != NULL && q->left != NULL) ps.push(p->left), qs.push(q->left);
+            else if (!(p->left == NULL && q->left == NULL)) return false;
+            if (p->right != NULL && q->right != NULL) ps.push(p->right), qs.push(q->right);
+            else if (!(p->right == NULL && q->right == NULL)) return false;
         }
-        return false;
+        return ps.empty() && qs.empty();
     }
 };
 
